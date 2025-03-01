@@ -6,150 +6,199 @@ using namespace token;
 
 
 static Token lhs[] = {
+        // program
+        real_start,
+        prog,
+        prog_head,
+        prog_body,
 
-    TokenState::real_start,
-    
-    TokenState::prog,
-    TokenState::prog_head,
-    TokenState::prog_body,
-    
-    TokenState::const_body,
-    TokenState::const_body,
-    TokenState::const_def,
-    TokenState::const_def,
-    
-    TokenState::var_body,
-    TokenState::var_body,
-    TokenState::var_def,
-    TokenState::var_def,
-    
-    TokenState::type,
-    TokenState::type_base,
-    TokenState::type_base,
-    //TokenState::type_base,
-    //TokenState::type_base,
-    
-    TokenState::ids,
-    TokenState::ids,
-    
-    TokenState::main,
-    TokenState::begin,
-    TokenState::stmt_list,
-    TokenState::stmt_list,
-    
-    TokenState::stmt,
-    TokenState::variable,
-    TokenState::variable,
-    //TokenState::cont,
-    //TokenState::cont,
-    //TokenState::cont,
-    TokenState::cont,
-    //TokenState::cont,
-    //TokenState::cont,
-    TokenState::cont,
+        // const
+        const_body,
+        const_body,
+        const_def,
+        const_def,
 
-    TokenState::exp,
-    TokenState::exp,
-    TokenState::exp,
-    TokenState::exp,
-    //TokenState::exp,
-    //TokenState::exp,
-    //TokenState::exp,
+        cont,
+        cont,
+        cont,
+        cont,
 
-    TokenState::subexp,
-    TokenState::subexp,
-    TokenState::subexp,
-    //TokenState::subexp,
-    
-    TokenState::term,
-    TokenState::factor,
-    TokenState::factor,
-    TokenState::factor,
-    //TokenState::factor,
-    
-    //TokenState::factor,
-    //TokenState::factor,
-    TokenState::factor,
-    TokenState::factor,
-    TokenState::factor,
-    
+        // var
+        var_body,
+        var_body,
+        var_def,
+        var_def,
+
+        // type
+        type,
+        type_base,
+        type_base,
+        type_base,
+        type_base,
+
+        // id
+        ids,
+        ids,
+        var,
+        var,
+        var_list,
+        var_list,
+
+        // op
+        op_cmp,
+        op_cmp,
+        op_cmp,
+        op_cmp,
+        op_cmp,
+        op_cmp,
+
+        op_add_sub,
+        op_add_sub,
+        op_add_sub,
+
+        op_div_mul,
+        op_div_mul,
+        op_div_mul,
+        op_div_mul,
+
+        // statement
+        main,
+        TokenState::begin,
+        stmt_list,
+        stmt_list,
+
+        stmt,
+        stmt,
+        stmt,
+        stmt,
+        stmt,
+
+        // expression
+        exp_list,
+        exp_list,
+
+        exp,
+        exp,
+
+        // sub_exp
+        sub_exp,
+        sub_exp,
+
+        // term
+        term,
+        term,
+
+        // factor
+        factor,
+        factor,
+        factor,
+        factor,
+        factor,
+        factor,
+
 };
 
 static vector<Token> rhs[] = {
 
-    { TokenState::prog,       TokenState::real_end },
-    
-    { TokenState::prog_head,  TokenState::prog_body },
-    { TokenState::key_prog,   TokenState::id,         TokenState::p_semicolon },
-    { TokenState::const_body, TokenState::var_body,   TokenState::main },
+        // program
+        {prog,              real_end},
+        {prog_head,         prog_body},
+        {key_prog,          id,          p_semicolon},
+        {const_body,        var_body,    main},
 
-    { },
-    { TokenState::key_const,  TokenState::const_def},
-    { TokenState::id,         TokenState::op_equal,   TokenState::cont,     TokenState::p_semicolon },
-    { TokenState::const_def,  TokenState::id,         TokenState::op_equal, TokenState::cont, TokenState::p_semicolon},
+        // const
+        {},
+        {key_const,         const_def},
+        {id,                op_equal,    cont,     p_semicolon},
+        {const_def,         id,          op_equal, cont, p_semicolon},
 
-    { },
-    { TokenState::key_var,    TokenState::var_def},
-    { TokenState::ids,        TokenState::p_colon, TokenState::type,     TokenState::p_semicolon },
-    { TokenState::var_def,    TokenState::ids,     TokenState::p_colon,  TokenState::type, TokenState::p_semicolon },
+        {p_quote,           letter,      p_quote},
+        {op_add,            num},
+        {op_sub,            num},
+        {num},
 
-    { TokenState::type_base },
-    { TokenState::type_int},
-    { TokenState::type_real},
-    //{ TokenState::type_char},
-    //{ TokenState::type_bool},
+        // var
+        {},
+        {key_var,           var_def},
+        {ids,               p_colon,     type,     p_semicolon},
+        {var_def,           ids,         p_colon,  type, p_semicolon},
 
-    { TokenState::id },
-    { TokenState::ids,        TokenState::p_comma, TokenState::id },
-    
-    { TokenState::begin, TokenState::stmt_list,    TokenState::key_end, TokenState::p_dot },
-    { TokenState::key_begin },
-    { TokenState::stmt },
-    { TokenState::stmt_list, TokenState::stmt },
-    
-    { TokenState::variable, TokenState::op_assign, TokenState::exp, TokenState::p_semicolon },
-    { TokenState::id},
-    { TokenState::id, TokenState::op_l_square,     TokenState::exp, TokenState::op_r_square},
-    //{TokenState::p_quote, TokenState::character, TokenState::p_quote},
-    //{ TokenState::op_add, TokenState::integer},
-    //{ TokenState::op_minus, TokenState::integer},
-    {  TokenState::integer},
-    //{ TokenState::op_add, TokenState::real},
-    //{ TokenState::op_minus, TokenState::real},
-    {  TokenState::real},
+        // type
+        {type_base},
+        {type_int},
+        {type_real},
+        {type_char},
+        {type_bool},
 
-    { TokenState::subexp},
-    { TokenState::subexp, TokenState::op_great, TokenState::subexp},
-    { TokenState::subexp, TokenState::op_less, TokenState::subexp},
-    { TokenState::subexp, TokenState::op_equal, TokenState::subexp},
-    //{ TokenState::subexp, TokenState::op_great_equal, TokenState::subexp},
-    //{ TokenState::subexp, TokenState::op_less_equal, TokenState::subexp},
-    //{ TokenState::subexp, TokenState::op_not_equal, TokenState::subexp},
+        // id
+        {id},
+        {ids,               p_comma,     id},
+        {id},
+        {id,                op_l_square, exp_list, op_r_square},
+        {var},
+        {var_list,          p_comma,     var},
 
-    { TokenState::term},
-    { TokenState::term, TokenState::op_add, TokenState::term},
-    { TokenState::term, TokenState::op_minus, TokenState::term},
-    //{ TokenState::term, TokenState::op_or, TokenState::term},
+        // op
+        {op_great},
+        {op_less},
+        {op_equal},
+        {op_great_equal},
+        {op_less_equal},
+        {op_not_equal},
 
-    { TokenState::factor},
-    { TokenState::factor,    TokenState::op_mul, TokenState::factor},
-    { TokenState::factor,    TokenState::op_div, TokenState::factor},
-    { TokenState::factor,    TokenState::op_mod, TokenState::factor},
-    //{ TokenState::factor, TokenState::op_and, TokenState::factor},
+        {op_add},
+        {op_sub},
+        {op_or},
 
-    //{ TokenState::op_not, TokenState::factor},
-    //{ TokenState::op_minus, TokenState::factor},
-    { TokenState::p_l_paren, TokenState::exp,    TokenState::p_r_paren},
-    { TokenState::variable},
-    { TokenState::cont}
-    
+        {op_div},
+        {op_mul},
+        {op_mod},
+        {op_and},
+
+        // statement
+        {TokenState::begin, stmt_list,   key_end,  p_dot},
+        {key_begin},
+        {stmt},
+        {stmt_list,         p_semicolon, stmt},
+
+        {},
+        {main},
+        {var,               op_assign,   exp},
+        {key_read,          p_l_paren,   var_list, p_r_paren},
+        {key_write,         p_l_paren,   exp_list, p_r_paren},
+
+
+        // exp
+        {exp},
+        {exp_list,          p_comma,     exp},
+
+        {sub_exp},
+        {sub_exp,           op_cmp,      sub_exp},
+
+        // sub_exp
+        {term},
+        {sub_exp,           op_add_sub,  term},
+
+        // term
+        {factor},
+        {term,              op_div_mul,  factor},
+
+        // factor
+        {num},
+        {var},
+        {p_l_paren,         exp,         p_r_paren},
+        {id,                p_l_paren,   exp_list, p_r_paren},
+
+        {op_not,            factor},
+        {op_sub,            factor},
+
 };
 
 static_assert(sizeof(lhs) / sizeof(Token) == sizeof(rhs) / sizeof(vector<Token>));
 
 const int entryCount = sizeof(lhs) / sizeof(Token);
 
-inline SyntaxArray& syntax::getSyntaxes(){
+inline SyntaxArray &syntax::getSyntaxes() {
     static SyntaxArray syntaxes;
     return syntaxes;
 }
@@ -159,8 +208,7 @@ syntax::SyntaxEntry::SyntaxEntry(size_t id) :
         l(lhs[id]),
         r(rhs[id]) {}
 
-void syntax::initSyntaxes()
-{
+void syntax::initSyntaxes() {
     for (int i = 0; i < entryCount; ++i)
         getSyntaxes().emplace_back(i);
 }

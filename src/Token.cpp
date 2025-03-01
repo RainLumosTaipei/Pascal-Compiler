@@ -11,26 +11,31 @@ std::string token::tokenNames[] = {
     "prog_body",
     
     "var_body",
-    "var_d",
+    "var_def",
     "const_body",
-    "const_d",
+    "const_def",
     "main",
     "begin",
     "stmt",
     "stmt_list",
     
+    "exp_list",
     "exp",
-    "subexp",
+    "sub_exp",
     "term",
     "factor",
     
-    "variable",
+    "var",
+    "var_list",
     "cont",
     
     "type_base",
     "type",
     
     "ids",
+    "op_cmp",
+    "op_add_sub",
+    "op_div_mul",
 
     // terminal
     
@@ -41,9 +46,8 @@ std::string token::tokenNames[] = {
     "boolean",
     
     "id",
-    "100",
-    "0.1f",
-    "abc",
+    "number",
+    "str",
     
     "{",
     "}",

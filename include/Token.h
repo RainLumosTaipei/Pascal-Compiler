@@ -24,17 +24,22 @@ namespace token {
         begin,                  // begin -> key_begin
         stmt,                   // statement
         stmt_list,              // statement list
+        exp_list,               // expression list
         exp,                    // expression
-        subexp,                 // simple exp
+        sub_exp,                // simple exp
         term,                   // term exp
         factor,                 // factor exp
 
-        variable,               // variable
+        var,                    // var
+        var_list,               // var list
         cont,                   // const
 
         type_base,              // basic type
         type,                   // type
         ids,                    // id list
+        op_cmp,                 // compare operator
+        op_add_sub,             // + -
+        op_div_mul,             // * /
 
         // terminal
         // type
@@ -45,9 +50,8 @@ namespace token {
         type_bool,              // boolean
         // value
         id,                     // identifier
-        integer,                // int num
-        real,                   // float num
-        character,              // char
+        num,                    // number
+        letter,                 // char
         // punctuation
         p_l_bracket,            // {
         p_r_bracket,            // }
@@ -62,7 +66,7 @@ namespace token {
         // operator
         op_equal,               // =
         op_add,                 // +
-        op_minus,               // -
+        op_sub,                 // -
         op_mul,                 // *
         op_div,                 // div
         op_not_equal,           // <>
@@ -185,7 +189,6 @@ namespace token {
     inline std::ostream &operator<<(std::ostream &os, const Token &s) {
         return os << tokenNames[s.token];
     }
-    
 
 }
 
