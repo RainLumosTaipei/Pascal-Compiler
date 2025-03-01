@@ -22,7 +22,7 @@ static const CharMap puncMap = {
         {'<', TokenState::op_less},
         {'>', TokenState::op_great},
         {'+', TokenState::op_add},
-        {'-', TokenState::op_minus},
+        {'-', TokenState::op_sub},
         {'*', TokenState::op_mul},
         {'/', TokenState::op_div},
         {'=', TokenState::op_equal}
@@ -110,6 +110,7 @@ TokenState Lexer::key(const std::string& value) {
     return TokenState::id;
 }
 
+// TODO: consider real number
 TokenDesc* Lexer::num() {
     size_t start = pos_;
     while (pos_ < input_.size() && isdigit(input_[pos_])) {
@@ -117,7 +118,7 @@ TokenDesc* Lexer::num() {
     }
     string value = input_.substr(start, pos_ - start);
     Lexer::col += value.length();
-    return new TokenDesc(TokenState::integer, value);
+    return new TokenDesc(TokenState::num, value);
 }
 
 TokenDesc* Lexer::str() {
@@ -129,7 +130,7 @@ TokenDesc* Lexer::str() {
     string value = input_.substr(start, pos_ - start);
     pos_++; // 跳过结尾的双引号
     Lexer::col += value.length() + 2;
-    return new TokenDesc(TokenState::character, value);
+    return new TokenDesc(TokenState::letter, value);
 }
 
 TokenDesc* Lexer::punc() {

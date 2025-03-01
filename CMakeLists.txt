@@ -8,6 +8,8 @@ file(GLOB_RECURSE SOURCES "src/*.cpp" "include/*.h")
 add_executable(Pascal-Compiler
         main.cpp
         ${SOURCES}
+        src/Serialize.cpp
+        include/Serialize.h
 )
 
 target_include_directories(Pascal-Compiler PRIVATE

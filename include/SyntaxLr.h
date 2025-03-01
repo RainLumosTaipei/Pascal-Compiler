@@ -90,5 +90,7 @@ namespace syntax::lr
 
     void initLr();
     void lrCheck();
-    
+    void saveTable();
+    void loadTable();
+
 }

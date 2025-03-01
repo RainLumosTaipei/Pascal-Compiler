@@ -4,6 +4,7 @@
 
 #include "SyntaxLr.h"
 #include "SyntaxLl.h"
+#include "Serialize.h"
 
 using namespace std;
 using namespace token;
@@ -241,6 +242,15 @@ static void fillLrTable()
     cout << "\nLR table is ready!\n\n";
 }
 
+void syntax::lr::saveTable() {
+    const auto& table = getLrTable();
+    serializeLrTable(table);
+}
+
+void syntax::lr::loadTable() {
+    auto& table = getLrTable();
+    deserializeLrTable(table);
+}
 
 void syntax::lr::initLr() {
     searchStates();
@@ -280,6 +290,8 @@ void syntax::lr::lrCheck(){
     stateStack.push(0);
     // 开始进行分析
     while (!stateStack.empty()) {
+
+        if(times > 200) goto end;
 
         int curToken = tokens.front()->token;
         LrStateId curState = stateStack.top();
