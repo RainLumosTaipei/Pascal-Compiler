@@ -95,6 +95,7 @@ std::string token::tokenNames[] = {
     "neg",
     
     "for",
+    "while",
     "if",
     "else",
     "then",

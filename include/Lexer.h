@@ -8,12 +8,19 @@
 namespace token
 {
     struct TokenDesc;
+
+    enum LexerState{
+        normal,
+        array,
+        func
+    };
     
     class Lexer
     {
     public:
         static size_t line;
         static size_t col;
+        static LexerState state;
         
         Lexer(std::string input):input_(input), pos_(0) {}
         
@@ -22,6 +29,7 @@ namespace token
     private:
         std::string input_;
         size_t pos_;
+
 
         void skip();
 

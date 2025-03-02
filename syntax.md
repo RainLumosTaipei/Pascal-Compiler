@@ -12,6 +12,25 @@ prog_head -> program id ( ids )
 
 prog_body -> const_defs var_defs sub_prog_def main
 
+## const
+
+const_defs -> null
+
+const_defs -> const const_def ;
+
+const_def -> id = const
+
+const_def -> const_def ; id = const
+
+const -> 'char'
+
+const -> + num
+
+const -> - num
+
+const -> num
+
+
 ## sub program
 
 sub_prog_def -> null
@@ -32,6 +51,8 @@ formal_para -> null
 
 formal_para -> ( para_list )
 
+formal_para -> ( )
+
 para_list -> para
 
 para_list -> para_list ; para
@@ -44,23 +65,6 @@ var_para -> key_var value_para
 
 value_para -> ids : type_base
 
-## const
-
-const_defs -> null
-
-const_defs -> const const_def
-
-const_def -> id = const ;
-
-const_def -> const_def id = const ;
-
-const -> 'char'
-
-const -> + num
-
-const -> - num
-
-const -> num
 
 
 ## var
@@ -160,6 +164,8 @@ stmt -> read ( var_list )
 stmt -> write ( exp_list )
 
 stmt -> for id := exp to exp do stmt
+
+stmt -> while do stmt //////////////
 
 stmt -> if exp then stmt else_part
 

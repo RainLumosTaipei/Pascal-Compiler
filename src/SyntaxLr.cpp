@@ -37,12 +37,13 @@ static inline void printTime(){
 static void searchEntry(EntrySet& entries) {
     size_t count;
     EntrySet newEntries;
+    EntrySet extEntries = entries;
     do {
         count = 0;
         newEntries.clear();
 
         // 遍历所有生成式
-        for (auto &entry: entries) {
+        for (auto &entry: extEntries) {
             // 找到还可以移动的生成式
             // A -> .BCd
             SyntaxEntry* psyntax = entry.syn;
@@ -61,12 +62,15 @@ static void searchEntry(EntrySet& entries) {
                     looks.insert(entry.look);
                 
                 // 如果当前符号不是最后一个符号，则将当前符号的First集合加入到lookahead中
-                // A -> .BCd  添加 first(C)
-                if (entry.dot < psyntax->r.size() - 1) {
-                    Token ahead = psyntax->r[entry.dot + 1];
-                    for (auto &firstToken: getFirstArray()[ahead].set) {
+                // A -> .BCDe  添加 first(CD)
+                for(size_t loc = entry.dot; loc < psyntax->r.size() - 1; ++loc){
+                    Token ahead = psyntax->r[loc + 1];
+                    auto& aheadFirst = getFirstArray()[ahead];
+                    for (auto &firstToken: aheadFirst.set) {
                         looks.insert(firstToken.token);
                     }
+                    // 如果是终结符或者不为null，则直接跳出循环
+                    if(ahead.isTerminal() || !aheadFirst.canNull) break;
                 }
 
                 // 遍历所有产生式，寻找可以推导的
@@ -87,6 +91,7 @@ static void searchEntry(EntrySet& entries) {
             size_t post = entries.size();
             count = post - pre;
         }
+        extEntries = newEntries;
     } while (count);
 }
 
@@ -112,7 +117,6 @@ static void searchStates()
     LrSet newStates;
     do {
         count = 0;
-
 
         newStates.clear();
         // 遍历所有状态
@@ -310,7 +314,7 @@ void syntax::lr::lrCheck(){
     // 开始进行分析
     while (!stateStack.empty()) {
 
-        //if(times > 200) goto end;
+        if(times > 200) goto end;
         check();
 
         int curToken = tokens.front()->token;

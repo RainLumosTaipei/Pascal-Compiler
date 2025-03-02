@@ -49,7 +49,7 @@ namespace token {
         type_base,              // basic type
         type,                   // type
         period,                 // array
-        ids,                    // id list   34
+        ids,                    // id list
         op_cmp,                 // compare operator
         op_add_sub,             // + -
         op_div_mul,             // * /
@@ -62,7 +62,7 @@ namespace token {
         type_array,             // array
         type_bool,              // boolean
         // value
-        id,                     // identifier   43
+        id,                     // identifier
         idf,                    // id of function
         num,                    // number
         letter,                 // char
@@ -73,11 +73,11 @@ namespace token {
         p_l_paren,              // (
         p_r_paren,              // )
         p_colon,                // :
-        p_quote,                // '  53
+        p_quote,                // '
         p_comma,                // ,
         p_semicolon,            // ;
         p_dotdot,               // ..
-        p_dot,                  // .  57
+        p_dot,                  // .
         // operator
         op_equal,               // =
         op_add,                 // +
@@ -87,7 +87,7 @@ namespace token {
         op_not_equ,             // <>
         op_l_squ,               // [
         op_r_squ,               // ]
-        op_assign,              // :=  66
+        op_assign,              // :=
         op_mod,                 // mod
         op_less,                // <
         op_less_equ,            // <=
@@ -99,6 +99,7 @@ namespace token {
         op_neg,                 // -
         // keyword
         key_for,                // for
+        key_while,              // while
         key_if,                 // if
         key_else,               // else
         key_then,               // then
@@ -107,7 +108,7 @@ namespace token {
         key_of,                 // of
         key_const,              // const
         key_var,                // var
-        key_begin,              // begin 85
+        key_begin,              // begin
         key_end,                // end
         key_prog,               // program
         key_proc,               // procedure

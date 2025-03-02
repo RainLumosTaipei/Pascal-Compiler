@@ -7,6 +7,7 @@ using namespace std;
 
 size_t token::Lexer::col = 1 ;
 size_t token::Lexer::line = 1 ;
+LexerState token::Lexer::state = normal;
 
 static const CharMap puncMap = {
         {'{', TokenState::p_l_bracket},
@@ -31,6 +32,7 @@ static const CharMap puncMap = {
 static const StrMap keyMap = {
         {"for", TokenState::key_for},
         {"if", TokenState::key_if},
+        {"while", TokenState::key_while},
         {"else", TokenState::key_else},
         {"then", TokenState::key_then},
         {"to", TokenState::key_to},
@@ -105,6 +107,8 @@ TokenDesc* Lexer::idOrKey(){
 TokenState Lexer::key(const std::string& value) {
     auto it = keyMap.find(value);
     if (it != keyMap.end()) {
+        // array
+        if(value == "array") state = array;
         return it->second;
     }
     return TokenState::id;
@@ -118,6 +122,8 @@ TokenDesc* Lexer::num() {
     }
     string value = input_.substr(start, pos_ - start);
     Lexer::col += value.length();
+    if (state == array)
+        return new TokenDesc(TokenState::digit, value);
     return new TokenDesc(TokenState::num, value);
 }
 
@@ -148,6 +154,9 @@ TokenDesc* Lexer::punc() {
     t = singlePunc(ch);
     pos_++;
     Lexer::col++;
+    // array
+    if(t == TokenState::op_r_squ && state == array)
+        state = normal;
     return new TokenDesc(t, value);
 }
 

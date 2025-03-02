@@ -7,6 +7,7 @@ using namespace std;
 
 int main() {
 
+
     syntax::initSyntaxes();
 
     if (0){
@@ -18,7 +19,7 @@ int main() {
     }
     else{
         syntax::lr::loadTable();
-        token::lex("open_set/45_dijkstra.pas");
+        token::lex("open_set/02_var_defn3.pas");
         //token::printTokens();
         syntax::lr::lrCheck();
     }

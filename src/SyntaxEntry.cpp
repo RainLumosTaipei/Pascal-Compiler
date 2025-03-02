@@ -24,6 +24,7 @@ static Token lhs[] = {
         // parameter
         formal_para,
         formal_para,
+        formal_para,
         para_list,
         para_list,
         para,
@@ -150,6 +151,7 @@ static std::vector<Token> rhs[] = {
         // parameter
         {},
         {p_l_paren,     para_list,   p_r_paren},
+        {p_l_paren, p_r_paren},
         {para},
         {para_list,     p_semicolon, para},
         {var_para},
@@ -159,9 +161,9 @@ static std::vector<Token> rhs[] = {
 
         // const
         {},
-        {key_const,     const_def},
-        {id,            op_equal,    cont,         p_semicolon},
-        {const_def,     id,          op_equal,     cont,     p_semicolon},
+        {key_const,     const_def, p_semicolon},
+        {id,            op_equal,    cont},
+        {const_def,     p_semicolon, id,          op_equal,     cont},
 
         {p_quote,       letter,      p_quote},
         {op_add,        num},
