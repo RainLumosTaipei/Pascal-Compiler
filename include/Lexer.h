@@ -21,6 +21,7 @@ namespace token
         static size_t line;
         static size_t col;
         static LexerState state;
+        static TokenState prev;
         
         Lexer(std::string input):input_(input), pos_(0) {}
         
@@ -30,8 +31,8 @@ namespace token
         std::string input_;
         size_t pos_;
 
-
         void skip();
+        bool skipComment();
 
         TokenDesc* idOrKey();
         TokenDesc* num();

@@ -19,7 +19,7 @@ int main() {
     }
     else{
         syntax::lr::loadTable();
-        token::lex("open_set/02_var_defn3.pas");
+        token::lex("open_set/18_if_test3.pas");
         //token::printTokens();
         syntax::lr::lrCheck();
     }
