@@ -14,12 +14,22 @@ namespace token {
         prog,
         prog_head,
         prog_body,
-        
-        var_body,               // var body
+        sub_prog_def,           // sub program declare
+        sub_prog,               // sub program
+        sub_prog_head,          // sub program head
+        sub_prog_body,          // sub program body
+
+        var_para,
+        value_para,
+        para,
+        para_list,
+        formal_para,
+
         var_def,                // var declare
-        const_body,             // const body
+        var_defs,               // var declares
         const_def,              // const declare
-        
+        const_defs,             // const declares
+
         main,                   // main body
         begin,                  // begin -> key_begin
         stmt,                   // statement
@@ -29,6 +39,8 @@ namespace token {
         sub_exp,                // simple exp
         term,                   // term exp
         factor,                 // factor exp
+        else_part,              // else
+        proc_call,              //
 
         var,                    // var
         var_list,               // var list
@@ -36,7 +48,8 @@ namespace token {
 
         type_base,              // basic type
         type,                   // type
-        ids,                    // id list
+        period,                 // array
+        ids,                    // id list   34
         op_cmp,                 // compare operator
         op_add_sub,             // + -
         op_div_mul,             // * /
@@ -49,38 +62,41 @@ namespace token {
         type_array,             // array
         type_bool,              // boolean
         // value
-        id,                     // identifier
+        id,                     // identifier   43
+        idf,                    // id of function
         num,                    // number
         letter,                 // char
+        digit,                  // array
         // punctuation
         p_l_bracket,            // {
         p_r_bracket,            // }
         p_l_paren,              // (
         p_r_paren,              // )
         p_colon,                // :
-        p_quote,                // '
+        p_quote,                // '  53
         p_comma,                // ,
         p_semicolon,            // ;
         p_dotdot,               // ..
-        p_dot,                  // .
+        p_dot,                  // .  57
         // operator
         op_equal,               // =
         op_add,                 // +
         op_sub,                 // -
         op_mul,                 // *
         op_div,                 // div
-        op_not_equal,           // <>
-        op_l_square,            // [
-        op_r_square,            // ]
-        op_assign,              // :=
+        op_not_equ,             // <>
+        op_l_squ,               // [
+        op_r_squ,               // ]
+        op_assign,              // :=  66
         op_mod,                 // mod
         op_less,                // <
-        op_less_equal,          // <=
+        op_less_equ,            // <=
         op_great,               // >
-        op_great_equal,         // >=
+        op_great_equ,           // >=
         op_and,                 // and
         op_or,                  // or
         op_not,                 // not
+        op_neg,                 // -
         // keyword
         key_for,                // for
         key_if,                 // if
@@ -91,7 +107,7 @@ namespace token {
         key_of,                 // of
         key_const,              // const
         key_var,                // var
-        key_begin,              // begin
+        key_begin,              // begin 85
         key_end,                // end
         key_prog,               // program
         key_proc,               // procedure

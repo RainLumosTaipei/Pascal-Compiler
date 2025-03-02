@@ -1,6 +1,6 @@
 ﻿#include "SyntaxEntry.h"
 
-using namespace std;
+
 using namespace syntax;
 using namespace token;
 
@@ -10,11 +10,30 @@ static Token lhs[] = {
         real_start,
         prog,
         prog_head,
+        prog_head,
         prog_body,
 
+        // sub program
+        sub_prog_def,
+        sub_prog_def,
+        sub_prog,
+        sub_prog_body,
+        sub_prog_head,
+        sub_prog_head,
+
+        // parameter
+        formal_para,
+        formal_para,
+        para_list,
+        para_list,
+        para,
+        para,
+        var_para,
+        value_para,
+
         // const
-        const_body,
-        const_body,
+        const_defs,
+        const_defs,
         const_def,
         const_def,
 
@@ -24,17 +43,20 @@ static Token lhs[] = {
         cont,
 
         // var
-        var_body,
-        var_body,
+        var_defs,
+        var_defs,
         var_def,
         var_def,
 
         // type
         type,
+        type,
         type_base,
         type_base,
         type_base,
         type_base,
+        period,
+        period,
 
         // id
         ids,
@@ -63,7 +85,7 @@ static Token lhs[] = {
 
         // statement
         main,
-        TokenState::begin,
+        begin,
         stmt_list,
         stmt_list,
 
@@ -72,6 +94,16 @@ static Token lhs[] = {
         stmt,
         stmt,
         stmt,
+        stmt,
+        stmt,
+        stmt,
+        stmt,
+
+        proc_call,
+        proc_call,
+
+        else_part,
+        else_part,
 
         // expression
         exp_list,
@@ -98,53 +130,75 @@ static Token lhs[] = {
 
 };
 
-static vector<Token> rhs[] = {
+static std::vector<Token> rhs[] = {
 
         // program
-        {prog,              real_end},
-        {prog_head,         prog_body},
-        {key_prog,          id,          p_semicolon},
-        {const_body,        var_body,    main},
+        {prog,          real_end},
+        {prog_head,     p_semicolon, prog_body,    p_dot},
+        {key_prog,      id},
+        {key_prog,      id,          p_l_paren,    ids,      p_r_paren},
+        {const_defs,    var_defs,    sub_prog_def, main},
+
+        // sub program
+        { },
+        {sub_prog_def,  sub_prog,    p_semicolon},
+        {sub_prog_head, p_semicolon, sub_prog_body},
+        {const_defs,    var_defs,    main},
+        {key_proc,      id,          formal_para},
+        {key_func,      id,          formal_para,  p_colon,  type_base},
+
+        // parameter
+        {},
+        {p_l_paren,     para_list,   p_r_paren},
+        {para},
+        {para_list,     p_semicolon, para},
+        {var_para},
+        {value_para},
+        {key_var,       value_para},
+        {ids,           p_colon,     type_base},
 
         // const
         {},
-        {key_const,         const_def},
-        {id,                op_equal,    cont,     p_semicolon},
-        {const_def,         id,          op_equal, cont, p_semicolon},
+        {key_const,     const_def},
+        {id,            op_equal,    cont,         p_semicolon},
+        {const_def,     id,          op_equal,     cont,     p_semicolon},
 
-        {p_quote,           letter,      p_quote},
-        {op_add,            num},
-        {op_sub,            num},
+        {p_quote,       letter,      p_quote},
+        {op_add,        num},
+        {op_sub,        num},
         {num},
 
         // var
         {},
-        {key_var,           var_def},
-        {ids,               p_colon,     type,     p_semicolon},
-        {var_def,           ids,         p_colon,  type, p_semicolon},
+        {key_var,       var_def,     p_semicolon},
+        {ids,           p_colon,     type},
+        {var_def,       p_semicolon, ids,          p_colon,  type},
 
         // type
         {type_base},
+        {type_array,    op_l_squ,    period,       op_r_squ, key_of, type_base},
         {type_int},
         {type_real},
         {type_char},
         {type_bool},
+        {digit,         p_dotdot,    digit},
+        {period,        p_comma,     digit,        p_dotdot, digit},
 
         // id
         {id},
-        {ids,               p_comma,     id},
+        {ids,           p_comma,     id},
         {id},
-        {id,                op_l_square, exp_list, op_r_square},
+        {id,            op_l_squ,    exp_list,     op_r_squ},
         {var},
-        {var_list,          p_comma,     var},
+        {var_list,      p_comma,     var},
 
         // op
         {op_great},
         {op_less},
         {op_equal},
-        {op_great_equal},
-        {op_less_equal},
-        {op_not_equal},
+        {op_great_equ},
+        {op_less_equ},
+        {op_not_equ},
 
         {op_add},
         {op_sub},
@@ -156,45 +210,54 @@ static vector<Token> rhs[] = {
         {op_and},
 
         // statement
-        {TokenState::begin, stmt_list,   key_end,  p_dot},
+        {begin,         stmt_list,   key_end},
         {key_begin},
         {stmt},
-        {stmt_list,         p_semicolon, stmt},
+        {stmt_list,     p_semicolon, stmt},
 
         {},
         {main},
-        {var,               op_assign,   exp},
-        {key_read,          p_l_paren,   var_list, p_r_paren},
-        {key_write,         p_l_paren,   exp_list, p_r_paren},
+        {proc_call},
+        {var,           op_assign,   exp},
+        {idf,           op_assign,   exp},
+        {key_read,      p_l_paren,   var_list,     p_r_paren},
+        {key_write,     p_l_paren,   exp_list,     p_r_paren},
+        {key_for,       id,          op_assign,    exp,      key_to, exp, key_do, stmt},
+        {key_if,        exp,         key_then,     stmt,     else_part},
 
+        {id},
+        {id,            p_l_paren,   exp_list,     p_r_paren},
+
+        {},
+        {key_else,      stmt},
 
         // exp
         {exp},
-        {exp_list,          p_comma,     exp},
+        {exp_list,      p_comma,     exp},
 
         {sub_exp},
-        {sub_exp,           op_cmp,      sub_exp},
+        {sub_exp,       op_cmp,      sub_exp},
 
         // sub_exp
         {term},
-        {sub_exp,           op_add_sub,  term},
+        {sub_exp,       op_add_sub,  term},
 
         // term
         {factor},
-        {term,              op_div_mul,  factor},
+        {term,          op_div_mul,  factor},
 
         // factor
         {num},
         {var},
-        {p_l_paren,         exp,         p_r_paren},
-        {id,                p_l_paren,   exp_list, p_r_paren},
+        {p_l_paren,     exp,         p_r_paren},
+        {id,            p_l_paren,   exp_list,     p_r_paren},
 
-        {op_not,            factor},
-        {op_sub,            factor},
+        {op_not,        factor},
+        {op_neg,        factor},
 
 };
 
-static_assert(sizeof(lhs) / sizeof(Token) == sizeof(rhs) / sizeof(vector<Token>));
+static_assert(sizeof(lhs) / sizeof(Token) == sizeof(rhs) / sizeof(std::vector<Token>));
 
 const int entryCount = sizeof(lhs) / sizeof(Token);
 

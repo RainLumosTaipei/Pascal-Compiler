@@ -9,11 +9,22 @@ std::string token::tokenNames[] = {
     "prog",
     "prog_head",
     "prog_body",
-    
-    "var_body",
+
+    "sub_prog_def",            // sub program declare
+    "sub_prog",                // sub program
+    "sub_prog_head",           // sub program head
+    "sub_prog_body",
+
+    "var_para",
+    "value_para",
+    "para",
+    "para_list",
+    "formal_para",
+
     "var_def",
-    "const_body",
+    "var_defs",
     "const_def",
+    "const_defs",
     "main",
     "begin",
     "stmt",
@@ -24,6 +35,8 @@ std::string token::tokenNames[] = {
     "sub_exp",
     "term",
     "factor",
+    "else-part",
+    "proc-call",
     
     "var",
     "var_list",
@@ -31,24 +44,26 @@ std::string token::tokenNames[] = {
     
     "type_base",
     "type",
-    
+    "period",
     "ids",
     "op_cmp",
     "op_add_sub",
     "op_div_mul",
 
     // terminal
-    
+    // type
     "int",
     "real",
     "char",
     "array",
     "boolean",
-    
+    // value
     "id",
+    "idf",
     "number",
     "str",
-    
+    "digit",
+
     "{",
     "}",
     "(",
@@ -77,6 +92,7 @@ std::string token::tokenNames[] = {
     "and",
     "or",
     "not",
+    "neg",
     
     "for",
     "if",
