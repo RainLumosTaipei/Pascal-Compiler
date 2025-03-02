@@ -17,8 +17,8 @@ static const CharMap puncMap = {
         {':', TokenState::p_colon},
         {';', TokenState::p_semicolon},
         {'.', TokenState::p_dot},
-        {'[', TokenState::op_l_square},
-        {']', TokenState::op_r_square},
+        {'[', TokenState::op_l_squ},
+        {']', TokenState::op_r_squ},
         {'<', TokenState::op_less},
         {'>', TokenState::op_great},
         {'+', TokenState::op_add},
@@ -153,11 +153,11 @@ TokenDesc* Lexer::punc() {
 
 TokenState Lexer::doublePunc(const std::string& value) {
     if (value == "<>") {
-        return TokenState::op_not_equal;
+        return TokenState::op_not_equ;
     } else if (value == "<=") {
-        return TokenState::op_less_equal;
+        return TokenState::op_less_equ;
     } else if (value == ">=") {
-        return TokenState::op_great_equal;
+        return TokenState::op_great_equ;
     } else if (value == ":=") {
         return TokenState::op_assign;
     } else if (value == "..") {
