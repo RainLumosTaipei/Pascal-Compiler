@@ -199,7 +199,7 @@ void syntax::ll::printFirst()
         auto& entry = getFirstArray()[i];
         if (entry.canNull) cout << "* ";
         else cout << "  ";
-        cout << left << setw(10) << NonTermToken(i)  << " -> ";
+        cout << left << setw(15) << NonTermToken(i)  << " -> ";
         for( auto& t: entry.set)
         {
             cout << t.token << " ";
@@ -215,7 +215,7 @@ void syntax::ll::printFollow()
     printLine();
     for (size_t i = 0; i < nonTerminalCount; ++i)
     {
-        cout << left << setw(10) << NonTermToken(i)  << " -> ";
+        cout << left << setw(15) << NonTermToken(i)  << " -> ";
         for( auto& t: getFollowArray()[i].set)
         {
             cout << t.token << " ";

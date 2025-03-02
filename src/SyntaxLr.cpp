@@ -31,7 +31,7 @@ static inline void printTime(){
     auto now = std::chrono::system_clock::now();
     time_t currentTime = chrono::system_clock::to_time_t(now);
     tm* localTime = localtime(&currentTime);
-    cout << put_time(localTime, "%H:%M:%S");
+    cout << put_time(localTime, "[%H:%M:%S]");
 }
 
 static void searchEntry(EntrySet& entries) {
@@ -152,8 +152,9 @@ static void searchStates()
             {
                 printTime();
                 cout << " No." << left << setw(2) << ++times
-                     << " : add new " << right << setw(3) << count
-                     << ", now total " << post << '\n';
+                     << " new " << left << setw(20) << string(count/50 + 1, '=')
+                     << left << setw(3) << count
+                     << "  |  total " << left << setw(20) << string(post/500 + 1, '=') << post << '\n';
             }
 
         }
@@ -202,6 +203,8 @@ static void fillLrTable()
                 if (entry.dot >= pentry->r.size()) {
                     // 只执行一次
                     if(0 != nextToken) continue;
+
+                    // TODO: 移进规约冲突可能需要手动解决
                     // 存在 shift 冲突直接跳过
                     auto tableI = table.find(state.id);
                     if (tableI != table.end() && tableI->second.find(entry.look) != tableI->second.end()) {
@@ -215,8 +218,7 @@ static void fillLrTable()
                 // 下一个token正确, 拷贝加入新生成式
                 if (nextToken == (int)entry.syn->r[entry.dot]) {
                     auto e(entry);
-                    ++e;
-                    newEntry.insert(e);
+                    newEntry.insert(++e);
                 }
             }
             if (!newEntry.empty()) {
@@ -257,11 +259,34 @@ void syntax::lr::initLr() {
     fillLrTable();
 }
 
-
-
-
 static stack<LrStateId> stateStack;
-static stack<TokenDesc*> waitTokens;
+static deque<TokenDesc*> waitTokens;
+
+static void printDeque(deque<TokenDesc*>& deq, int dir){
+    size_t times = 0;
+    if (1 == dir){
+        for (auto & it : deq) {
+            cout << it->token << " ";
+            if(++times >= 8) break;
+        }
+        return;
+    }
+    vector<TokenDesc*> waitArray;
+    for (auto it = deq.rbegin(); it != deq.rend(); ++it) {
+        waitArray.push_back(*it);
+        if(++times >= 8) break;
+    }
+    for (auto it = waitArray.rbegin(); it != waitArray.rend(); ++it) {
+        cout << (*it)->token << " ";
+    }
+}
+
+static void check(){
+    printDeque(waitTokens, 0);
+    cout << "  <=====>  ";
+    printDeque(getTokens(), 1);
+    cout << "\n\n";
+}
 
 static void printError(){
     auto& tokens = getTokens();
@@ -270,13 +295,7 @@ static void printError(){
          << "possible token is wrong " + t->value
          << " at line " << t->line
          << ", col " << t->col
-         << '\n'
-         << "waiting tokens : ";
-    while (!tokens.empty()){
-        cout << tokens.front()->value << " ";
-        tokens.pop_front();
-    }
-    cout << '\n';
+         << '\n';
 }
 
 void syntax::lr::lrCheck(){
@@ -291,7 +310,8 @@ void syntax::lr::lrCheck(){
     // 开始进行分析
     while (!stateStack.empty()) {
 
-        if(times > 200) goto end;
+        //if(times > 200) goto end;
+        check();
 
         int curToken = tokens.front()->token;
         LrStateId curState = stateStack.top();
@@ -325,7 +345,7 @@ void syntax::lr::lrCheck(){
                 //callSymbol(inputStack.front());
 
                 // 移进 token
-                waitTokens.push(tokens.front());
+                waitTokens.push_back(tokens.front());
                 tokens.pop_front();
                 // 压入新的状态
                 stateStack.push(option.id);
@@ -333,19 +353,21 @@ void syntax::lr::lrCheck(){
 
             // reduce
             case LrOption::reduce:
-                cout << "No." << left << setw(3) << ++times << " reduce " << option.id << '\n';
+                auto& entry = getSyntaxes()[option.id];
+
+                cout << "No." << left << setw(3) << ++times << " reduce " << option.id << " ["
+                     << entry << "]\n";
 
                 // 规约操作
                 //callReduce(option->id);
 
-                auto& entry = getSyntaxes()[option.id];
                 // 弹出符号和状态
                 for (size_t i = 0; i < entry.r.size(); ++i) {
-                    waitTokens.pop();
+                    waitTokens.pop_back();
                     stateStack.pop();
                 }
                 // 压入规约符号
-                waitTokens.push(new TokenDesc(entry.l));
+                waitTokens.push_back(new TokenDesc(entry.l));
                 // goto 跳转状态
                 auto s = stateStack.top();
                 if (table.find(s) != table.end() &&
@@ -362,6 +384,6 @@ void syntax::lr::lrCheck(){
     cout << "Finished" << endl;
     tokens.clear();
 
-    while (!waitTokens.empty()) waitTokens.pop();
+    while (!waitTokens.empty()) waitTokens.pop_back();
     while (!stateStack.empty()) stateStack.pop();
 }
