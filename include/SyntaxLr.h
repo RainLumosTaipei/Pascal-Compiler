@@ -5,6 +5,7 @@
 
 #include "SyntaxEntry.h"
 #include "Lexer.h"
+#include "SyntaxLl.h"
 
 namespace syntax::lr
 {

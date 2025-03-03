@@ -208,13 +208,14 @@ static void fillLrTable()
                     // 只执行一次
                     if(0 != nextToken) continue;
 
-                    // TODO: 移进规约冲突可能需要手动解决
-                    // 存在 shift 冲突直接跳过
-                    auto tableI = table.find(state.id);
-                    if (tableI != table.end() && tableI->second.find(entry.look) != tableI->second.end()) {
-                        continue;
+                    // null 不应在可以从 first 推导的产生式中规约
+                    if(entry.syn->r.empty()){
+                        auto& first = getFirstArray()[entry.syn->l];
+                        if(first.find(entry.look)) continue;
                     }
 
+                    // TODO: 移进规约冲突可能需要手动解决
+                    // 存在 shift 冲突则插入失败
                     table[state.id].emplace(entry.look, LrHashEntry(LrOption::reduce, pentry->id));
                     continue;
                 }
@@ -230,9 +231,9 @@ static void fillLrTable()
                 size_t id = findState(newEntry);
                 // shift && goto
                 if (Token(nextToken).isTerminal()) 
-                    table[state.id].emplace(nextToken, LrHashEntry(LrOption::shift, id));
+                    table[state.id][nextToken] = LrHashEntry(LrOption::shift, id);
                 else
-                    table[state.id].emplace(nextToken, LrHashEntry(LrOption::go, id));
+                    table[state.id][nextToken] = LrHashEntry(LrOption::go, id);
             }
         }
         // accept
@@ -240,7 +241,7 @@ static void fillLrTable()
         {
             for (auto &entry: state.entries)
                 if (TokenState::null == entry.look)
-                    table[state.id].emplace(TokenState::real_end, LrHashEntry(LrOption::accept, 0));
+                    table[state.id][TokenState::real_end] = LrHashEntry(LrOption::accept, 0);
         }
             
     }
@@ -271,14 +272,14 @@ static void printDeque(deque<TokenDesc*>& deq, int dir){
     if (1 == dir){
         for (auto & it : deq) {
             cout << it->token << " ";
-            if(++times >= 8) break;
+            if(++times >= 12) break;
         }
         return;
     }
     vector<TokenDesc*> waitArray;
     for (auto it = deq.rbegin(); it != deq.rend(); ++it) {
         waitArray.push_back(*it);
-        if(++times >= 8) break;
+        if(++times >= 12) break;
     }
     for (auto it = waitArray.rbegin(); it != waitArray.rend(); ++it) {
         cout << (*it)->token << " ";
@@ -302,6 +303,14 @@ static void printError(){
          << '\n';
 }
 
+static void tableCheck(LrStateId id){
+    auto& e = getLrTable()[id];
+    for(auto& it : e){
+        cout << tokenNames[it.first] << " " << it.second.op << endl;
+    }
+    cout << endl;
+}
+
 void syntax::lr::lrCheck(){
 
     auto& table = getLrTable();
@@ -309,12 +318,13 @@ void syntax::lr::lrCheck(){
     bool isAccept = false;
     size_t times = 0;
 
+
     // 初始 lr 状态
     stateStack.push(0);
     // 开始进行分析
     while (!stateStack.empty()) {
 
-        if(times > 200) goto end;
+        //if(times > 200) goto end;
         check();
 
         int curToken = tokens.front()->token;

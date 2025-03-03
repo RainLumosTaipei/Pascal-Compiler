@@ -17,6 +17,14 @@ inline FirstArray& syntax::ll::getFollowArray(){
     return followArray;
 }
 
+bool syntax::ll::FirstEntry::find(token::Token t){
+    for (auto& first: set) {
+        if( t == first.token)
+            return true;
+    }
+    return false;
+}
+
 void syntax::ll::searchNull()
 {
     auto& firstArray = getFirstArray();

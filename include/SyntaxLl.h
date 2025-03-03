@@ -29,6 +29,8 @@ namespace syntax::ll
         FirstEntry() : canNull(false) {}
 
         size_t merge(const FirstEntry& entry);
+
+        bool find(token::Token t);
     };
 
     struct FollowEntry
