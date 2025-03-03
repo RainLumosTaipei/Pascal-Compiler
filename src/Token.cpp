@@ -28,6 +28,7 @@ std::string token::tokenNames[] = {
     "main",
     "begin",
     "stmt",
+    "stmt_base",
     "stmt_list",
     
     "exp_list",
@@ -69,7 +70,6 @@ std::string token::tokenNames[] = {
     "(",
     ")",
     ":",
-    "'",
     ",",
     ";",
     "..",
@@ -93,7 +93,8 @@ std::string token::tokenNames[] = {
     "or",
     "not",
     "neg",
-    
+    "pos",
+
     "for",
     "while",
     "if",

@@ -33,6 +33,7 @@ namespace token {
         main,                   // main body
         begin,                  // begin -> key_begin
         stmt,                   // statement
+        stmt_base,              // nom null
         stmt_list,              // statement list
         exp_list,               // expression list
         exp,                    // expression
@@ -73,7 +74,6 @@ namespace token {
         p_l_paren,              // (
         p_r_paren,              // )
         p_colon,                // :
-        p_quote,                // '
         p_comma,                // ,
         p_semicolon,            // ;
         p_dotdot,               // ..
@@ -97,6 +97,7 @@ namespace token {
         op_or,                  // or
         op_not,                 // not
         op_neg,                 // -
+        op_pos,                 // +
         // keyword
         key_for,                // for
         key_while,              // while

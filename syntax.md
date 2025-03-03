@@ -20,30 +20,29 @@ const_defs -> const const_def ;
 
 const_def -> id = const
 
-const_def -> const_def ; id = const
+const_def -> const_def ; id = const 
 
-const -> 'char'
+const -> char
 
-const -> + num
+const -> op_pos num
 
-const -> - num
+const -> op_neg num
 
 const -> num
-
 
 ## sub program
 
 sub_prog_def -> null
 
-sub_prog_def -> sub_prog_def sub_prog ;
+sub_prog_def -> sub_prog ; sub_prog_def
 
 sub_prog -> sub_prog_head ; sub_prog_body
 
 sub_prog_body -> const_defs var_defs main
 
-sub_prog_head -> key_proc id formal_para
+sub_prog_head -> key_proc idf formal_para
 
-sub_prog_head -> key_func id formal_para : type_base
+sub_prog_head -> key_func idf formal_para : type_base
 
 ## parameter
 
@@ -55,7 +54,7 @@ formal_para -> ( )
 
 para_list -> para
 
-para_list -> para_list ; para
+para_list -> para ; para_list
 
 para -> var_para
 
@@ -64,8 +63,6 @@ para -> value_para
 var_para -> key_var value_para
 
 value_para -> ids : type_base
-
-
 
 ## var
 
@@ -93,14 +90,13 @@ type_base -> boolean
 
 period -> digit .. digit
 
-period -> period , digit .. digit
-
+period -> digit .. digit , period 
 
 ## id
 
 ids -> id
 
-ids -> ids , id
+ids -> id , ids
 
 var -> id
 
@@ -108,7 +104,7 @@ var -> id [ exp_list ]
 
 var_list -> var
 
-var_list -> var_list , var
+var_list -> var , var_list
 
 ## op
 
@@ -138,7 +134,6 @@ op_div_mul -> mod
 
 op_div_mul -> and
 
-
 ## statement
 
 main -> begin stmt_list end
@@ -147,35 +142,41 @@ begin -> key_begin
 
 stmt_list -> stmt 
 
-stmt_list -> stmt_list ; stmt 
+stmt_list -> stmt_list  ; stmt
 
 stmt -> null
 
-stmt -> main
+stmt -> stmt_base
 
-stmt -> proc_call
 
-stmt -> var := exp 
 
-stmt -> idf := exp 
+stmt_base -> main
 
-stmt -> read ( var_list )
+stmt_base -> proc_call
 
-stmt -> write ( exp_list )
+stmt_base -> var := exp 
 
-stmt -> for id := exp to exp do stmt
+stmt_base -> idf := exp 
 
-stmt -> while do stmt //////////////
+stmt_base -> read ( var_list )
 
-stmt -> if exp then stmt else_part
+stmt_base -> write ( exp_list )
 
-proc_call -> id
+stmt_base -> for id := exp to exp do stmt_base
 
-proc_call -> id ( exp_list )
+stmt_base -> while exp do stmt_base
+
+stmt_base -> if exp then stmt else_part
+
+proc_call -> idf
+
+proc_call -> idf ( exp_list )
+
+proc_call -> idf (  )
 
 else_part -> null
 
-else_part -> else stmt
+else_part -> else stmt_base
 
 ## exp
 
@@ -185,20 +186,25 @@ exp_list -> exp_list , exp
 
 exp -> sub_exp
 
-exp -> sub_exp op_cmp sub_exp
+exp -> exp op_cmp sub_exp
+
 
 
 ## sub_exp
 
 sub_exp -> term
 
-sub_exp -> sub_exp op_add_sub term 
+sub_exp -> sub_exp op_add_sub term
+
+
 
 ## term
 
 term -> factor
 
 term -> term op_div_mul factor
+
+
 
 ## factor
 
@@ -208,9 +214,15 @@ factor -> var
 
 factor -> ( exp )
 
-factor -> id ( exp_list )
+factor -> idf ( exp_list )
+
+factor -> idf (  )
+
+factor -> idf
 
 factor -> not factor
 
 factor -> op_neg factor
+
+factor -> op_pos factor
 
