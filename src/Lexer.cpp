@@ -40,10 +40,16 @@ static const std::set<TokenState> opMap = {
         op_mul,
         op_div,
         op_equal,
+        op_not_equ,
         op_assign,
         op_great_equ,
-        op_less_equ
+        op_less_equ,
+        p_l_paren,
+        op_neg,
+        op_pos
 };
+
+static std::set<std::string> idfMap;
 
 static const StrMap keyMap = {
         {"for", TokenState::key_for},
@@ -155,6 +161,12 @@ TokenState Lexer::key(const std::string& value) {
         Lexer::prev = it->second;
         return it->second;
     }
+    if(Lexer::prev == key_func || Lexer::prev == key_proc)
+        idfMap.insert(value);
+    if(idfMap.count(value)){
+        Lexer::prev = idf;
+        return TokenState::idf;
+    }
     Lexer::prev = id;
     return TokenState::id;
 }
@@ -163,10 +175,19 @@ TokenState Lexer::key(const std::string& value) {
 TokenDesc* Lexer::num() {
     size_t start = pos_;
     while (pos_ < input_.size() && isdigit(input_[pos_])) {
-        pos_++;
+        ++pos_;
+    }
+    // real 10.23
+    if(state != array && input_[pos_] == '.'){
+        ++pos_;
+        while (pos_ < input_.size() && isdigit(input_[pos_])) {
+            ++pos_;
+        }
     }
     string value = input_.substr(start, pos_ - start);
     Lexer::col += value.length();
+
+    // array 需要使用 digit
     if (state == array){
         Lexer::prev = TokenState::digit;
         return new TokenDesc(TokenState::digit, value);
@@ -209,8 +230,11 @@ TokenDesc* Lexer::punc() {
     if(t == TokenState::op_r_squ && state == array)
         state = normal;
     // negative
-    if( t == TokenState::op_sub && opMap.count(t))
+    if( t == TokenState::op_sub && opMap.count(Lexer::prev))
         t = op_neg;
+    // positive
+    if( t == TokenState::op_add && opMap.count(Lexer::prev))
+        t = op_pos;
     Lexer::prev = t;
     return new TokenDesc(t, value);
 }
@@ -239,7 +263,6 @@ TokenState Lexer::doublePunc(const std::string& value) {
 TokenState Lexer::singlePunc(char value) {
     auto it = puncMap.find(value);
     if (it != puncMap.end()) {
-        Lexer::prev = it->second;
         return it->second;
     }
     return TokenState::null;
