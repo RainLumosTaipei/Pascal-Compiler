@@ -171,7 +171,7 @@ TokenState Lexer::key(const std::string& value) {
     return TokenState::id;
 }
 
-// TODO: consider real number
+
 TokenDesc* Lexer::num() {
     size_t start = pos_;
     while (pos_ < input_.size() && isdigit(input_[pos_])) {
