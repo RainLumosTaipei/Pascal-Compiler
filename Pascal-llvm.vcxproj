@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>17.0</VCProjectVersion>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectGuid>{0e241e1b-8cc8-45c8-b320-5fbba5102d91}</ProjectGuid>
+    <RootNamespace>Pascalllvm</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ExecutablePath>$(ExecutablePath)</ExecutablePath>
+    <IncludePath>$(ProjectDir)include;D:/llvm/build_release/include;D:/llvm/llvm/include;$(IncludePath)</IncludePath>
+    <LibraryPath>D:/llvm/build_release/Release/lib;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>false</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>D:/llvm/build_release/Release/lib/LLVMWindowsManifest.lib;D:/llvm/build_release/Release/lib/LLVMXRay.lib;D:/llvm/build_release/Release/lib/LLVMLibDriver.lib;D:/llvm/build_release/Release/lib/LLVMDlltoolDriver.lib;D:/llvm/build_release/Release/lib/LLVMTelemetry.lib;D:/llvm/build_release/Release/lib/LLVMTextAPIBinaryReader.lib;D:/llvm/build_release/Release/lib/LLVMCoverage.lib;D:/llvm/build_release/Release/lib/LLVMLineEditor.lib;D:/llvm/build_release/Release/lib/LLVMX86TargetMCA.lib;D:/llvm/build_release/Release/lib/LLVMX86Disassembler.lib;D:/llvm/build_release/Release/lib/LLVMX86AsmParser.lib;D:/llvm/build_release/Release/lib/LLVMX86CodeGen.lib;D:/llvm/build_release/Release/lib/LLVMX86Desc.lib;D:/llvm/build_release/Release/lib/LLVMX86Info.lib;D:/llvm/build_release/Release/lib/LLVMOrcDebugging.lib;D:/llvm/build_release/Release/lib/LLVMOrcJIT.lib;D:/llvm/build_release/Release/lib/LLVMWindowsDriver.lib;D:/llvm/build_release/Release/lib/LLVMMCJIT.lib;D:/llvm/build_release/Release/lib/LLVMJITLink.lib;D:/llvm/build_release/Release/lib/LLVMInterpreter.lib;D:/llvm/build_release/Release/lib/LLVMExecutionEngine.lib;D:/llvm/build_release/Release/lib/LLVMRuntimeDyld.lib;D:/llvm/build_release/Release/lib/LLVMOrcTargetProcess.lib;D:/llvm/build_release/Release/lib/LLVMOrcShared.lib;D:/llvm/build_release/Release/lib/LLVMDWP.lib;D:/llvm/build_release/Release/lib/LLVMDebugInfoLogicalView.lib;D:/llvm/build_release/Release/lib/LLVMDebugInfoGSYM.lib;D:/llvm/build_release/Release/lib/LLVMOption.lib;D:/llvm/build_release/Release/lib/LLVMObjCopy.lib;D:/llvm/build_release/Release/lib/LLVMMCA.lib;D:/llvm/build_release/Release/lib/LLVMMCDisassembler.lib;D:/llvm/build_release/Release/lib/LLVMLTO.lib;D:/llvm/build_release/Release/lib/LLVMPasses.lib;D:/llvm/build_release/Release/lib/LLVMHipStdPar.lib;D:/llvm/build_release/Release/lib/LLVMCFGuard.lib;D:/llvm/build_release/Release/lib/LLVMCoroutines.lib;D:/llvm/build_release/Release/lib/LLVMipo.lib;D:/llvm/build_release/Release/lib/LLVMVectorize.lib;D:/llvm/build_release/Release/lib/LLVMSandboxIR.lib;D:/llvm/build_release/Release/lib/LLVMLinker.lib;D:/llvm/build_release/Release/lib/LLVMInstrumentation.lib;D:/llvm/build_release/Release/lib/LLVMFrontendOpenMP.lib;D:/llvm/build_release/Release/lib/LLVMFrontendOffloading.lib;D:/llvm/build_release/Release/lib/LLVMObjectYAML.lib;D:/llvm/build_release/Release/lib/LLVMFrontendOpenACC.lib;D:/llvm/build_release/Release/lib/LLVMFrontendHLSL.lib;D:/llvm/build_release/Release/lib/LLVMFrontendDriver.lib;D:/llvm/build_release/Release/lib/LLVMFrontendAtomic.lib;D:/llvm/build_release/Release/lib/LLVMExtensions.lib;D:/llvm/build_release/Release/lib/LLVMDWARFLinkerParallel.lib;D:/llvm/build_release/Release/lib/LLVMDWARFLinkerClassic.lib;D:/llvm/build_release/Release/lib/LLVMDWARFLinker.lib;D:/llvm/build_release/Release/lib/LLVMGlobalISel.lib;D:/llvm/build_release/Release/lib/LLVMMIRParser.lib;D:/llvm/build_release/Release/lib/LLVMAsmPrinter.lib;D:/llvm/build_release/Release/lib/LLVMSelectionDAG.lib;D:/llvm/build_release/Release/lib/LLVMCodeGen.lib;D:/llvm/build_release/Release/lib/LLVMTarget.lib;D:/llvm/build_release/Release/lib/LLVMObjCARCOpts.lib;D:/llvm/build_release/Release/lib/LLVMCodeGenTypes.lib;D:/llvm/build_release/Release/lib/LLVMCGData.lib;D:/llvm/build_release/Release/lib/LLVMIRPrinter.lib;D:/llvm/build_release/Release/lib/LLVMInterfaceStub.lib;D:/llvm/build_release/Release/lib/LLVMFileCheck.lib;D:/llvm/build_release/Release/lib/LLVMFuzzMutate.lib;D:/llvm/build_release/Release/lib/LLVMScalarOpts.lib;D:/llvm/build_release/Release/lib/LLVMInstCombine.lib;D:/llvm/build_release/Release/lib/LLVMAggressiveInstCombine.lib;D:/llvm/build_release/Release/lib/LLVMTransformUtils.lib;D:/llvm/build_release/Release/lib/LLVMBitWriter.lib;D:/llvm/build_release/Release/lib/LLVMAnalysis.lib;D:/llvm/build_release/Release/lib/LLVMProfileData.lib;D:/llvm/build_release/Release/lib/LLVMSymbolize.lib;D:/llvm/build_release/Release/lib/LLVMDebugInfoBTF.lib;D:/llvm/build_release/Release/lib/LLVMDebugInfoPDB.lib;D:/llvm/build_release/Release/lib/LLVMDebugInfoMSF.lib;D:/llvm/build_release/Release/lib/LLVMDebugInfoCodeView.lib;D:/llvm/build_release/Release/lib/LLVMDebugInfoDWARF.lib;D:/llvm/build_release/Release/lib/LLVMObject.lib;D:/llvm/build_release/Release/lib/LLVMTextAPI.lib;D:/llvm/build_release/Release/lib/LLVMMCParser.lib;D:/llvm/build_release/Release/lib/LLVMIRReader.lib;D:/llvm/build_release/Release/lib/LLVMAsmParser.lib;D:/llvm/build_release/Release/lib/LLVMMC.lib;D:/llvm/build_release/Release/lib/LLVMBitReader.lib;D:/llvm/build_release/Release/lib/LLVMFuzzerCLI.lib;D:/llvm/build_release/Release/lib/LLVMCore.lib;D:/llvm/build_release/Release/lib/LLVMRemarks.lib;D:/llvm/build_release/Release/lib/LLVMBitstreamReader.lib;D:/llvm/build_release/Release/lib/LLVMBinaryFormat.lib;D:/llvm/build_release/Release/lib/LLVMTargetParser.lib;D:/llvm/build_release/Release/lib/LLVMTableGen.lib;D:/llvm/build_release/Release/lib/LLVMSupport.lib;D:/llvm/build_release/Release/lib/LLVMDemangle.lib;psapi.lib;shell32.lib;ole32.lib;uuid.lib;advapi32.lib;ws2_32.lib;ntdll.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="src\lex\Lex.cpp" />
+    <ClCompile Include="src\lex\Lexer.cpp" />
+    <ClCompile Include="src\lex\Token.cpp" />
+    <ClCompile Include="src\semantic\Ast.cpp" />
+    <ClCompile Include="src\semantic\Reduce.cpp" />
+    <ClCompile Include="src\semantic\VarDef.cpp" />
+    <ClCompile Include="src\syntax\Serialize.cpp" />
+    <ClCompile Include="src\syntax\SyntaxCheck.cpp" />
+    <ClCompile Include="src\syntax\SyntaxEntry.cpp" />
+    <ClCompile Include="src\syntax\SyntaxLl.cpp" />
+    <ClCompile Include="src\syntax\SyntaxLr.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\lex\Lexer.h" />
+    <ClInclude Include="include\lex\Token.h" />
+    <ClInclude Include="include\semantic\Ast.h" />
+    <ClInclude Include="include\semantic\Reduce.h" />
+    <ClInclude Include="include\semantic\VarDef.h" />
+    <ClInclude Include="include\syntax\Serialize.h" />
+    <ClInclude Include="include\syntax\SyntaxCheck.h" />
+    <ClInclude Include="include\syntax\SyntaxEntry.h" />
+    <ClInclude Include="include\syntax\SyntaxLl.h" />
+    <ClInclude Include="include\syntax\SyntaxLr.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
