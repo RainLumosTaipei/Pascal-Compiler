@@ -5,7 +5,6 @@
 
 using namespace std;
 
-
 static void init()
 {
     syntax::ll::initFirst();

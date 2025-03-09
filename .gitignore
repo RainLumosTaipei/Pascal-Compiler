@@ -5,3 +5,5 @@ cmake-build-release/
 Pascal-llvm/
 x64/
 ref.cpp
+Pascal-llvm.vcxproj.filters
+Pascal-llvm.vcxproj.user
