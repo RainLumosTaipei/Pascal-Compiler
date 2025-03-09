@@ -70,9 +70,14 @@ var_defs -> null
 
 var_defs -> var var_def ;
 
-var_def -> ids : type 
+var_def -> var_with_type
 
-var_def -> var_def ; ids : type 
+var_def -> var_def ; var_with_type
+
+var_with_type -> id : type
+
+var_with_type -> id , var_with_type
+
 
 ## type
 
