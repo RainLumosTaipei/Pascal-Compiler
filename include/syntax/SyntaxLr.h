@@ -4,7 +4,8 @@
 #include <unordered_map>
 
 #include "SyntaxEntry.h"
-#include "Lexer.h"
+#include "lex/Lexer.h"
+
 
 namespace syntax::lr
 {
@@ -89,6 +90,8 @@ namespace syntax::lr
     LrTable& getLrTable();
 
     void initLr();
-    void lrCheck();
     
+    void saveTable();
+    void loadTable();
+
 }

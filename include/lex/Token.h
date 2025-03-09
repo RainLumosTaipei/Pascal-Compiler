@@ -3,6 +3,8 @@
 #include <string>
 #include <iostream>
 
+
+
 namespace token {
 
     enum TokenState {
@@ -14,27 +16,47 @@ namespace token {
         prog,
         prog_head,
         prog_body,
-        
-        var_body,               // var body
+        sub_prog_def,           // sub program declare
+        sub_prog,               // sub program
+        sub_prog_head,          // sub program head
+        sub_prog_body,          // sub program body
+
+        var_para,
+        value_para,
+        para,
+        para_list,
+        formal_para,
+
         var_def,                // var declare
-        const_body,             // const body
+        var_defs,               // var declares
+        var_with_type,          
         const_def,              // const declare
-        
+        const_defs,             // const declares
+
         main,                   // main body
         begin,                  // begin -> key_begin
         stmt,                   // statement
+        stmt_base,              // nom null
         stmt_list,              // statement list
+        exp_list,               // expression list
         exp,                    // expression
-        subexp,                 // simple exp
+        sub_exp,                // simple exp
         term,                   // term exp
         factor,                 // factor exp
+        else_part,              // else
+        proc_call,              //
 
-        variable,               // variable
+        var,                    // var
+        var_list,               // var list
         cont,                   // const
 
         type_base,              // basic type
         type,                   // type
+        period,                 // array
         ids,                    // id list
+        op_cmp,                 // compare operator
+        op_add_sub,             // + -
+        op_div_mul,             // * /
 
         // terminal
         // type
@@ -45,16 +67,16 @@ namespace token {
         type_bool,              // boolean
         // value
         id,                     // identifier
-        integer,                // int num
-        real,                   // float num
-        character,              // char
+        idf,                    // id of function
+        num,                    // number
+        letter,                 // char
+        digit,                  // array
         // punctuation
         p_l_bracket,            // {
         p_r_bracket,            // }
         p_l_paren,              // (
         p_r_paren,              // )
         p_colon,                // :
-        p_quote,                // '
         p_comma,                // ,
         p_semicolon,            // ;
         p_dotdot,               // ..
@@ -62,23 +84,26 @@ namespace token {
         // operator
         op_equal,               // =
         op_add,                 // +
-        op_minus,               // -
+        op_sub,                 // -
         op_mul,                 // *
         op_div,                 // div
-        op_not_equal,           // <>
-        op_l_square,            // [
-        op_r_square,            // ]
+        op_not_equ,             // <>
+        op_l_squ,               // [
+        op_r_squ,               // ]
         op_assign,              // :=
         op_mod,                 // mod
         op_less,                // <
-        op_less_equal,          // <=
+        op_less_equ,            // <=
         op_great,               // >
-        op_great_equal,         // >=
+        op_great_equ,           // >=
         op_and,                 // and
         op_or,                  // or
         op_not,                 // not
+        op_neg,                 // -
+        op_pos,                 // +
         // keyword
         key_for,                // for
+        key_while,              // while
         key_if,                 // if
         key_else,               // else
         key_then,               // then
@@ -185,7 +210,6 @@ namespace token {
     inline std::ostream &operator<<(std::ostream &os, const Token &s) {
         return os << tokenNames[s.token];
     }
-    
 
 }
 

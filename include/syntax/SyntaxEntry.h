@@ -1,7 +1,7 @@
 ﻿#pragma once
 #include <vector>
 
-#include "Token.h"
+#include "lex/Token.h"
 
 namespace syntax
 {
@@ -29,9 +29,10 @@ namespace syntax
     };
 
     inline std::ostream &operator<<(std::ostream &os, const SyntaxEntry &s) {
-        os << s.l << " -> ";
         for (auto token : s.r)
             os << token << " ";
+        if (s.isNull()) os << "null ";
+        os << "-> " << s.l;
         return os;
     }
 
