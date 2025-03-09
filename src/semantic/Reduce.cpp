@@ -7,10 +7,27 @@ using namespace std;
 using namespace llvm;
 using namespace ast;
 using namespace semantic;
+using namespace token;
 
 
-static token::TokenState  varType;
+static TokenDesc saveToken(null);
 
+namespace
+{
+    void getBack()
+    {
+        auto& waits = syntax::lr::getWaitTokens();
+        saveToken = *waits.back();
+    }
+
+    TokenDesc* getBackAt(int pos)
+    {
+        auto& waits = syntax::lr::getWaitTokens();
+        auto it = prev(waits.end(), pos);
+        return *it;
+    }
+    
+}
 
 
 namespace
@@ -19,56 +36,49 @@ namespace
     // var_with_type -> id , var_with_type
     void varDef()
     {
-        auto& waits = syntax::lr::getWaitTokens();
-        auto it = prev(waits.end(), 3);
-        regisVar((*it)->value, varType);
+        regisVar(getBackAt(3)->value, saveToken);
     }
+
+    // const_def -> id = const
+    // const_def -> const_def ; id = const 
+    void constDef()
+    {
+        regisConstWithValue(getBackAt(3)->value, saveToken);
+    }
+
+    void negNum()
+    {
+        getBack();
+        saveToken.value.insert(0, "-");
+    }
+
 }
 
 
-namespace
-{
-    // type_base -> integer
-    void typeInt()
-    {
-        varType = token::TokenState::type_int;
-    }
 
-    // type_base -> char
-    void typeChar()
-    {
-        varType = token::TokenState::type_char;
-    }
-
-    // type_base -> real
-    void typeReal()
-    {
-        varType = token::TokenState::type_real;
-    }
-
-    // type_base -> bool
-    void typeBool()
-    {
-        varType = token::TokenState::type_bool;
-    }
-    
-}
 
 inline ReduceTable& getReduceTable()
 {
     static ReduceTable reduceTable{
         
-        {32, varDef},
-        {33, varDef},
-        
-        {36, typeInt},
-        {37, typeReal},
-        {38, typeChar},
-        {39, typeBool},
+            {22, constDef},
+            {23, constDef},
+
+            {24, getBack},
+            {25, negNum},
+            {26, getBack},
+            {27, getBack},
+
+            {32, varDef},
+            {33, varDef},
+            
+            {36, getBack},
+            {37, getBack},
+            {38, getBack},
+            {39, getBack},
         };
     return reduceTable;
 }
-
 
 void semantic::callReduce(size_t id)
 {

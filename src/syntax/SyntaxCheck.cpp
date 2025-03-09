@@ -100,9 +100,6 @@ void syntax::lr::lrCheck(){
             case LrOption::shift:
                 cout << "No." << left << setw(3) << ++times << " shift" << '\n';
 
-                // 添加符号
-                //callSymbol(inputStack.front());
-
                 // 移进 token
                 getWaitTokens().push_back(tokens.front());
                 tokens.pop_front();
@@ -118,7 +115,7 @@ void syntax::lr::lrCheck(){
                      << entry << "]\n";
 
                 // 规约操作
-                //semantic::callReduce(option.id);
+                semantic::callReduce(option.id);
 
                 // 弹出符号和状态
                 for (size_t i = 0; i < entry.r.size(); ++i) {

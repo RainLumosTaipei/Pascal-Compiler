@@ -172,7 +172,7 @@ static std::vector<Token> rhs[] = {
         {key_var,       value_para},
         {ids,           p_colon,     type_base},
 
-        // const
+        // const  20-27
         {},
         {key_const,     const_def,   p_semicolon},
         {id,            op_equal,    cont},

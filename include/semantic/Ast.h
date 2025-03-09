@@ -148,4 +148,6 @@ namespace ast
 
     llvm::IRBuilder<>& getBuilder();
 
+    void printCode();
+
 }

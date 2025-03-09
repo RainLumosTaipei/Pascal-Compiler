@@ -1,4 +1,5 @@
 ﻿#include "lex/Lexer.h"
+#include "semantic/Ast.h"
 #include "syntax/SyntaxLl.h"
 #include "syntax/SyntaxLr.h"
 #include "syntax/SyntaxCheck.h"
@@ -17,8 +18,9 @@ static void init()
 static void test()
 {
     syntax::lr::loadTable();
-    token::lex("open_set/03_arr_defn2.pas");
+    token::lex("open_set/00_main.pas");
     syntax::lr::lrCheck();
+    ast::printCode();
 }
 
 int main() {
