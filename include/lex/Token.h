@@ -53,6 +53,7 @@ namespace token {
         type_base,              // basic type
         type,                   // type
         period,                 // array
+        period_with_type,       // array
         ids,                    // id list
         op_cmp,                 // compare operator
         op_add_sub,             // + -

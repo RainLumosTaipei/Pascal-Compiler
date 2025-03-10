@@ -58,8 +58,8 @@ static Token lhs[] = {
         type_base,    // 37
         type_base,  //  38
         type_base,    // 39
-        period,    // 40
-        period,    // 41
+        period_with_type,    // 40
+        period_with_type,    // 41
 
         // id
         ids,
@@ -193,13 +193,13 @@ static std::vector<Token> rhs[] = {
 
         // type  34-41
         {type_base},
-        {type_array,    op_l_squ,    period,       op_r_squ,  key_of, type_base},
+        {type_array,    op_l_squ,    period_with_type},
         {type_int},
         {type_real},
         {type_char},
         {type_bool},
-        {digit,         p_dotdot,    digit},
-        {digit,         p_dotdot,    digit,        p_comma,   period},
+        {digit,         p_dotdot,    digit,        p_comma, period_with_type},
+        {digit,         p_dotdot,    digit,       op_r_squ,  key_of, type_base},
 
         // id
         {id},

@@ -67,7 +67,7 @@ namespace
     }
 
     void regisVarBool(const std::string& id) {
-        regisVar<bool, 8, false>(id, false);
+        regisVar<bool, 1, false>(id, false);
     }
 
     // 常量注册函数
@@ -84,7 +84,7 @@ namespace
     }
 
     void regisConstBool(const std::string& id) {
-        regisVar<bool, 8, false>(id, true);
+        regisVar<bool, 1, false>(id, true);
     }
 }
 
@@ -121,7 +121,7 @@ namespace
     }
 
     void regisVarBoolWithValue(const std::string& id, const string& val) {
-        regisVarWithValue<bool, 8, false>(id, val, false);
+        regisVarWithValue<bool, 1, false>(id, val, false);
     }
 
     // 常量注册函数
@@ -138,20 +138,50 @@ namespace
     }
 
     void regisConstBoolWithValue(const std::string& id, const string& val) {
-        regisVarWithValue<bool, 8, false>(id, val, true);
+        regisVarWithValue<bool, 1, false>(id, val, true);
     }
 }
 
 namespace
 {
-    void regisArray(const std::string& id, bool isConstant, Type* type, size_t size)
+    void regisArray(const std::string& id, bool isConstant, const ArrayDesc& desc)
     {
+        regisGlobal(id, isConstant, desc.arrayType, desc.constant);
+    }
+
+    template <typename T, unsigned BitWidth = 32, bool IsSigned = true>
+    void getArrayType(int size, ArrayDesc& desc) {
         LLVMContext& context = getContext();
-        ArrayType *ArrayTy = ArrayType::get(type, size);
-        vector InitialValues(size, ConstantInt::get(type, 0));
-        Constant *zero = ConstantArray::get(ArrayTy, InitialValues);
-        
-        regisGlobal(id, isConstant, type, zero);
+        Type* type;
+        Constant* zero;
+
+        if constexpr (std::is_same_v<T, float>) {
+            type = Type::getFloatTy(context);
+            zero = ConstantFP::get(type, 0.0);
+        } else {
+            IntegerType* intType = IntegerType::get(context, BitWidth);
+            type = intType;
+            zero = ConstantInt::get(intType, 0, IsSigned);
+        }
+        ArrayType* arrayType = ArrayType::get(type, size);
+        desc.arrayType = arrayType;
+        desc.constant = ConstantArray::get(arrayType, vector(size, zero));
+    }
+
+    void getArrayTypeInt(int size, ArrayDesc& desc) {
+        getArrayType<int>(size, desc);
+    }
+    
+    void getArrayTypeChar(int size, ArrayDesc& desc) {
+        getArrayType<char, 8>(size, desc);
+    }
+    
+    void getArrayTypeReal(int size, ArrayDesc& desc) {
+        getArrayType<float>(size, desc);
+    }
+    
+    void getArrayTypeBool(int size, ArrayDesc& desc) {
+        getArrayType<bool, 1>(size, desc);
     }
 }
 
@@ -191,4 +221,36 @@ void semantic::regisConstWithValue(const string& id, token::TokenDesc& t)
     }
 }
 
-void semantic::regisArray(const std::string& id, token::TokenDesc& t, ArrayShape& shape){}
+void semantic::getArrayType(ArrayDesc& desc, int size)
+{
+    auto* newTy = ArrayType::get(desc.arrayType, size);
+    auto* newConst =  ConstantArray::get(newTy, vector(size, desc.constant));
+    desc.arrayType = newTy;
+    desc.constant = newConst;
+}
+
+void semantic::getArrayType(token::TokenDesc& t, ArrayDesc& desc, int size)
+{
+    switch (t.token.token)
+    {
+    case token::TokenState::type_int:
+        getArrayTypeInt(size, desc);
+        break;
+    case token::TokenState::type_real:
+        getArrayTypeReal(size, desc);
+        break;
+    case token::TokenState::type_char:
+        getArrayTypeChar(size, desc);
+        break;
+    case token::TokenState::type_bool:
+        getArrayTypeBool(size, desc);;
+        break;
+    default:
+        throw runtime_error("Unknown array type");
+    }
+}
+
+void semantic::regisVarArray(const std::string& id, const ArrayDesc& desc)
+{
+    regisArray(id, false, desc);
+}

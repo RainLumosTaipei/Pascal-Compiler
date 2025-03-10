@@ -11,6 +11,8 @@ using namespace token;
 
 
 static TokenDesc saveToken(null);
+static ArrayDesc arrayDesc;
+static bool isArrayDef = false;
 
 namespace
 {
@@ -26,9 +28,15 @@ namespace
         auto it = prev(waits.end(), pos);
         return *it;
     }
+
+    int getSize(int pos)
+    {
+        int r = stoi(getBackAt(pos)->value);
+        int l = stoi(getBackAt(pos + 2)->value);
+        return r - l + 1;
+    }
     
 }
-
 
 namespace
 {
@@ -36,7 +44,10 @@ namespace
     // var_with_type -> id , var_with_type
     void varDef()
     {
-        regisVar(getBackAt(3)->value, saveToken);
+        if (!isArrayDef)
+            return regisVar(getBackAt(3)->value, saveToken);
+        regisVarArray(getBackAt(3)->value, arrayDesc);
+        isArrayDef = false;
     }
 
     // const_def -> id = const
@@ -52,10 +63,25 @@ namespace
         saveToken.value.insert(0, "-");
     }
 
+    // period_with_type -> digit .. digit ] key_of type_base
+    void arrayTypeBase()
+    {
+        getArrayType(saveToken, arrayDesc, getSize(4));
+    }
+
+    // period_with_type -> digit .. digit , period_with_type
+    void arrayType()
+    {
+        getArrayType(arrayDesc, getSize(3));
+    }
+
+    // type -> key_array [ period_with_type
+    void changeArrayDef()
+    {
+        isArrayDef = true;
+    }
+
 }
-
-
-
 
 inline ReduceTable& getReduceTable()
 {
@@ -71,11 +97,15 @@ inline ReduceTable& getReduceTable()
 
             {32, varDef},
             {33, varDef},
+            {35, changeArrayDef},
             
             {36, getBack},
             {37, getBack},
             {38, getBack},
             {39, getBack},
+
+            {40, arrayType},
+            {41, arrayTypeBase},
         };
     return reduceTable;
 }

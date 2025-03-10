@@ -83,7 +83,7 @@ var_with_type -> id , var_with_type
 
 type -> type_base
 
-type -> key_array [ period ] key_of type_base
+type -> key_array [ period_with_type
 
 type_base -> integer
 
@@ -93,9 +93,9 @@ type_base -> char
 
 type_base -> boolean
 
-period -> digit .. digit
+period_with_type -> digit .. digit , period_with_type
 
-period -> digit .. digit , period 
+period_with_type -> digit .. digit ] key_of type_base
 
 ## id
 
