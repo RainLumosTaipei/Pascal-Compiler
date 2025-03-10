@@ -13,7 +13,7 @@ static Token lhs[] = {
         prog_head,    // 3
         prog_body,    // 4
 
-        // sub program
+        // sub program 5-10
         sub_prog_def,   // 5
         sub_prog_def,   // 6
         sub_prog,       // 7
@@ -61,13 +61,13 @@ static Token lhs[] = {
         period_with_type,    // 40
         period_with_type,    // 41
 
-        // id
-        ids,
-        ids,
-        var,
-        var,
-        var_list,
-        var_list,
+        // id 42-47
+        id_with_type,    // 42
+        id_with_type,    // 43
+        var,        // 44
+        var,       // 45
+        var_list,    // 46
+        var_list,     // 47
 
         // op
         op_cmp,
@@ -150,10 +150,10 @@ static std::vector<Token> rhs[] = {
         {prog,          real_end},
         {prog_head,     p_semicolon, prog_body,    p_dot},
         {key_prog,      id},
-        {key_prog,      id,          p_l_paren,    ids,       p_r_paren},
+        {key_prog,      id,          p_l_paren,    id,       p_r_paren},
         {const_defs,    var_defs,    sub_prog_def, main},
 
-        // sub program
+        // sub program 5-10
         {},
         {sub_prog,      p_semicolon, sub_prog_def},
         {sub_prog_head, p_semicolon, sub_prog_body},
@@ -170,7 +170,7 @@ static std::vector<Token> rhs[] = {
         {var_para},
         {value_para},
         {key_var,       value_para},
-        {ids,           p_colon,     type_base},
+        {id_with_type},
 
         // const  20-27
         {},
@@ -201,9 +201,9 @@ static std::vector<Token> rhs[] = {
         {digit,         p_dotdot,    digit,        p_comma, period_with_type},
         {digit,         p_dotdot,    digit,       op_r_squ,  key_of, type_base},
 
-        // id
-        {id},
-        {id,            p_comma,     ids},
+        // id 42-47
+        {id, p_colon, type_base},
+        {id,            p_comma,     id_with_type},
         {id},
         {id,            op_l_squ,    exp_list,     op_r_squ},
         {var},

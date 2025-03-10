@@ -8,7 +8,7 @@ prog -> prog_head ; prog_body .
 
 prog_head -> program id 
 
-prog_head -> program id ( ids )
+prog_head -> program id ( id )
 
 prog_body -> const_defs var_defs sub_prog_def main
 
@@ -62,7 +62,7 @@ para -> value_para
 
 var_para -> key_var value_para
 
-value_para -> ids : type_base
+value_para -> id_with_type
 
 ## var
 
@@ -99,9 +99,9 @@ period_with_type -> digit .. digit ] key_of type_base
 
 ## id
 
-ids -> id
+id_with_type -> id : type_base
 
-ids -> id , ids
+id_with_type -> id , id_with_type
 
 var -> id
 

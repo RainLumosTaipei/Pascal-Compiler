@@ -2,6 +2,7 @@
 #include "semantic/Ast.h"
 #include "syntax/SyntaxCheck.h"
 #include "semantic/VarDef.h"
+#include "semantic/FuncDef.h"
 
 using namespace std;
 using namespace llvm;
@@ -9,10 +10,18 @@ using namespace ast;
 using namespace semantic;
 using namespace token;
 
+namespace
+{
+    // typebase
+    TokenDesc saveToken(null);
+    // array
+    ArrayDesc arrayDesc;
+    bool isArrayDef = false;
+    // func para
+    FuncDesc funcDesc;
+}
 
-static TokenDesc saveToken(null);
-static ArrayDesc arrayDesc;
-static bool isArrayDef = false;
+
 
 namespace
 {
@@ -83,9 +92,42 @@ namespace
 
 }
 
+namespace
+{
+    // id_with_type -> id : type_base
+    // id_with_type -> id , id_with_type
+    void addPara()
+    {
+        funcDesc.paras.emplace_back(saveToken.token, getBackAt(3)->value);
+    }
+
+    // sub_prog_head -> key_func idf formal_para : type_base
+    void funcDef()
+    {
+        funcDesc.rev = saveToken.token;
+        funcDesc.name = getBackAt(4)->value;
+        regisFunc(funcDesc);
+        funcDesc.paras.clear();
+    }
+
+    // sub_prog_head -> key_proc idf formal_para
+    void procDef()
+    {
+        funcDesc.name = getBackAt(2)->value;
+        funcDesc.rev = null;
+        regisFunc(funcDesc);
+        funcDesc.paras.clear();
+    }
+}
+
+
+
 inline ReduceTable& getReduceTable()
 {
     static ReduceTable reduceTable{
+
+            {9, procDef},
+            {10, funcDef},
         
             {22, constDef},
             {23, constDef},
@@ -106,6 +148,8 @@ inline ReduceTable& getReduceTable()
 
             {40, arrayType},
             {41, arrayTypeBase},
+            {42, addPara},
+            {43, addPara}
         };
     return reduceTable;
 }

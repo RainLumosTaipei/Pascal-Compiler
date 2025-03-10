@@ -48,7 +48,7 @@ std::string token::tokenNames[] = {
     "type",
     "period",
     "period_with_type",
-    "ids",
+    "id_with_type",
     "op_cmp",
     "op_add_sub",
     "op_div_mul",

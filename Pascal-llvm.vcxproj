@@ -139,6 +139,7 @@
     <ClCompile Include="src\lex\Lexer.cpp" />
     <ClCompile Include="src\lex\Token.cpp" />
     <ClCompile Include="src\semantic\Ast.cpp" />
+    <ClCompile Include="src\semantic\funcDef.cpp" />
     <ClCompile Include="src\semantic\Reduce.cpp" />
     <ClCompile Include="src\semantic\VarDef.cpp" />
     <ClCompile Include="src\syntax\Serialize.cpp" />
@@ -151,6 +152,7 @@
     <ClInclude Include="include\lex\Lexer.h" />
     <ClInclude Include="include\lex\Token.h" />
     <ClInclude Include="include\semantic\Ast.h" />
+    <ClInclude Include="include\semantic\funcDef.h" />
     <ClInclude Include="include\semantic\Reduce.h" />
     <ClInclude Include="include\semantic\VarDef.h" />
     <ClInclude Include="include\syntax\Serialize.h" />

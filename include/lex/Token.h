@@ -54,7 +54,7 @@ namespace token {
         type,                   // type
         period,                 // array
         period_with_type,       // array
-        ids,                    // id list
+        id_with_type,                    // id list
         op_cmp,                 // compare operator
         op_add_sub,             // + -
         op_div_mul,             // * /
