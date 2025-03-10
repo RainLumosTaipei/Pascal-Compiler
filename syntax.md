@@ -78,7 +78,6 @@ var_with_type -> id : type
 
 var_with_type -> id , var_with_type
 
-
 ## type
 
 type -> type_base

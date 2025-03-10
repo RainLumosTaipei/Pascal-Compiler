@@ -18,10 +18,11 @@ namespace semantic
         llvm::Constant* constant;
     } ArrayDesc;
     
-    std::map<std::string, llvm::Value*>& getIdTable();
-    void regisVar(std::string id, token::TokenDesc& t);
-    void regisConstWithValue(const std::string& id, token::TokenDesc& t);
-    void regisVarArray(const std::string& id, const ArrayDesc& desc);
+    
+    void regisVar(const token::TokenDesc* , token::TokenDesc* t, bool isGlobal);
+    void regisConstWithValue(const token::TokenDesc* , token::TokenDesc* t, bool isGlobal);
+    void regisVarArray(const token::TokenDesc* , const ArrayDesc& desc, bool isGlobal);
+    
     void getArrayType(ArrayDesc& desc, int size);
-    void getArrayType(token::TokenDesc& t, ArrayDesc& desc, int size);
+    void getArrayType(token::TokenDesc* t, ArrayDesc& desc, int size);
 }

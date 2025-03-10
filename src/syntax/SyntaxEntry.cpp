@@ -69,31 +69,31 @@ static Token lhs[] = {
         var_list,    // 46
         var_list,     // 47
 
-        // op
-        op_cmp,
-        op_cmp,
-        op_cmp,
-        op_cmp,
-        op_cmp,
-        op_cmp,
+        // op  48-60
+        op_cmp,          // 48
+        op_cmp,      // 49
+        op_cmp,     // 50
+        op_cmp,     // 51
+        op_cmp,     // 52
+        op_cmp,     // 53
 
-        op_add_sub,
-        op_add_sub,
-        op_add_sub,
+        op_add_sub,   // 54
+        op_add_sub,    // 55
+        op_add_sub,   // 56
 
-        op_div_mul,
-        op_div_mul,
-        op_div_mul,
-        op_div_mul,
+        op_div_mul,    // 57
+        op_div_mul,    // 58
+        op_div_mul,    // 59
+        op_div_mul,    // 60
 
         // statement
-        main,
-        begin,
-        stmt_list,
-        stmt_list,
+        main,       // 61
+        begin,    // 62
+        stmt_list,    // 63
+        stmt_list,    // 64
 
-        stmt,
-        stmt,
+        stmt,    // 65
+        stmt,    // 66
 
         stmt_base,
         stmt_base,

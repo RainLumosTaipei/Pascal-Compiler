@@ -19,7 +19,7 @@ inline deque<TokenDesc*>& syntax::lr::getWaitTokens(){
 
 namespace 
 {
-    static void printDeque(deque<TokenDesc*>& deq, int dir){
+    void printDeque(deque<TokenDesc*>& deq, int dir){
         size_t times = 0;
         if (1 == dir){
             for (auto & it : deq) {
@@ -38,14 +38,14 @@ namespace
         }
     }
 
-    static void check(){
+    void check(){
         printDeque(getWaitTokens(), 0);
         cout << "  <=====>  ";
         printDeque(getTokens(), 1);
         cout << "\n\n";
     }
 
-    static void printError(){
+    void printError(){
         auto& tokens = getTokens();
         auto& t = tokens.front();
         cout << "Error: "

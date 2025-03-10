@@ -1,13 +1,17 @@
 ﻿#include "semantic/funcDef.h"
-
-#include <complex>
-
 #include "semantic/Ast.h"
+#include "semantic/SymbolTable.h"
 
 using namespace std;
 using namespace semantic;
 using namespace ast;
 using namespace llvm;
+
+Function* semantic::getFunc(const string& name)
+{
+    Function* func = getModule().getFunction(name);
+    return  func;
+}
 
 namespace
 {
@@ -31,6 +35,16 @@ namespace
     }
 }
 
+void startBlock(Function* func)
+{
+    BasicBlock* BB = BasicBlock::Create(getContext(), "entry", func);
+    getBuilder().SetInsertPoint(BB);
+    getSymbolTable().enterScope();
+    
+}
+
+
+
 void semantic::regisFunc(const FuncDesc& desc)
 {
     FunctionType *funcTy;
@@ -44,13 +58,20 @@ void semantic::regisFunc(const FuncDesc& desc)
     else
         funcTy = FunctionType::get(getParaType(desc.rev), false);
     
-    Function *func = Function::Create(funcTy, Function::ExternalLinkage, desc.name, getModule());
+    Function *func = Function::Create(funcTy, Function::ExternalLinkage, desc.name->value, getModule());
+
+    startBlock(func);
     
     int id = 0;
     for(auto& arg : func->args())
     {
-        arg.setName(desc.paras[id++].second);
+        auto& argName = desc.paras[id++].second->value;
+        arg.setName(argName);
+        // 将函数形参加入符号表
+        getSymbolTable().addVar(argName, &arg);
     }
+
+    
 }
 
 

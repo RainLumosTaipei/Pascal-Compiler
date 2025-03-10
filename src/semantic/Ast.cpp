@@ -230,21 +230,7 @@ void convertType(Value* l, Value* r) {
 //     return builder->CreateCall(CalleeF, ArgsV, "call");
 // }
 //
-// // 函数声明
-// Function* ast::PrototypeAST::codegen() {
-//     vector<Type*> Doubles(args.size(), Type::getDoubleTy(*context));
-//     FunctionType* FT =
-//         FunctionType::get(Type::getDoubleTy(*context), Doubles, false);
-//
-//     Function* F =
-//         Function::Create(FT, Function::ExternalLinkage, name, module.get());
-//     
-//     unsigned Idx = 0;
-//     for (auto& Arg : F->args())
-//         Arg.setName(args[Idx++]);
-//
-//     return F;
-// }
+
 //
 // // 函数定义
 // Function* ast::FunctionAST::codegen() {

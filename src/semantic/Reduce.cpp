@@ -3,6 +3,7 @@
 #include "syntax/SyntaxCheck.h"
 #include "semantic/VarDef.h"
 #include "semantic/FuncDef.h"
+#include "semantic/SymbolTable.h"
 
 using namespace std;
 using namespace llvm;
@@ -13,12 +14,13 @@ using namespace token;
 namespace
 {
     // typebase
-    TokenDesc saveToken(null);
+    TokenDesc* saveToken;
     // array
     ArrayDesc arrayDesc;
     bool isArrayDef = false;
     // func para
     FuncDesc funcDesc;
+    bool isGlobal = true;
 }
 
 
@@ -28,7 +30,7 @@ namespace
     void getBack()
     {
         auto& waits = syntax::lr::getWaitTokens();
-        saveToken = *waits.back();
+        saveToken = waits.back();
     }
 
     TokenDesc* getBackAt(int pos)
@@ -54,8 +56,8 @@ namespace
     void varDef()
     {
         if (!isArrayDef)
-            return regisVar(getBackAt(3)->value, saveToken);
-        regisVarArray(getBackAt(3)->value, arrayDesc);
+            return regisVar(getBackAt(3), saveToken, isGlobal);
+        regisVarArray(getBackAt(3), arrayDesc, isGlobal);
         isArrayDef = false;
     }
 
@@ -63,13 +65,13 @@ namespace
     // const_def -> const_def ; id = const 
     void constDef()
     {
-        regisConstWithValue(getBackAt(3)->value, saveToken);
+        regisConstWithValue(getBackAt(3), saveToken, isGlobal);
     }
 
     void negNum()
     {
         getBack();
-        saveToken.value.insert(0, "-");
+        saveToken->value.insert(0, "-");
     }
 
     // period_with_type -> digit .. digit ] key_of type_base
@@ -98,26 +100,42 @@ namespace
     // id_with_type -> id , id_with_type
     void addPara()
     {
-        funcDesc.paras.emplace_back(saveToken.token, getBackAt(3)->value);
+        funcDesc.paras.emplace_back(saveToken->token, getBackAt(3));
     }
 
     // sub_prog_head -> key_func idf formal_para : type_base
     void funcDef()
     {
-        funcDesc.rev = saveToken.token;
-        funcDesc.name = getBackAt(4)->value;
+        funcDesc.rev = saveToken->token;
+        funcDesc.name = getBackAt(4);
         regisFunc(funcDesc);
         funcDesc.paras.clear();
+        isGlobal = false;
     }
 
     // sub_prog_head -> key_proc idf formal_para
     void procDef()
     {
-        funcDesc.name = getBackAt(2)->value;
+        funcDesc.name = getBackAt(2);
         funcDesc.rev = null;
         regisFunc(funcDesc);
         funcDesc.paras.clear();
+        isGlobal = false;
     }
+
+    void endBlock()
+    {
+        if (!isGlobal)
+        {
+            Value* ret = getSymbolTable().randomVar();
+            getBuilder().CreateRet(ret);
+        }
+        
+        getSymbolTable().leaveScope();
+        isGlobal = true;
+    }
+
+    
 }
 
 
@@ -149,7 +167,9 @@ inline ReduceTable& getReduceTable()
             {40, arrayType},
             {41, arrayTypeBase},
             {42, addPara},
-            {43, addPara}
+            {43, addPara},
+
+            {61, endBlock}
         };
     return reduceTable;
 }
