@@ -75,6 +75,11 @@
     <IncludePath>$(ProjectDir)include;D:/llvm/build_release/include;D:/llvm/llvm/include;$(IncludePath)</IncludePath>
     <LibraryPath>D:/llvm/build_release/Release/lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LibraryPath>D:/llvm/build_debug/Debug/lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>D:/llvm/build_debug/include;D:/llvm/llvm/include;$(ProjectDir)include;$(IncludePath)</IncludePath>
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -106,13 +111,19 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
-      <SDLCheck>true</SDLCheck>
+      <SDLCheck>false</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>D:/llvm/build_debug/Debug/lib/LLVMWindowsManifest.lib;D:/llvm/build_debug/Debug/lib/LLVMXRay.lib;D:/llvm/build_debug/Debug/lib/LLVMLibDriver.lib;D:/llvm/build_debug/Debug/lib/LLVMDlltoolDriver.lib;D:/llvm/build_debug/Debug/lib/LLVMTelemetry.lib;D:/llvm/build_debug/Debug/lib/LLVMTextAPIBinaryReader.lib;D:/llvm/build_debug/Debug/lib/LLVMCoverage.lib;D:/llvm/build_debug/Debug/lib/LLVMLineEditor.lib;D:/llvm/build_debug/Debug/lib/LLVMX86TargetMCA.lib;D:/llvm/build_debug/Debug/lib/LLVMX86Disassembler.lib;D:/llvm/build_debug/Debug/lib/LLVMX86AsmParser.lib;D:/llvm/build_debug/Debug/lib/LLVMX86CodeGen.lib;D:/llvm/build_debug/Debug/lib/LLVMX86Desc.lib;D:/llvm/build_debug/Debug/lib/LLVMX86Info.lib;D:/llvm/build_debug/Debug/lib/LLVMOrcDebugging.lib;D:/llvm/build_debug/Debug/lib/LLVMOrcJIT.lib;D:/llvm/build_debug/Debug/lib/LLVMWindowsDriver.lib;D:/llvm/build_debug/Debug/lib/LLVMMCJIT.lib;D:/llvm/build_debug/Debug/lib/LLVMJITLink.lib;D:/llvm/build_debug/Debug/lib/LLVMInterpreter.lib;D:/llvm/build_debug/Debug/lib/LLVMExecutionEngine.lib;D:/llvm/build_debug/Debug/lib/LLVMRuntimeDyld.lib;D:/llvm/build_debug/Debug/lib/LLVMOrcTargetProcess.lib;D:/llvm/build_debug/Debug/lib/LLVMOrcShared.lib;D:/llvm/build_debug/Debug/lib/LLVMDWP.lib;D:/llvm/build_debug/Debug/lib/LLVMDebugInfoLogicalView.lib;D:/llvm/build_debug/Debug/lib/LLVMDebugInfoGSYM.lib;D:/llvm/build_debug/Debug/lib/LLVMOption.lib;D:/llvm/build_debug/Debug/lib/LLVMObjCopy.lib;D:/llvm/build_debug/Debug/lib/LLVMMCA.lib;D:/llvm/build_debug/Debug/lib/LLVMMCDisassembler.lib;D:/llvm/build_debug/Debug/lib/LLVMLTO.lib;D:/llvm/build_debug/Debug/lib/LLVMPasses.lib;D:/llvm/build_debug/Debug/lib/LLVMHipStdPar.lib;D:/llvm/build_debug/Debug/lib/LLVMCFGuard.lib;D:/llvm/build_debug/Debug/lib/LLVMCoroutines.lib;D:/llvm/build_debug/Debug/lib/LLVMipo.lib;D:/llvm/build_debug/Debug/lib/LLVMVectorize.lib;D:/llvm/build_debug/Debug/lib/LLVMSandboxIR.lib;D:/llvm/build_debug/Debug/lib/LLVMLinker.lib;D:/llvm/build_debug/Debug/lib/LLVMInstrumentation.lib;D:/llvm/build_debug/Debug/lib/LLVMFrontendOpenMP.lib;D:/llvm/build_debug/Debug/lib/LLVMFrontendOffloading.lib;D:/llvm/build_debug/Debug/lib/LLVMObjectYAML.lib;D:/llvm/build_debug/Debug/lib/LLVMFrontendOpenACC.lib;D:/llvm/build_debug/Debug/lib/LLVMFrontendHLSL.lib;D:/llvm/build_debug/Debug/lib/LLVMFrontendDriver.lib;D:/llvm/build_debug/Debug/lib/LLVMFrontendAtomic.lib;D:/llvm/build_debug/Debug/lib/LLVMExtensions.lib;D:/llvm/build_debug/Debug/lib/LLVMDWARFLinkerParallel.lib;D:/llvm/build_debug/Debug/lib/LLVMDWARFLinkerClassic.lib;D:/llvm/build_debug/Debug/lib/LLVMDWARFLinker.lib;D:/llvm/build_debug/Debug/lib/LLVMGlobalISel.lib;D:/llvm/build_debug/Debug/lib/LLVMMIRParser.lib;D:/llvm/build_debug/Debug/lib/LLVMAsmPrinter.lib;D:/llvm/build_debug/Debug/lib/LLVMSelectionDAG.lib;D:/llvm/build_debug/Debug/lib/LLVMCodeGen.lib;D:/llvm/build_debug/Debug/lib/LLVMTarget.lib;D:/llvm/build_debug/Debug/lib/LLVMObjCARCOpts.lib;D:/llvm/build_debug/Debug/lib/LLVMCodeGenTypes.lib;D:/llvm/build_debug/Debug/lib/LLVMCGData.lib;D:/llvm/build_debug/Debug/lib/LLVMIRPrinter.lib;D:/llvm/build_debug/Debug/lib/LLVMInterfaceStub.lib;D:/llvm/build_debug/Debug/lib/LLVMFileCheck.lib;D:/llvm/build_debug/Debug/lib/LLVMFuzzMutate.lib;D:/llvm/build_debug/Debug/lib/LLVMScalarOpts.lib;D:/llvm/build_debug/Debug/lib/LLVMInstCombine.lib;D:/llvm/build_debug/Debug/lib/LLVMAggressiveInstCombine.lib;D:/llvm/build_debug/Debug/lib/LLVMTransformUtils.lib;D:/llvm/build_debug/Debug/lib/LLVMBitWriter.lib;D:/llvm/build_debug/Debug/lib/LLVMAnalysis.lib;D:/llvm/build_debug/Debug/lib/LLVMProfileData.lib;D:/llvm/build_debug/Debug/lib/LLVMSymbolize.lib;D:/llvm/build_debug/Debug/lib/LLVMDebugInfoBTF.lib;D:/llvm/build_debug/Debug/lib/LLVMDebugInfoPDB.lib;D:/llvm/build_debug/Debug/lib/LLVMDebugInfoMSF.lib;D:/llvm/build_debug/Debug/lib/LLVMDebugInfoCodeView.lib;D:/llvm/build_debug/Debug/lib/LLVMDebugInfoDWARF.lib;D:/llvm/build_debug/Debug/lib/LLVMObject.lib;D:/llvm/build_debug/Debug/lib/LLVMTextAPI.lib;D:/llvm/build_debug/Debug/lib/LLVMMCParser.lib;D:/llvm/build_debug/Debug/lib/LLVMIRReader.lib;D:/llvm/build_debug/Debug/lib/LLVMAsmParser.lib;D:/llvm/build_debug/Debug/lib/LLVMMC.lib;D:/llvm/build_debug/Debug/lib/LLVMBitReader.lib;D:/llvm/build_debug/Debug/lib/LLVMFuzzerCLI.lib;D:/llvm/build_debug/Debug/lib/LLVMCore.lib;D:/llvm/build_debug/Debug/lib/LLVMRemarks.lib;D:/llvm/build_debug/Debug/lib/LLVMBitstreamReader.lib;D:/llvm/build_debug/Debug/lib/LLVMBinaryFormat.lib;D:/llvm/build_debug/Debug/lib/LLVMTargetParser.lib;D:/llvm/build_debug/Debug/lib/LLVMTableGen.lib;D:/llvm/build_debug/Debug/lib/LLVMSupport.lib;D:/llvm/build_debug/Debug/lib/LLVMDemangle.lib;ntdll.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <IgnoreSpecificDefaultLibraries>MSVCRT.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -139,7 +150,8 @@
     <ClCompile Include="src\lex\Lexer.cpp" />
     <ClCompile Include="src\lex\Token.cpp" />
     <ClCompile Include="src\semantic\Ast.cpp" />
-    <ClCompile Include="src\semantic\funcDef.cpp" />
+    <ClCompile Include="src\semantic\Exp.cpp" />
+    <ClCompile Include="src\semantic\FuncDef.cpp" />
     <ClCompile Include="src\semantic\Reduce.cpp" />
     <ClCompile Include="src\semantic\SymbolTable.cpp">
       <AssemblerOutput>NoListing</AssemblerOutput>
@@ -216,6 +228,7 @@
       <SDLCheck>false</SDLCheck>
       <LinkCompiled>true</LinkCompiled>
       <AdditionalIncludeDirectories>;D:\vcpkg\vcpkg-master\installed\x64-windows\include</AdditionalIncludeDirectories>
+      <RuntimeLibrary Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <ClCompile Include="src\semantic\VarDef.cpp" />
     <ClCompile Include="src\syntax\Serialize.cpp" />
@@ -228,7 +241,8 @@
     <ClInclude Include="include\lex\Lexer.h" />
     <ClInclude Include="include\lex\Token.h" />
     <ClInclude Include="include\semantic\Ast.h" />
-    <ClInclude Include="include\semantic\funcDef.h" />
+    <ClInclude Include="include\semantic\Exp.h" />
+    <ClInclude Include="include\semantic\FuncDef.h" />
     <ClInclude Include="include\semantic\Reduce.h" />
     <ClInclude Include="include\semantic\SymbolTable.h" />
     <ClInclude Include="include\semantic\VarDef.h" />

@@ -86,7 +86,7 @@ static Token lhs[] = {
         op_div_mul,    // 59
         op_div_mul,    // 60
 
-        // statement
+        // statement 61-80
         main,       // 61
         begin,    // 62
         stmt_list,    // 63
@@ -95,53 +95,53 @@ static Token lhs[] = {
         stmt,    // 65
         stmt,    // 66
 
-        stmt_base,
-        stmt_base,
-        stmt_base,
-        stmt_base,
-        stmt_base,
-        stmt_base,
-        stmt_base,
-        stmt_base,
-        stmt_base,
+        stmt_base,    // 67
+        stmt_base,   // 68
+        stmt_base,   // 69
+        stmt_base,   // 70
+        stmt_base,   // 71
+        stmt_base,   // 72
+        stmt_base,   // 73
+        stmt_base,   // 74
+        stmt_base,   // 75
 
 
-        proc_call,
-        proc_call,
-        proc_call,
+        proc_call,   // 76
+        proc_call,   // 77
+        proc_call,   // 78
 
-        else_part,
-        else_part,
+        else_part,   // 79
+        else_part,   // 80
 
-        // expression
-        exp_list,
-        exp_list,
+        // expression 81-84
+        exp_list,  // 81
+        exp_list,   // 82
 
-        TokenState::exp,
-        TokenState::exp,
+        TokenState::exp,  // 83
+        TokenState::exp,    // 84
 
 
         // sub_exp
-        sub_exp,
-        sub_exp,
+        sub_exp,    // 85
+        sub_exp,    // 86
 
 
         // term
-        term,
-        term,
+        term,    // 87
+        term,    // 88
 
 
-        // factor
-        factor,
-        factor,
-        factor,
-        factor,
-        factor,
-        factor,
-        factor,
-        factor,
-        factor,
-
+        // factor 89-97
+        factor,   // 89
+        factor,   // 90
+        factor,   // 91
+        factor,    // 92
+        factor,   // 93
+        factor,    // 94
+        factor,   // 95
+        factor,    //  96
+        factor,  // 97
+ 
 };
 
 static std::vector<Token> rhs[] = {
@@ -204,7 +204,7 @@ static std::vector<Token> rhs[] = {
         // id 42-47
         {id, p_colon, type_base},
         {id,            p_comma,     id_with_type},
-        {id},
+        {id},    // 44
         {id,            op_l_squ,    exp_list,     op_r_squ},
         {var},
         {var,           p_comma,     var_list},
@@ -226,7 +226,7 @@ static std::vector<Token> rhs[] = {
         {op_mod},
         {op_and},
 
-        // statement
+        // statement 61-80
         {begin,         stmt_list,   key_end},
         {key_begin},
         {stmt},
@@ -235,10 +235,10 @@ static std::vector<Token> rhs[] = {
         {},
         {stmt_base},
 
-        {main},
+        {main},   // 67
         {proc_call},
-        {var,           op_assign,   TokenState::exp},
-        {idf,           op_assign,   TokenState::exp},
+        {var,           op_assign,   TokenState::exp},   // 69
+        {idf,           op_assign,   TokenState::exp},    // 70
         {key_read,      p_l_paren,   var_list,     p_r_paren},
         {key_write,     p_l_paren,   exp_list,     p_r_paren},
         {key_for,       id,          op_assign,    TokenState::exp,       key_to, TokenState::exp, key_do, stmt_base},
@@ -252,7 +252,7 @@ static std::vector<Token> rhs[] = {
         {},
         {key_else,      stmt_base},
 
-        // exp
+        // exp 81-84
         {TokenState::exp},
         {exp_list,      p_comma,     TokenState::exp},
 
@@ -260,17 +260,17 @@ static std::vector<Token> rhs[] = {
         {TokenState::exp,           op_cmp,      sub_exp},
 
 
-        // sub_exp
+        // sub_exp  85-86
         {term},
         {sub_exp,       op_add_sub,  term},
 
 
-        // term
+        // term  87-88
         {factor},
         {term,          op_div_mul,  factor},
 
 
-        // factor
+        // factor  89-97
         {num},
         {var},
         {p_l_paren,     TokenState::exp,         p_r_paren},

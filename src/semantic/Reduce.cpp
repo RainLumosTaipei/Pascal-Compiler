@@ -1,5 +1,9 @@
 ﻿#include "semantic/Reduce.h"
+
+#include <stack>
+
 #include "semantic/Ast.h"
+#include "semantic/Exp.h"
 #include "syntax/SyntaxCheck.h"
 #include "semantic/VarDef.h"
 #include "semantic/FuncDef.h"
@@ -15,12 +19,21 @@ namespace
 {
     // typebase
     TokenDesc* saveToken;
+    
     // array
     ArrayDesc arrayDesc;
     bool isArrayDef = false;
+    
     // func para
     FuncDesc funcDesc;
     bool isGlobal = true;
+    bool isVoid = false;
+
+    // exp
+    SymbolEntry entry;
+    stack<SymbolEntry> expStack;
+    TokenState op;
+    
 }
 
 
@@ -56,7 +69,7 @@ namespace
     void varDef()
     {
         if (!isArrayDef)
-            return regisVar(getBackAt(3), saveToken, isGlobal);
+            return regisVar(getBackAt(3), saveToken->token, isGlobal);
         regisVarArray(getBackAt(3), arrayDesc, isGlobal);
         isArrayDef = false;
     }
@@ -121,24 +134,107 @@ namespace
         regisFunc(funcDesc);
         funcDesc.paras.clear();
         isGlobal = false;
+        isVoid = true;
     }
 
+    // main -> begin stmt_list end
     void endBlock()
     {
-        if (!isGlobal)
-        {
-            Value* ret = getSymbolTable().randomVar();
-            getBuilder().CreateRet(ret);
-        }
-        
         getSymbolTable().leaveScope();
-        isGlobal = true;
+        if (getSymbolTable().deep() == 1)
+            isGlobal = true;
+        if(isVoid)
+        {
+            retFunc();
+            isVoid = false;
+        }
     }
 
     
 }
 
+namespace
+{
+    // factor -> var
+    void varExp()
+    {
+        auto* t = getBackAt(1);
+        if(getSymbolTable().findVar(t->value, entry))
+        {
+            loadIfPointer(entry);
+            return expStack.push(entry); 
+        }
+        throw runtime_error("var does not exist");
+    }
 
+    // factor -> num
+    void numExp()
+    {
+        auto* t = getBackAt(1);
+        semantic::num(t, entry);
+        expStack.push(entry);
+    }
+
+    // stmt_base -> var := exp 
+    void assignExp()
+    {
+        Value* newValue = expStack.top().val;
+        auto* var = getBackAt(3);
+        if(getSymbolTable().findVar(var->value, entry))
+            return store(newValue, entry.val);
+        expStack.pop();
+        throw runtime_error("var does not exist");
+    }
+
+    // stmt_base -> idf := exp 
+    void retExp()
+    {
+        Value* ret = expStack.top().val;
+        getBuilder().CreateRet(ret);
+        expStack.pop();
+    }
+
+    // factor -> not factor
+    // factor -> op_neg factor
+    // factor -> op_pos factor
+    void unaryExp()
+    {
+        auto* op = getBackAt(2);
+        unaryOp(op->token, expStack.top());
+    }
+
+    // exp -> exp op_cmp sub_exp
+    // sub_exp -> sub_exp op_add_sub term
+    // term -> term op_div_mul factor
+    void binaryExp()
+    {
+        auto r = expStack.top();
+        expStack.pop();
+        auto l = expStack.top();
+        expStack.pop();
+        binaryOp(op, l, r, entry);
+        expStack.push(entry);
+    }
+
+    // op_cmp -> >
+    // op_cmp -> < 
+    // op_cmp -> =
+    // op_cmp -> >=
+    // op_cmp -> <=
+    // op_cmp -> <>
+    // op_add_sub -> +
+    // op_add_sub -> -
+    // op_add_sub -> or
+    // op_div_mul -> div
+    // op_div_mul -> *
+    // op_div_mul -> mod
+    // op_div_mul -> and
+    void opExp()
+    {
+        op = getBackAt(1)->token.token;
+    }
+    
+}
 
 inline ReduceTable& getReduceTable()
 {
@@ -169,7 +265,35 @@ inline ReduceTable& getReduceTable()
             {42, addPara},
             {43, addPara},
 
-            {61, endBlock}
+
+            {48, opExp},
+            {49, opExp},
+            {50, opExp},
+            {51, opExp},
+            {52, opExp},
+            {53, opExp},
+            {54, opExp},
+            {55, opExp},
+            {56, opExp},
+            {57, opExp},
+            {58, opExp},
+            {59, opExp},
+            {60, opExp},
+
+            {61, endBlock},
+        
+            {69, assignExp},
+            {70, retExp},
+
+            {84, binaryExp},
+            {86, binaryExp},
+            {88, binaryExp},
+
+            {89, numExp},
+            {90, varExp},
+            {95, unaryExp},
+            {96, unaryExp},
+            {97, unaryExp},
         };
     return reduceTable;
 }

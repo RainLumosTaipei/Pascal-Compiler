@@ -5,6 +5,7 @@
 namespace semantic{
 
     typedef void (*ReduceFn)();
+    
 
     typedef std::unordered_map<size_t, ReduceFn> ReduceTable;
 

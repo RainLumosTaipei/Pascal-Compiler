@@ -64,7 +64,7 @@ var_para -> key_var value_para
 
 value_para -> id_with_type
 
-## var
+## var_def
 
 var_defs -> null
 
@@ -96,7 +96,7 @@ period_with_type -> digit .. digit , period_with_type
 
 period_with_type -> digit .. digit ] key_of type_base
 
-## id
+## id (left value)
 
 id_with_type -> id : type_base
 

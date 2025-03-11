@@ -42,7 +42,7 @@ namespace
         printDeque(getWaitTokens(), 0);
         cout << "  <=====>  ";
         printDeque(getTokens(), 1);
-        cout << "\n\n";
+        cout << endl << endl;
     }
 
     void printError(){
@@ -87,17 +87,17 @@ void syntax::lr::lrCheck(){
         switch (option.op) {
 
             // goto
-            case LrOption::go:
+            case go:
                 goto end;
 
             // accept
-            case LrOption::accept:
+            case accept:
                 cout << "No." << left << setw(3) << ++times << " accept (*^__^*) " << '\n';
                 isAccept = true;
                 goto end;
 
             // shift
-            case LrOption::shift:
+            case shift:
                 cout << "No." << left << setw(3) << ++times << " shift" << '\n';
 
                 // 移进 token
@@ -108,7 +108,7 @@ void syntax::lr::lrCheck(){
                 break;
 
             // reduce
-            case LrOption::reduce:
+            case reduce:
                 auto& entry = getSyntaxes()[option.id];
 
                 cout << "No." << left << setw(3) << ++times << " reduce " << option.id << " ["
@@ -117,13 +117,22 @@ void syntax::lr::lrCheck(){
                 // 规约操作
                 semantic::callReduce(option.id);
 
+                TokenDesc* save;
+                if(entry.r.size() == 1)
+                    save = getWaitTokens().back();
+            
                 // 弹出符号和状态
                 for (size_t i = 0; i < entry.r.size(); ++i) {
                     getWaitTokens().pop_back();
                     stateStack.pop();
                 }
+            
                 // 压入规约符号
-                getWaitTokens().push_back(new TokenDesc(entry.l));
+                if(entry.r.size() == 1)
+                    getWaitTokens().push_back(new TokenDesc(entry.l, save));
+                else
+                    getWaitTokens().push_back(new TokenDesc(entry.l));
+            
                 // goto 跳转状态
                 auto s = stateStack.top();
                 if (table.find(s) != table.end() &&

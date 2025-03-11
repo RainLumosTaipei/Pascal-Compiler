@@ -1,6 +1,7 @@
-﻿#include "semantic/funcDef.h"
+﻿#include "semantic/FuncDef.h"
 #include "semantic/Ast.h"
 #include "semantic/SymbolTable.h"
+#include "semantic/VarDef.h"
 
 using namespace std;
 using namespace semantic;
@@ -33,16 +34,33 @@ namespace
             throw std::runtime_error("Invalid token type");
         }
     }
+
+    void startBlock(Function* func)
+    {
+        BasicBlock* BB = BasicBlock::Create(getContext(), "entry", func);
+        getBuilder().SetInsertPoint(BB);
+        getSymbolTable().enterScope();
+    }
+
+    void allocParas(const FuncDesc& desc)
+    {
+        if (!desc.paras.empty())
+            for(auto& it : desc.paras)
+                regisVar(it);
+    }
 }
 
-void startBlock(Function* func)
+
+
+void semantic::retFunc(Value* ret)
 {
-    BasicBlock* BB = BasicBlock::Create(getContext(), "entry", func);
-    getBuilder().SetInsertPoint(BB);
-    getSymbolTable().enterScope();
-    
+    getBuilder().CreateRet(ret);
 }
 
+void semantic::retFunc()
+{
+    getBuilder().CreateRetVoid();
+}
 
 
 void semantic::regisFunc(const FuncDesc& desc)
@@ -67,11 +85,9 @@ void semantic::regisFunc(const FuncDesc& desc)
     {
         auto& argName = desc.paras[id++].second->value;
         arg.setName(argName);
-        // 将函数形参加入符号表
-        getSymbolTable().addVar(argName, &arg);
     }
 
-    
+    allocParas(desc);
 }
 
 

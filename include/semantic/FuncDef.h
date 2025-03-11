@@ -18,5 +18,7 @@ namespace semantic
     }FuncDesc;
 
     void regisFunc(const FuncDesc& desc);
+    void retFunc(llvm::Value* ret);
+    void retFunc();
     llvm::Function* getFunc(const std::string& name);
 }

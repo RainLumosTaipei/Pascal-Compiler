@@ -56,7 +56,9 @@ namespace token
                 line(Lexer::line),col(Lexer::col),
                 token(token),value(std::move(value)){}
 
-        explicit TokenDesc(Token t): token(t), line(0), col(0), value("undefined") {};
+        explicit TokenDesc(Token t):  line(0), col(0), token(t), value("undefined") {}
+
+        TokenDesc(Token t, const TokenDesc* desc):  line(0), col(0), token(t), value(desc->value) {}
     };
 
     inline std::ostream &operator<<(std::ostream &os, const TokenDesc &s) {

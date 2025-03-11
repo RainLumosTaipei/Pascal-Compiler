@@ -48,6 +48,18 @@
     <ClCompile Include="src\syntax\SyntaxLr.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="src\semantic\Exp.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\semantic\FuncDef.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\semantic\SymbolTable.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\semantic\VarDef.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\lex\Lexer.h">
@@ -75,6 +87,18 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="include\syntax\SyntaxLr.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\semantic\Exp.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\semantic\FuncDef.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\semantic\SymbolTable.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\semantic\VarDef.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

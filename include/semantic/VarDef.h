@@ -2,6 +2,7 @@
 #include <map>
 #include <llvm/IR/DerivedTypes.h>
 
+#include "FuncDef.h"
 #include "llvm/IR/Value.h"
 
 #include "lex/Token.h"
@@ -19,7 +20,8 @@ namespace semantic
     } ArrayDesc;
     
     
-    void regisVar(const token::TokenDesc* , token::TokenDesc* t, bool isGlobal);
+    void regisVar(const token::TokenDesc* , token::TokenState t, bool isGlobal);
+    void regisVar(const Para& para);
     void regisConstWithValue(const token::TokenDesc* , token::TokenDesc* t, bool isGlobal);
     void regisVarArray(const token::TokenDesc* , const ArrayDesc& desc, bool isGlobal);
     

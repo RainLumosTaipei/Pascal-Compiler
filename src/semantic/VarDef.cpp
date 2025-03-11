@@ -4,6 +4,7 @@
 #include "llvm/IR/DerivedTypes.h"
 #include "llvm/IR/Type.h"
 #include "llvm/IR/Verifier.h"
+#include "semantic/FuncDef.h"
 #include "semantic/SymbolTable.h"
 
 using namespace std;
@@ -13,21 +14,24 @@ using namespace semantic;
 
 namespace 
 {
-    void regisId(string id, Value* v)
+    void regisId(string id, Value* v, Type* t)
     {
-        getSymbolTable().addVar(id, v);
+        getSymbolTable().addVar(id, v, t);
     }
-    
+
+    // 注册全局变量
     void regisGlobal(const std::string& id, bool isConst, Type* type, Constant* initialValue) {
         GlobalVariable *var = new GlobalVariable(
             getModule(), type, isConst, GlobalValue::ExternalLinkage, initialValue, id);
-        regisId(id, var);
+        regisId(id, var, type);
     }
 
+    // 注册局部变量
     void regisLocal(const std::string& id, bool isConst, Type* type, Constant* initialValue) {
         AllocaInst *var = getBuilder().CreateAlloca(type, nullptr, id);
-        getBuilder().CreateStore(var, initialValue);
-        regisId(id, var);
+        // 将 initialValue 的值存储到 var 所指向的内存位置
+        getBuilder().CreateStore(initialValue, var);
+        regisId(id, var, type);
     }
 
     // 通用的注册变量函数模板
@@ -195,9 +199,9 @@ namespace
     }
 }
 
-void semantic::regisVar(const token::TokenDesc* name, token::TokenDesc* type, bool isGlobal)
+void semantic::regisVar(const token::TokenDesc* name, token::TokenState type, bool isGlobal)
 {
-    switch (type->token.token)
+    switch (type)
     {
     case token::TokenState::type_int:
         regisVarInt(name->value, isGlobal);
@@ -214,6 +218,11 @@ void semantic::regisVar(const token::TokenDesc* name, token::TokenDesc* type, bo
     default:
         throw runtime_error("Unknown var type");
     }
+}
+
+void semantic::regisVar(const Para& para)
+{
+    regisVar(para.second, para.first, false);
 }
 
 void semantic::regisConstWithValue(const token::TokenDesc* name, token::TokenDesc* t, bool isGlobal)
