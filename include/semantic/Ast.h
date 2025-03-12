@@ -14,5 +14,6 @@ namespace ast
     llvm::IRBuilder<>& getBuilder();
 
     void printCode();
+    void printCodeToFile();
 
 }

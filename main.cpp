@@ -20,7 +20,7 @@ static void test()
     syntax::lr::loadTable();
     token::lex("open_set/00_main.pas");
     syntax::lr::lrCheck();
-    ast::printCode();
+    ast::printCodeToFile();
 }
 
 int main() {

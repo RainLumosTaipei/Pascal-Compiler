@@ -1,4 +1,7 @@
 ﻿#include "semantic/FuncDef.h"
+
+#include <stack>
+
 #include "semantic/Ast.h"
 #include "semantic/SymbolTable.h"
 #include "semantic/VarDef.h"
@@ -8,22 +11,21 @@ using namespace semantic;
 using namespace ast;
 using namespace llvm;
 
-Function* semantic::getFunc(const string& name)
-{
-    Function* func = getModule().getFunction(name);
-    return  func;
-}
-
 namespace
 {
-
-    void startBlock(Function* func)
-    {
-        BasicBlock* BB = BasicBlock::Create(getContext(), "entry", func);
-        getBuilder().SetInsertPoint(BB);
-        getSymbolTable().enterScope();
+    stack<Function*>& getFuncScope(){
+        static stack<Function*> funcScope;
+        // 添加 main 函数
+        if(funcScope.empty())
+        {
+            FunctionType *MainFT = FunctionType::get(Type::getInt32Ty(getContext()), false);
+            Function *MainF = Function::Create(MainFT, Function::ExternalLinkage, "main", getModule());
+            funcScope.push(MainF);
+        }
+        return funcScope;
     }
 
+    
     void allocParas(const FuncDesc& desc)
     {
         for (size_t i = 0; i < desc.paraName.size(); ++i)
@@ -31,9 +33,24 @@ namespace
             regisVar(desc.paraName[i], desc.paraType[i], false);
         }
     }
+    
+    
 }
 
 
+void semantic::startFuncBlock(const string& name)
+{
+    BasicBlock* BB = BasicBlock::Create(getContext(), name, getFuncScope().top());
+    getBuilder().SetInsertPoint(BB);
+    getSymbolTable().enterScope();
+}
+
+
+
+void semantic::endFuncBlock()
+{
+    getFuncScope().pop();
+}
 
 void semantic::retFunc(token::TokenDesc* ret)
 {
@@ -69,8 +86,9 @@ void semantic::regisFunc(const FuncDesc& desc)
         funcTy = FunctionType::get(retTy, false);
     
     Function *func = Function::Create(funcTy, Function::ExternalLinkage, desc.name->str, getModule());
+    getFuncScope().push(func);
 
-    startBlock(func);
+    startFuncBlock("entry");
     
     int id = 0;
     for(auto& arg : func->args())
@@ -82,6 +100,17 @@ void semantic::regisFunc(const FuncDesc& desc)
     allocParas(desc);
 }
 
-
+void semantic::callFunc(token::TokenDesc* idf, const vector<token::TokenDesc*>& exps)
+{
+    Function* func = getModule().getFunction(idf->str);
+    vector<Value*> args;
+    for (auto it : exps)
+    {
+        args.push_back(it->entry.val);
+    }
+    CallInst *call = getBuilder().CreateCall(func, args);
+    idf->entry.val = call;
+    idf->entry.type = call->getType();
+}
 
         

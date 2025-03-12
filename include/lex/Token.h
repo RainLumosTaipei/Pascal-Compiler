@@ -35,6 +35,15 @@ namespace token {
 
         main,                   // main body
         begin,                  // begin -> key_begin
+        end,
+        then,                   
+        els,
+        to,
+        doo,
+        iff,
+        whl,
+        fore,
+        
         stmt,                   // statement
         stmt_base,              // nom null
         stmt_list,              // statement list

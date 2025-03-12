@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include <stack>
 #include <vector>
 #include <llvm/IR/Function.h>
 
@@ -20,5 +21,7 @@ namespace semantic
     void regisFunc(const FuncDesc& desc);
     void retFunc(token::TokenDesc* ret);
     void retFunc();
-    llvm::Function* getFunc(const std::string& name);
+    void callFunc(token::TokenDesc* idf, const std::vector<token::TokenDesc*>& exps);
+    void startFuncBlock(const std::string& name);
+    void endFuncBlock();
 }

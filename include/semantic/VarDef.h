@@ -21,4 +21,6 @@ namespace semantic
     void typeBool(token::TokenDesc* type);
     void typeReal(token::TokenDesc* type);
     void typeArray(token::TokenDesc* type, int size);
+
+    void getArrayElement(token::TokenDesc* id, const std::vector<token::TokenDesc*>& pos);
 }

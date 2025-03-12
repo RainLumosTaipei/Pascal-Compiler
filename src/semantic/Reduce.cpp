@@ -19,6 +19,9 @@ namespace
 {
     // func para
     FuncDesc funcDesc;
+    // exp list
+    vector<TokenDesc*> expList;
+    size_t realDeep = 1;
 }
 
 
@@ -57,8 +60,17 @@ namespace
     {
         return getSymbolTable().deep() == 1;
     }
+
+    bool isDeepEqu()
+    {
+        return getSymbolTable().deep() == realDeep;
+    }
+
+    
     
 }
+
+
 
 // type
 namespace
@@ -170,10 +182,10 @@ namespace
         funcDesc.paraType.clear();
     }
 
-    // main -> begin stmt_list end
-    void endBlock(TokenDesc* desc)
+    // sub_prog_body -> const_defs var_defs main
+    void retFuncBlock(TokenDesc* desc)
     {
-        getSymbolTable().leaveScope();
+        endFuncBlock();
         if(funcDesc.isVoid)
             retFunc();
     }
@@ -211,6 +223,20 @@ namespace
         throw runtime_error("var does not exist");
     }
 
+    // var -> id [ exp_list ]
+    void leftArray(TokenDesc* desc)
+    {
+        auto* id = getBackAt(4);
+        if(getSymbolTable().findVar(id))
+        {
+            getArrayElement(id, expList);
+            *desc = *id;
+            expList.clear();
+            return;
+        }
+        throw runtime_error("var does not exist");
+    }
+
     // stmt_base -> var := exp 
     void assignExp(TokenDesc* desc)
     {
@@ -244,14 +270,85 @@ namespace
         copyBack(desc);
         binaryOp(getBackAt(2), getBackAt(3), getBackAt(1), desc);
     }
+
+    // exp_list -> exp
+    // exp_list -> exp_list , exp
+    void addExpList(TokenDesc* desc)
+    {
+        expList.push_back(getBackAt(1));
+        copyBack(desc);
+    }
+
+    // proc_call -> idf ( exp_list )
+    void callFuncExp(TokenDesc* desc)
+    {
+        auto* idf = getBackAt(4);
+        callFunc(idf, expList);
+        *desc = *idf;
+        expList.clear();
+    }
+
+    // factor -> idf (  )
+    void callFuncVoidExp(TokenDesc* desc)
+    {
+        auto* idf = getBackAt(3);
+        callFunc(idf, expList);
+        *desc = *idf;
+    }
+
+    // factor -> idf
+    void callFuncNoParenExp(TokenDesc* desc)
+    {
+        auto* idf = getBackAt(1);
+        callFunc(idf, expList);
+        *desc = *idf;
+    }
     
-    
+}
+
+
+namespace
+{
+    // if -> key_if
+    void ifBlock(TokenDesc* desc)
+    {
+        
+    }
+
+    void elseBlock(TokenDesc* desc)
+    {
+        
+    }
+    void thenBlock(TokenDesc* desc)
+    {
+        
+    }
+
+    // begin
+    void beginBlock(TokenDesc* desc)
+    {
+        if(isDeepEqu())
+        {
+            startFuncBlock("entry");
+            ++realDeep;
+            return;
+        }
+        ++realDeep;
+    }
+
+    // end
+    void endBlock(TokenDesc* desc)
+    {
+        getSymbolTable().leaveScope();
+        --realDeep;
+    }
 }
 
 inline ReduceTable& getReduceTable()
 {
     static ReduceTable reduceTable{
 
+            {8, retFuncBlock},
             {9, procDef},
             {10, funcDef},
         
@@ -278,7 +375,7 @@ inline ReduceTable& getReduceTable()
             {42, addPara},
             {43, addPara},
             {44, leftVar},
-
+            {45, leftArray},
 
             {48, saveBack},
             {49, saveBack},
@@ -294,11 +391,18 @@ inline ReduceTable& getReduceTable()
             {59, saveBack},
             {60, saveBack},
 
-            {61, endBlock},
-        
+            {62, beginBlock},
+
+            {68, copyBack},
             {69, assignExp},
             {70, retExp},
 
+            {76, callFuncNoParenExp},
+            {77, callFuncExp},
+            {78, callFuncVoidExp},
+
+            {81, addExpList},
+            {82, addExpList},
             {83, copyBack},
             {84, binaryExp},
             {85, copyBack},
@@ -309,9 +413,18 @@ inline ReduceTable& getReduceTable()
             {89, numExp},
             {90, varExp},
             {91, parenExp},
+            {92, callFuncExp},
+            {93, callFuncVoidExp},
+            {94, callFuncNoParenExp},
             {95, unaryExp},
             {96, unaryExp},
             {97, unaryExp},
+
+            
+            {98, thenBlock},
+            {99, elseBlock},
+            {102, ifBlock},
+            {105, endBlock},
         };
     return reduceTable;
 }

@@ -154,3 +154,18 @@ void semantic::typeArray(token::TokenDesc* type, int size)
     type->entry.type = newTy;
     type->entry.val = newConst;
 }
+
+void semantic::getArrayElement(token::TokenDesc* id, const vector<token::TokenDesc*>& pos)
+{
+    std::vector<Value*> index;
+    Type* elementTy = id->entry.type;
+    index.push_back(ConstantInt::get(Type::getInt32Ty(getContext()), 0)); 
+    for (auto it : pos)
+    {
+        // 获取元素类型
+        elementTy = elementTy->getArrayElementType();
+        index.push_back(it->entry.val);
+    }
+    id->entry.val = getBuilder().CreateGEP(id->entry.type, id->entry.val, index);
+    id->entry.type = elementTy;
+}

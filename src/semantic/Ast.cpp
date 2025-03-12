@@ -31,45 +31,24 @@ void ast::printCode()
     getModule().print(errs(), nullptr);
 }
 
+void ast::printCodeToFile()
+{
+    std::error_code EC;
+    raw_fd_ostream fileStream("output.ll", EC);
+    if (EC) {
+        errs() << "Error opening file: " << EC.message() << "\n";
+        return;
+    }
+    getModule().print(fileStream, nullptr);
+    fileStream.close();
+}
+
 
 Value* logError(const char* Str) {
     cerr << Str << '\n';
     return nullptr;
 }
 
-
-
-
-//
-// // id 变量
-// Value* ast::VariableExprAST::codegen() {
-//     Value* V = idTable[name];
-//     if (!V)
-//         return logError("Unknown variable name");
-//     return V;
-// }
-//
-
-//
-// // 函数调用
-// Value* ast::CallExprAST::codegen() {
-//     Function* CalleeF = module->getFunction(Callee);
-//     if (!CalleeF)
-//         return logError("Unknown function referenced");
-//
-//
-//     if (CalleeF->arg_size() != Args.size())
-//         return logError("Incorrect # arguments passed");
-//
-//     vector<Value*> ArgsV;
-//     for (unsigned i = 0, e = Args.size(); i != e; ++i) {
-//         ArgsV.push_back(Args[i]->codegen());
-//         if (!ArgsV.back())
-//             return nullptr;
-//     }
-//     return builder->CreateCall(CalleeF, ArgsV, "call");
-// }
-//
 
 //
 // // 函数定义

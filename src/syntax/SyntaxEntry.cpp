@@ -141,6 +141,16 @@ static Token lhs[] = {
         factor,   // 95
         factor,    //  96
         factor,  // 97
+
+        //
+        then,  // 98
+        els,    // 99
+        doo,   // 100
+        to,    // 101
+        iff,   // 102
+        whl,    // 103
+        fore,    // 104
+        end
  
 };
 
@@ -157,7 +167,7 @@ static std::vector<Token> rhs[] = {
         {},
         {sub_prog,      p_semicolon, sub_prog_def},
         {sub_prog_head, p_semicolon, sub_prog_body},
-        {const_defs,    var_defs,    main},
+        {const_defs,    var_defs,    main},      // 8
         {key_proc,      idf,          formal_para},
         {key_func,      idf,          formal_para,  p_colon,   type_base},
 
@@ -205,7 +215,7 @@ static std::vector<Token> rhs[] = {
         {id, p_colon, type_base},
         {id,            p_comma,     id_with_type},
         {id},    // 44
-        {id,            op_l_squ,    exp_list,     op_r_squ},
+        {id,            op_l_squ,    exp_list,     op_r_squ}, // 45
         {var},
         {var,           p_comma,     var_list},
 
@@ -227,8 +237,8 @@ static std::vector<Token> rhs[] = {
         {op_and},
 
         // statement 61-80
-        {begin,         stmt_list,   key_end},
-        {key_begin},
+        {begin,         stmt_list,   end},
+        {key_begin},  // 62
         {stmt},
         {stmt_list,     p_semicolon, stmt},
 
@@ -236,25 +246,25 @@ static std::vector<Token> rhs[] = {
         {stmt_base},
 
         {main},   // 67
-        {proc_call},
+        {proc_call},  // 68
         {var,           op_assign,   TokenState::exp},   // 69
         {idf,           op_assign,   TokenState::exp},    // 70
         {key_read,      p_l_paren,   var_list,     p_r_paren},
         {key_write,     p_l_paren,   exp_list,     p_r_paren},
-        {key_for,       id,          op_assign,    TokenState::exp,       key_to, TokenState::exp, key_do, stmt_base},
-        {key_while,     TokenState::exp,         key_do, stmt_base},
-        {key_if,        TokenState::exp,         key_then,     stmt, else_part},
+        {fore,       id,          op_assign,    TokenState::exp,       to, TokenState::exp, doo, stmt_base},
+        {whl,     TokenState::exp,         doo, stmt_base},
+        {iff,        TokenState::exp,         then,     stmt, else_part},
 
-        {idf},
-        {idf,            p_l_paren,   exp_list,     p_r_paren},
-        {idf,            p_l_paren,   p_r_paren},
+        {idf},  // 76
+        {idf,            p_l_paren,   exp_list,     p_r_paren},  // 77
+        {idf,            p_l_paren,   p_r_paren},  // 78
 
-        {},
-        {key_else,      stmt_base},
+        {},   // 79
+        {els,      stmt_base},  // 80
 
         // exp 81-84
-        {TokenState::exp},
-        {exp_list,      p_comma,     TokenState::exp},
+        {TokenState::exp},  // 81
+        {exp_list,      p_comma,     TokenState::exp},  // 82
 
         {sub_exp},   // 83
         {TokenState::exp,           op_cmp,      sub_exp},
@@ -274,13 +284,22 @@ static std::vector<Token> rhs[] = {
         {num},   // 89
         {var},   // 90
         {p_l_paren,     TokenState::exp,         p_r_paren},  // 91
-        {idf,            p_l_paren,   exp_list,     p_r_paren},
-        {idf,            p_l_paren,   p_r_paren},
-        {idf},
+        {idf,            p_l_paren,   exp_list,     p_r_paren},  // 92
+        {idf,            p_l_paren,   p_r_paren},   // 93
+        {idf},   // 94
 
         {op_not,        factor},
         {op_neg,        factor},
         {op_pos,        factor},
+
+        {key_then},  // 98
+        {key_else},   // 99
+        {key_do},    // 100
+        {key_to},   // 101
+        {key_if},   // 102
+        {key_while},  // 103
+        {key_for},   // 104
+        {key_end}    // 105
 
 };
 
