@@ -2,11 +2,28 @@
 
 #include <deque>
 #include <unordered_map>
+#include <llvm/IR/Value.h>
 
 #include "Token.h"
 
+
+namespace semantic
+{
+    struct SymbolEntry {
+        // 保存变量的地址，而不是右值
+        llvm::Value* val;
+        llvm::Type* type;
+
+        SymbolEntry() = default;
+        SymbolEntry(const SymbolEntry& desc) = default;
+        SymbolEntry& operator=(const SymbolEntry& entry) = default;
+    };
+}
+
 namespace token
 {
+    
+    
     struct TokenDesc;
 
     enum LexerState{
@@ -49,16 +66,28 @@ namespace token
         size_t line;
         size_t col;
         
-        Token token;
-        std::string value;
+        semantic::SymbolEntry entry;
+        std::string str;
         
-        TokenDesc(Token token, std::string value) :
-                line(Lexer::line),col(Lexer::col),
-                token(token),value(std::move(value)){}
+        Token token;
+        Token save;
 
-        explicit TokenDesc(Token t):  line(0), col(0), token(t), value("undefined") {}
-
-        TokenDesc(Token t, const TokenDesc* desc):  line(0), col(0), token(t), value(desc->value) {}
+        explicit TokenDesc(Token t): line(0), col(0),entry(),token(t), save(null) {}
+        
+        TokenDesc(Token token, std::string str) :
+                line(Lexer::line),col(Lexer::col),entry(),
+                str(std::move(str)), token(token),save(null){}
+        
+        TokenDesc(const TokenDesc& desc) = default;
+        TokenDesc& operator=(const TokenDesc& desc)
+        {
+            col = desc.col;
+            line = desc.line;
+            entry = desc.entry;
+            str = desc.str;
+            save = desc.save;
+            return *this;
+        }
     };
 
     inline std::ostream &operator<<(std::ostream &os, const TokenDesc &s) {

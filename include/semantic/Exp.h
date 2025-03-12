@@ -8,9 +8,9 @@
 namespace semantic
 {
     void load(llvm::Value* id);
-    void store(llvm::Value* value, llvm::Value* id);
+    void store(token::TokenDesc* exp, token::TokenDesc* ptr);
     void loadIfPointer(SymbolEntry& entry);
-    void num(const token::TokenDesc* t, SymbolEntry& entry);
-    void unaryOp(token::TokenState op, SymbolEntry& );
-    void binaryOp (token::TokenState op, SymbolEntry& L, SymbolEntry& R, SymbolEntry& entry);
+    void num(token::TokenDesc* t);
+    void unaryOp(token::TokenDesc* op, token::TokenDesc* factor );
+    void binaryOp (token::TokenDesc* op, token::TokenDesc* L, token::TokenDesc* R, token::TokenDesc* ret);
 }

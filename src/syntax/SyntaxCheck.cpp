@@ -49,7 +49,7 @@ namespace
         auto& tokens = getTokens();
         auto& t = tokens.front();
         cout << "Error: "
-             << "possible token is wrong " + t->value
+             << "possible token is wrong " + t->str
              << " at line " << t->line
              << ", col " << t->col
              << '\n';
@@ -115,23 +115,16 @@ void syntax::lr::lrCheck(){
                      << entry << "]\n";
 
                 // 规约操作
-                semantic::callReduce(option.id);
+                TokenDesc* newT = semantic::callReduce(option.id, entry.l);
 
-                TokenDesc* save;
-                if(entry.r.size() == 1)
-                    save = getWaitTokens().back();
-            
+
                 // 弹出符号和状态
                 for (size_t i = 0; i < entry.r.size(); ++i) {
                     getWaitTokens().pop_back();
                     stateStack.pop();
                 }
             
-                // 压入规约符号
-                if(entry.r.size() == 1)
-                    getWaitTokens().push_back(new TokenDesc(entry.l, save));
-                else
-                    getWaitTokens().push_back(new TokenDesc(entry.l));
+                getWaitTokens().push_back(newT);
             
                 // goto 跳转状态
                 auto s = stateStack.top();

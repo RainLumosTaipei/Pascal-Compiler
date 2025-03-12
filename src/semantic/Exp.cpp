@@ -77,11 +77,13 @@ namespace
     }
 }
 
+// 将指针类型转化为其指向的数，调用 load 并返回指向的数
 void semantic::loadIfPointer(SymbolEntry& entry)
 {
+    // 需要注意其类型本来不是指针类型
     if (entry.val->getType()->isPointerTy() && !entry.type->isPointerTy())
     {
-        entry.val = getBuilder().CreateLoad(entry.type, entry.val, "load_" + entry.val->getName());
+        entry.val = getBuilder().CreateLoad(entry.type, entry.val, entry.val->getName());
     }
 }
 
@@ -90,24 +92,25 @@ void semantic::load(Value* id)
     getBuilder().CreateLoad(id->getType(),id);
 }
 
-void semantic::store(Value* value, Value* id)
+// 将 value 存储到变量 id 中， 注意 id 必须是一个指针类型
+void semantic::store(token::TokenDesc* exp, token::TokenDesc* ptr)
 {
-    getBuilder().CreateStore(value, id);
+    getBuilder().CreateStore(exp->entry.val, ptr->entry.val);
 }
 
-void semantic::num(const token::TokenDesc* t, SymbolEntry& entry)
+void semantic::num(token::TokenDesc* t)
 {
     switch (t->token.token)
     {
     case token::TokenState::num:
-        if(t->value.find('.') != string::npos)
+        if(t->str.find('.') != string::npos)
         {
-            entry.val = realNum(stof(t->value));
-            entry.type =  Type::getFloatTy(getContext());
+            t->entry.val = realNum(stof(t->str));
+            t->entry.type =  Type::getFloatTy(getContext());
             return;
         }
-        entry.val = intNum(stoi(t->value));
-        entry.type = IntegerType::get(getContext(), 32);
+        t->entry.val = intNum(stoi(t->str));
+        t->entry.type = IntegerType::get(getContext(), 32);
         return ;
     default:
         throw runtime_error("Unknown const type");
@@ -115,25 +118,24 @@ void semantic::num(const token::TokenDesc* t, SymbolEntry& entry)
 }
 
 // 一元操作符
-void semantic::unaryOp(token::TokenState op, SymbolEntry& entry)
+void semantic::unaryOp(token::TokenDesc* op, token::TokenDesc* factor)
 {
-    if (!entry.val)
+    if (!factor->entry.val)
         return ;
-    loadIfPointer(entry);
     
-    switch (op)
+    switch (op->token.token)
     {
     case token::op_neg:
-        if(entry.type->isIntegerTy())
+        if(factor->entry.type->isIntegerTy())
         {
-            entry.val = getBuilder().CreateNeg(entry.val,"ineg");
+            factor->entry.val = getBuilder().CreateNeg(factor->entry.val,"ineg");
             return;
         }
-        entry.val = getBuilder().CreateFNeg(entry.val, "fneg");
+        factor->entry.val = getBuilder().CreateFNeg(factor->entry.val, "fneg");
         return;
         
     case token::op_not:
-        entry.val = getBuilder().CreateNot(entry.val, "not");
+        factor->entry.val = getBuilder().CreateNot(factor->entry.val, "not");
         return;
 
     case token::op_pos:
@@ -145,119 +147,115 @@ void semantic::unaryOp(token::TokenState op, SymbolEntry& entry)
 }
 
 // 二元操作符
-void semantic::binaryOp (token::TokenState op,  SymbolEntry& L, SymbolEntry& R, SymbolEntry& entry){
-    if (!L.val || !R.val)
+void semantic::binaryOp (token::TokenDesc* op,  token::TokenDesc* L, token::TokenDesc* R, token::TokenDesc* ret){
+    if (!L->entry.val || !R->entry.val)
         return ;
-
-    // 消除指针
-    loadIfPointer(L);
-    loadIfPointer(R);
     
-    convertType(L, R);
-    Type* t = R.type;
-    entry.type = R.type;
+    convertType(L->entry, R->entry);
+    Type* t = R->entry.type;
+    ret->entry.type = R->entry.type;
     
-    switch (op) {
+    switch (op->save.token) {
     // calculate operator
     case token::op_add:
         if(t->isIntegerTy())
         {
-            entry.val = getBuilder().CreateAdd(L.val, R.val, "iadd");
+            ret->entry.val = getBuilder().CreateAdd(L->entry.val, R->entry.val, "iadd");
             return;
         }
-        entry.val = getBuilder().CreateFAdd(L.val, R.val, "fadd");
+        ret->entry.val = getBuilder().CreateFAdd(L->entry.val, R->entry.val, "fadd");
         return;
         
     case token::op_sub:
         if(t->isIntegerTy())
         {
-            entry.val =getBuilder().CreateSub(L.val, R.val, "isub");
+            ret->entry.val =getBuilder().CreateSub(L->entry.val, R->entry.val, "isub");
             return;
         }
-        entry.val =getBuilder().CreateFSub(L.val, R.val, "fsub");
+        ret->entry.val =getBuilder().CreateFSub(L->entry.val, R->entry.val, "fsub");
         return;
     case token::op_mul:
         if(t->isIntegerTy())
         {
-            entry.val =getBuilder().CreateMul(L.val, R.val, "imul");
+            ret->entry.val =getBuilder().CreateMul(L->entry.val, R->entry.val, "imul");
             return;
         }
-        entry.val =getBuilder().CreateFMul(L.val, R.val, "fmul");
+        ret->entry.val =getBuilder().CreateFMul(L->entry.val, R->entry.val, "fmul");
         return;
     case token::op_div:
         if(t->isIntegerTy())
         {
-            entry.val =getBuilder().CreateSDiv(L.val, R.val, "idiv");
+            ret->entry.val =getBuilder().CreateSDiv(L->entry.val, R->entry.val, "idiv");
             return;
         }
-        entry.val =getBuilder().CreateFDiv(L.val, R.val, "fdiv");
+        ret->entry.val =getBuilder().CreateFDiv(L->entry.val, R->entry.val, "fdiv");
         return;
     case token::op_mod:
         if(t->isIntegerTy())
         {
-            entry.val =getBuilder().CreateSRem(L.val, R.val, "imod");
+            ret->entry.val =getBuilder().CreateSRem(L->entry.val, R->entry.val, "imod");
             return;
         }
-        entry.val =getBuilder().CreateFRem(L.val, R.val, "fmod");
+        ret->entry.val =getBuilder().CreateFRem(L->entry.val, R->entry.val, "fmod");
         return;
 
     // bits operator
     case token::op_and:
-        entry.val =getBuilder().CreateAnd(L.val, R.val, "and");
+        ret->entry.val =getBuilder().CreateAnd(L->entry.val, R->entry.val, "and");
         return;
     case token::op_or:
-        entry.val =getBuilder().CreateOr(L.val, R.val, "or");
+        ret->entry.val =getBuilder().CreateOr(L->entry.val, R->entry.val, "or");
         return;
     // cmp operator
     case token::op_equal:
         if(t->isIntegerTy())
         {
-            entry.val =getBuilder().CreateICmpEQ(L.val, R.val, "ieq");
+            ret->entry.val =getBuilder().CreateICmpEQ(L->entry.val, R->entry.val, "ieq");
             return;
         }
-        entry.val =getBuilder().CreateFCmpOEQ(L.val, R.val, "feq");
+        ret->entry.val =getBuilder().CreateFCmpOEQ(L->entry.val, R->entry.val, "feq");
         return;
     case token::op_not_equ:
         if(t->isIntegerTy())
         {
-            entry.val =getBuilder().CreateICmpNE(L.val, R.val, "ine");
+            ret->entry.val =getBuilder().CreateICmpNE(L->entry.val, R->entry.val, "ine");
             return;
         }
-         entry.val =getBuilder().CreateFCmpONE(L.val, R.val, "fne");
+         ret->entry.val =getBuilder().CreateFCmpONE(L->entry.val, R->entry.val, "fne");
         return;
     case token::op_less:
         if(t->isIntegerTy())
         {
-            entry.val =getBuilder().CreateICmpSLT(L.val, R.val, "ilt");
+            ret->entry.val =getBuilder().CreateICmpSLT(L->entry.val, R->entry.val, "ilt");
             return;
         }
-        entry.val =getBuilder().CreateFCmpOLT(L.val, R.val, "flt");
+        ret->entry.val =getBuilder().CreateFCmpOLT(L->entry.val, R->entry.val, "flt");
         return;
     case token::op_great:
         if(t->isIntegerTy())
         {
-            entry.val =getBuilder().CreateICmpSGT(L.val, R.val, "igt");
+            ret->entry.val =getBuilder().CreateICmpSGT(L->entry.val, R->entry.val, "igt");
             return;
         }
-        entry.val =getBuilder().CreateFCmpOGT(L.val, R.val, "fgt");
+        ret->entry.val =getBuilder().CreateFCmpOGT(L->entry.val, R->entry.val, "fgt");
         return;
         
     case token::op_less_equ:
         if(t->isIntegerTy())
         {
-            entry.val =getBuilder().CreateICmpSLE(L.val, R.val, "ile");
+            ret->entry.val =getBuilder().CreateICmpSLE(L->entry.val, R->entry.val, "ile");
             return;
         }
-        entry.val =getBuilder().CreateFCmpOLE(L.val, R.val, "fle");
+        ret->entry.val =getBuilder().CreateFCmpOLE(L->entry.val, R->entry.val, "fle");
         return;
         
     case token::op_great_equ:
         if(t->isIntegerTy())
         {
-            entry.val =getBuilder().CreateICmpSGE(L.val, R.val, "ige");
+            ret->entry.val =getBuilder().CreateICmpSGE(L->entry.val, R->entry.val, "ige");
             return;
         }
-         entry.val =getBuilder().CreateFCmpOGE(L.val, R.val, "fge");
+         ret->entry.val =getBuilder().CreateFCmpOGE(L->entry.val, R->entry.val, "fge");
         return;
     default:
         throw std::runtime_error("Unsupported binary operator");

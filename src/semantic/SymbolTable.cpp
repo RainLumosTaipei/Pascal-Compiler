@@ -46,11 +46,11 @@ bool semantic::SymbolTable::findVar(const std::string& name) {
 }
 
 
-bool semantic::SymbolTable::findVar(const std::string& name, SymbolEntry& entry) {
+bool semantic::SymbolTable::findVar(token::TokenDesc* desc) {
     for (auto it = scopes.rbegin(); it != scopes.rend(); ++it) {
-        auto found = it->find(name);
+        auto found = it->find(desc->str);
         if (found != it->end()) {
-            entry = found->second;
+            desc->entry = found->second;
             return true;
         }
     }

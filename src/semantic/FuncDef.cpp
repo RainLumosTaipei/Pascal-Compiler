@@ -16,24 +16,6 @@ Function* semantic::getFunc(const string& name)
 
 namespace
 {
-    Type* getParaType(token::TokenState t)
-    {
-        switch (t)
-        {
-        case token::type_int:
-            return IntegerType::get(getContext(), 32);
-        case token::type_bool:
-            return IntegerType::get(getContext(), 1);
-        case token::type_char:
-            return IntegerType::get(getContext(), 8);
-        case token::type_real:
-            return Type::getFloatTy(getContext());
-        case token::null:
-            return Type::getVoidTy(getContext());
-        default:
-            throw std::runtime_error("Invalid token type");
-        }
-    }
 
     void startBlock(Function* func)
     {
@@ -44,17 +26,18 @@ namespace
 
     void allocParas(const FuncDesc& desc)
     {
-        if (!desc.paras.empty())
-            for(auto& it : desc.paras)
-                regisVar(it);
+        for (size_t i = 0; i < desc.paraName.size(); ++i)
+        {
+            regisVar(desc.paraName[i], desc.paraType[i], false);
+        }
     }
 }
 
 
 
-void semantic::retFunc(Value* ret)
+void semantic::retFunc(token::TokenDesc* ret)
 {
-    getBuilder().CreateRet(ret);
+    getBuilder().CreateRet(ret->entry.val);
 }
 
 void semantic::retFunc()
@@ -66,24 +49,33 @@ void semantic::retFunc()
 void semantic::regisFunc(const FuncDesc& desc)
 {
     FunctionType *funcTy;
-    if (!desc.paras.empty())
+    Type* retTy;
+
+    // 返回值是否为空
+    if(desc.isVoid)
+        retTy = Type::getVoidTy(getContext());
+    else
+        retTy = desc.rev->entry.type;
+
+    // 参数是否为空
+    if (!desc.paraType.empty())
     {
-        vector<Type*> paramTypes;
-        for(auto& it : desc.paras)
-            paramTypes.push_back(getParaType(it.first));
-        funcTy = FunctionType::get(getParaType(desc.rev), paramTypes, false);
+        vector<Type*> paraTy;
+        for (auto it : desc.paraType)
+            paraTy.push_back(it->entry.type);
+        funcTy = FunctionType::get(retTy, paraTy, false);
     }
     else
-        funcTy = FunctionType::get(getParaType(desc.rev), false);
+        funcTy = FunctionType::get(retTy, false);
     
-    Function *func = Function::Create(funcTy, Function::ExternalLinkage, desc.name->value, getModule());
+    Function *func = Function::Create(funcTy, Function::ExternalLinkage, desc.name->str, getModule());
 
     startBlock(func);
     
     int id = 0;
     for(auto& arg : func->args())
     {
-        auto& argName = desc.paras[id++].second->value;
+        auto& argName = desc.paraName[id++]->str;
         arg.setName(argName);
     }
 

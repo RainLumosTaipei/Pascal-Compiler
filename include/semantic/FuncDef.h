@@ -8,17 +8,17 @@
 
 namespace semantic
 {
-    typedef std::pair<token::TokenState, token::TokenDesc*> Para;
-    typedef std::vector<Para> ParaList;
     typedef struct
     {
-        ParaList paras;
-        token::TokenState rev;
+        std::vector<token::TokenDesc*> paraType;
+        std::vector<token::TokenDesc*> paraName;
+        token::TokenDesc* rev;
         token::TokenDesc* name;
-    }FuncDesc;
+        bool isVoid;
+    } FuncDesc;
 
     void regisFunc(const FuncDesc& desc);
-    void retFunc(llvm::Value* ret);
+    void retFunc(token::TokenDesc* ret);
     void retFunc();
     llvm::Function* getFunc(const std::string& name);
 }

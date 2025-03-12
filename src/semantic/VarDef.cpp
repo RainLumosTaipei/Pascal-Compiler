@@ -33,65 +33,6 @@ namespace
         getBuilder().CreateStore(initialValue, var);
         regisId(id, var, type);
     }
-
-    // 通用的注册变量函数模板
-    template <typename T, unsigned BitWidth = 32, bool IsSigned = true>
-    void regisVar(const std::string& id, bool isConstant, bool isGlobal) {
-        LLVMContext& context = getContext();
-        Type* type;
-        Constant* zero;
-
-        if constexpr (std::is_same_v<T, float>) {
-            type = Type::getFloatTy(context);
-            zero = ConstantFP::get(type, 0.0);
-        } else {
-            IntegerType* intType = IntegerType::get(context, BitWidth);
-            type = intType;
-            zero = ConstantInt::get(intType, 0, IsSigned);
-        }
-
-        if (isGlobal) 
-            return regisGlobal(id, isConstant, type, zero);
-        return regisLocal(id, isConstant, type, zero);
-    }
-
-    // 变量注册函数
-    void regisVarInt(const std::string& id, bool isGlobal) {
-        regisVar<int>(id, false, isGlobal);
-    }
-
-    void regisVarReal(const std::string& id, bool isGlobal) {
-        regisVar<float>(id, false, isGlobal);
-    }
-
-    void regisVarChar(const std::string& id, bool isGlobal) {
-        regisVar<char, 8, false>(id, false, isGlobal);
-    }
-
-    void regisVarBool(const std::string& id, bool isGlobal) {
-        regisVar<bool, 1, false>(id, false, isGlobal);
-    }
-
-    // 常量注册函数
-    [[maybe_unused]]
-    void regisConstInt(const std::string& id, bool isGlobal) {
-        regisVar<int>(id, true, isGlobal);
-    }
-
-    [[maybe_unused]]
-    void regisConstReal(const std::string& id, bool isGlobal) {
-        regisVar<float>(id, true, isGlobal);
-    }
-
-    [[maybe_unused]]
-    void regisConstChar(const std::string& id, bool isGlobal) {
-        regisVar<char, 8, false>(id, true, isGlobal);
-    }
-
-    [[maybe_unused]]
-    void regisConstBool(const std::string& id, bool isGlobal) {
-        regisVar<bool, 1, false>(id, true, isGlobal);
-    }
 }
 
 namespace
@@ -154,122 +95,62 @@ namespace
     }
 }
 
-namespace
+
+
+void semantic::regisVar(token::TokenDesc* id, token::TokenDesc* type, bool isGlobal)
 {
-    void regisArray(const std::string& id, bool isConstant, const ArrayDesc& desc, bool isGlobal)
-    {
-        if (isGlobal)
-            return regisGlobal(id, isConstant, desc.arrayType, desc.constant);
-        return regisLocal(id, isConstant, desc.arrayType, desc.constant);
-    }
-
-    template <typename T, unsigned BitWidth = 32, bool IsSigned = true>
-    void getArrayType(int size, ArrayDesc& desc) {
-        LLVMContext& context = getContext();
-        Type* type;
-        Constant* zero;
-
-        if constexpr (std::is_same_v<T, float>) {
-            type = Type::getFloatTy(context);
-            zero = ConstantFP::get(type, 0.0);
-        } else {
-            IntegerType* intType = IntegerType::get(context, BitWidth);
-            type = intType;
-            zero = ConstantInt::get(intType, 0, IsSigned);
-        }
-        ArrayType* arrayType = ArrayType::get(type, size);
-        desc.arrayType = arrayType;
-        desc.constant = ConstantArray::get(arrayType, vector(size, zero));
-    }
-
-    void getArrayTypeInt(int size, ArrayDesc& desc) {
-        getArrayType<int>(size, desc);
-    }
-    
-    void getArrayTypeChar(int size, ArrayDesc& desc) {
-        getArrayType<char, 8>(size, desc);
-    }
-    
-    void getArrayTypeReal(int size, ArrayDesc& desc) {
-        getArrayType<float>(size, desc);
-    }
-    
-    void getArrayTypeBool(int size, ArrayDesc& desc) {
-        getArrayType<bool, 1>(size, desc);
-    }
+    auto contValue = cast<Constant>(type->entry.val);
+    if (isGlobal) 
+        return regisGlobal(id->str, false, type->entry.type, contValue);
+    return regisLocal(id->str, false, type->entry.type, contValue);
 }
 
-void semantic::regisVar(const token::TokenDesc* name, token::TokenState type, bool isGlobal)
+void semantic::regisConstWithValue(const token::TokenDesc* id, token::TokenDesc* cont, bool isGlobal)
 {
-    switch (type)
-    {
-    case token::TokenState::type_int:
-        regisVarInt(name->value, isGlobal);
-        break;
-    case token::TokenState::type_real:
-        regisVarReal(name->value, isGlobal);
-        break;
-    case token::TokenState::type_char:
-        regisVarChar(name->value, isGlobal);
-        break;
-    case token::TokenState::type_bool:
-        regisVarBool(name->value, isGlobal);
-        break;
-    default:
-        throw runtime_error("Unknown var type");
-    }
-}
-
-void semantic::regisVar(const Para& para)
-{
-    regisVar(para.second, para.first, false);
-}
-
-void semantic::regisConstWithValue(const token::TokenDesc* name, token::TokenDesc* t, bool isGlobal)
-{
-    switch (t->token.token)
+    switch (cont->token.token)
     {
     case token::TokenState::num:
-        if(t->value.find('.') != string::npos)
-            return regisConstRealWithValue(name->value, t->value, isGlobal);
-        return regisConstIntWithValue(name->value, t->value, isGlobal);
+        if(cont->str.find('.') != string::npos)
+            return regisConstRealWithValue(id->str, cont->str, isGlobal);
+        return regisConstIntWithValue(id->str, cont->str, isGlobal);
     case token::TokenState::letter:
-        return regisConstCharWithValue(name->value, t->value, isGlobal);
+        return regisConstCharWithValue(id->str, cont->str, isGlobal);
     default:
         throw runtime_error("Unknown const type");
     }
 }
 
-void semantic::getArrayType(ArrayDesc& desc, int size)
+
+
+void semantic::typeInt(token::TokenDesc* type)
 {
-    auto* newTy = ArrayType::get(desc.arrayType, size);
-    auto* newConst =  ConstantArray::get(newTy, vector(size, desc.constant));
-    desc.arrayType = newTy;
-    desc.constant = newConst;
+    type->entry.type = IntegerType::get(getContext(), 32);
+    type->entry.val = ConstantInt::get(type->entry.type, 0, true);
 }
 
-void semantic::getArrayType(token::TokenDesc* t, ArrayDesc& desc, int size)
+void semantic::typeChar(token::TokenDesc* type)
 {
-    switch (t->token.token)
-    {
-    case token::TokenState::type_int:
-        getArrayTypeInt(size, desc);
-        break;
-    case token::TokenState::type_real:
-        getArrayTypeReal(size, desc);
-        break;
-    case token::TokenState::type_char:
-        getArrayTypeChar(size, desc);
-        break;
-    case token::TokenState::type_bool:
-        getArrayTypeBool(size, desc);
-        break;
-    default:
-        throw runtime_error("Unknown array type");
-    }
+    type->entry.type = IntegerType::get(getContext(), 8);
+    type->entry.val = ConstantInt::get(type->entry.type, 0, false);
 }
 
-void semantic::regisVarArray(const token::TokenDesc* t, const ArrayDesc& desc, bool isGlobal)
+void semantic::typeBool(token::TokenDesc* type)
 {
-    regisArray(t->value, false, desc, isGlobal);
+    type->entry.type = IntegerType::get(getContext(), 1);
+    type->entry.val = ConstantInt::get(type->entry.type, 0, false);
+}
+
+void semantic::typeReal(token::TokenDesc* type)
+{
+    type->entry.type = Type::getFloatTy(getContext());
+    type->entry.val = ConstantFP::get(type->entry.type, 0.0);
+}
+
+void semantic::typeArray(token::TokenDesc* type, int size)
+{
+    auto* newTy = ArrayType::get(type->entry.type, size);
+    auto contValue = cast<Constant>(type->entry.val);
+    auto* newConst =  ConstantArray::get(newTy, vector(size, contValue));
+    type->entry.type = newTy;
+    type->entry.val = newConst;
 }

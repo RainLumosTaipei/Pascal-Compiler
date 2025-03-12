@@ -2,12 +2,15 @@
 
 #include <unordered_map>
 
+#include "SymbolTable.h"
+#include "lex/Lexer.h"
+
 namespace semantic{
 
-    typedef void (*ReduceFn)();
+    typedef void (*ReduceFn)(token::TokenDesc*);
     
 
     typedef std::unordered_map<size_t, ReduceFn> ReduceTable;
 
-    void callReduce(size_t id);
+    token::TokenDesc* callReduce(size_t id, token::TokenState t);
 }

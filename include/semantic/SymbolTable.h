@@ -4,15 +4,12 @@
 #include <vector>
 #include <llvm/IR/Value.h>
 
+#include "lex/Lexer.h"
+
 
 namespace semantic
 {
-    struct SymbolEntry {
-        // 保存变量的地址，而不是右值
-        llvm::Value* val;
-        llvm::Type* type;
-    };
-
+    struct SymbolEntry;
     typedef std::unordered_map<std::string, SymbolEntry> ScopeTable;
 
     class SymbolTable {
@@ -24,7 +21,7 @@ namespace semantic
         void enterScope();
         void leaveScope();
         void addVar(const std::string& name, llvm::Value* val, llvm::Type* type);
-        bool findVar(const std::string& name, SymbolEntry& entry);
+        bool findVar(token::TokenDesc* desc);
         bool findVar(const std::string& name);
         llvm::Value* randomVar();
         size_t deep();

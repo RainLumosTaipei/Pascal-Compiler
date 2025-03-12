@@ -179,7 +179,7 @@ static std::vector<Token> rhs[] = {
         {const_def,     p_semicolon, id,           op_equal,  cont},
 
         {letter},
-        {op_neg,        num},
+        {op_neg,        num},   // 25
         {op_pos,        num},
         {num},
 
@@ -192,8 +192,8 @@ static std::vector<Token> rhs[] = {
         { id, p_colon, type},
 
         // type  34-41
-        {type_base},
-        {type_array,    op_l_squ,    period_with_type},
+        {type_base},   
+        {type_array,    op_l_squ,    period_with_type},  // 35
         {type_int},
         {type_real},
         {type_char},
@@ -209,7 +209,7 @@ static std::vector<Token> rhs[] = {
         {var},
         {var,           p_comma,     var_list},
 
-        // op
+        // op 48-60
         {op_great},
         {op_less},
         {op_equal},
@@ -256,24 +256,24 @@ static std::vector<Token> rhs[] = {
         {TokenState::exp},
         {exp_list,      p_comma,     TokenState::exp},
 
-        {sub_exp},
+        {sub_exp},   // 83
         {TokenState::exp,           op_cmp,      sub_exp},
 
 
         // sub_exp  85-86
-        {term},
+        {term},    // 85
         {sub_exp,       op_add_sub,  term},
 
 
         // term  87-88
-        {factor},
+        {factor},   // 87
         {term,          op_div_mul,  factor},
 
 
         // factor  89-97
-        {num},
-        {var},
-        {p_l_paren,     TokenState::exp,         p_r_paren},
+        {num},   // 89
+        {var},   // 90
+        {p_l_paren,     TokenState::exp,         p_r_paren},  // 91
         {idf,            p_l_paren,   exp_list,     p_r_paren},
         {idf,            p_l_paren,   p_r_paren},
         {idf},
