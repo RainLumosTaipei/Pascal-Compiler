@@ -40,6 +40,7 @@ namespace token {
         els,
         to,
         doo,
+        todo,
         iff,
         whl,
         fore,

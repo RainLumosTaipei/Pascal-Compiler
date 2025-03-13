@@ -150,7 +150,8 @@ static Token lhs[] = {
         iff,   // 102
         whl,    // 103
         fore,    // 104
-        end
+        end,    // 105
+        todo    // 106
  
 };
 
@@ -249,11 +250,11 @@ static std::vector<Token> rhs[] = {
         {proc_call},  // 68
         {var,           op_assign,   TokenState::exp},   // 69
         {idf,           op_assign,   TokenState::exp},    // 70
-        {key_read,      p_l_paren,   var_list,     p_r_paren},
-        {key_write,     p_l_paren,   exp_list,     p_r_paren},
-        {fore,       id,          op_assign,    TokenState::exp,       to, TokenState::exp, doo, stmt_base},
-        {whl,     TokenState::exp,         doo, stmt_base},
-        {iff,        TokenState::exp,         then,     stmt, else_part},
+        {key_read,      p_l_paren,   var_list,     p_r_paren},  // 71
+        {key_write,     p_l_paren,   exp_list,     p_r_paren},   // 72
+        {fore,       var,          op_assign,    TokenState::exp,       to, TokenState::exp, todo, stmt_base},
+        {whl,     TokenState::exp,         doo, stmt_base},  // 74
+        {iff,        TokenState::exp,         then,     stmt, else_part},  // 75
 
         {idf},  // 76
         {idf,            p_l_paren,   exp_list,     p_r_paren},  // 77
@@ -299,7 +300,8 @@ static std::vector<Token> rhs[] = {
         {key_if},   // 102
         {key_while},  // 103
         {key_for},   // 104
-        {key_end}    // 105
+        {key_end},    // 105
+        {key_do}    // 106
 
 };
 

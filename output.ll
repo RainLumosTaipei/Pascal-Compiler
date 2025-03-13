@@ -1,48 +1,39 @@
 ; ModuleID = 'Pascal IR'
 source_filename = "Pascal IR"
 
-@c = global i32 0
-@b = global i32 0
-@a = global i32 0
-@vecA = global [10 x [10 x i32]] zeroinitializer
-
-define i32 @myFunc(i32 %q, i32 %p, float %s, float %r) {
+define i32 @ififElse() {
 entry:
-  %q1 = alloca i32, align 4
-  store i32 0, ptr %q1, align 4
-  %p2 = alloca i32, align 4
-  store i32 0, ptr %p2, align 4
-  %s3 = alloca float, align 4
-  store float 0.000000e+00, ptr %s3, align 4
-  %r4 = alloca float, align 4
-  store float 0.000000e+00, ptr %r4, align 4
-  %lb = alloca i32, align 4
-  store i32 0, ptr %lb, align 4
-  %la = alloca i32, align 4
-  store i32 0, ptr %la, align 4
-  store i32 1, ptr %p2, align 4
-  %p25 = load i32, ptr %p2, align 4
-  %la6 = load i32, ptr %la, align 4
-  %iadd = add i32 %p25, %la6
-  store i32 %iadd, ptr %q1, align 4
-  %p27 = load i32, ptr %p2, align 4
-  %q18 = load i32, ptr %q1, align 4
-  %iadd9 = add i32 %p27, %q18
-  %0 = load i32, ptr getelementptr ([10 x [10 x i32]], ptr @vecA, i32 0, i32 6, i32 8), align 4
-  %imul = mul i32 %iadd9, %0
-  store i32 %imul, ptr @b, align 4
-  %b = load i32, ptr @b, align 4
-  ret i32 %b
+  %a = alloca i32, align 4
+  store i32 0, ptr %a, align 4
+  %b = alloca i32, align 4
+  store i32 0, ptr %b, align 4
+  store i32 66, ptr %a, align 4
+  store i32 10, ptr %b, align 4
+  
+  store i32 0, ptr %a, align 4
+  br label %entry1
+
+entry1:                                           ; preds = %then, %entry
+  %a2 = load i32, ptr %a, align 4
+  %ile = icmp sle i32 %a2, 4
+  br i1 %ile, label %then, label %merge
+
+then:                                             ; preds = %entry1
+  %b3 = load i32, ptr %b, align 4
+  %imul = mul i32 %b3, 2
+  store i32 %imul, ptr %b, align 4
+  
+  %a4 = load i32, ptr %a, align 4
+  %inc = add i32 %a4, 1
+  store i32 %inc, ptr %a, align 4
+  br label %entry1
+
+merge:                                            ; preds = %entry1
+  %b5 = load i32, ptr %b, align 4
+  ret i32 %b5
 }
 
 define i32 @main() {
 entry:
-  store i32 3, ptr @a, align 4
-}
-
-define void @myProc() {
-entry:
-  %0 = call i32 @myFunc(i32 10, i32 100, float 1.000000e+00, float 2.000000e+00)
-  store i32 %0, ptr @c, align 4
-  ret void
+  %0 = call i32 @ififElse()
 }

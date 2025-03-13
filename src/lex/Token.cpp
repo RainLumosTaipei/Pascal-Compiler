@@ -33,6 +33,7 @@ std::string token::tokenNames[] = {
     "else",
     "to",
     "do",
+    "todo",
     "if",
     "while",
     "for",

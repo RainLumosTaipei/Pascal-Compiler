@@ -164,7 +164,7 @@ stmt_base -> read ( var_list )
 
 stmt_base -> write ( exp_list )
 
-stmt_base -> for id := exp to exp do stmt_base
+stmt_base -> for var := exp to exp do stmt_base
 
 stmt_base -> while exp do stmt_base
 

@@ -22,6 +22,8 @@ namespace
     // exp list
     vector<TokenDesc*> expList;
     size_t realDeep = 1;
+    // block
+    stack<BlockDesc> blocks;
 }
 
 
@@ -70,8 +72,6 @@ namespace
     
 }
 
-
-
 // type
 namespace
 {
@@ -118,7 +118,7 @@ namespace
     }
 }
 
-// var const
+// var const def
 namespace
 {
     // var_with_type -> id : type
@@ -306,23 +306,72 @@ namespace
     
 }
 
-
+// block
 namespace
 {
     // if -> key_if
     void ifBlock(TokenDesc* desc)
     {
-        
+        blocks.emplace(BlockType::iff);
     }
 
+    // else -> key_else
+    // else_part -> null
     void elseBlock(TokenDesc* desc)
     {
-        
+        blocks.top().thenBr();
     }
+
+    
+    // stmt_base -> if exp then stmt else_part
+    // stmt_base -> while exp do stmt_base
+    void mergeBlock(TokenDesc* desc)
+    {
+        blocks.top().elsBr();
+        blocks.pop();
+    }
+
+    // stmt_base -> for var := exp to exp do stmt_base
+    void mergeForBlock(TokenDesc* desc)
+    {
+        blocks.top().elsBr(getBackAt(7));
+        blocks.pop();
+    }
+
+    
+    // if exp then -> if exp key_then
     void thenBlock(TokenDesc* desc)
     {
-        
+        blocks.top().condBr(getBackAt(2));
     }
+
+    // while -> key_while
+    void whileBlock(TokenDesc* desc)
+    {
+        blocks.emplace(BlockType::whl);
+    }
+
+    // while exp do -> while exp key_do
+    void doBlock(TokenDesc* desc)
+    {
+        blocks.top().condBr(getBackAt(2));
+    }
+
+    // for var := exp to -> for var := exp key_to
+    void toBlock(TokenDesc* desc)
+    {
+        *desc = *getBackAt(2);
+        store(getBackAt(2), getBackAt(4));
+        blocks.emplace(BlockType::fore);
+    }
+
+    // for var := exp to exp to-do -> for var := exp to exp key_do
+    void todoBlock(TokenDesc* desc)
+    {
+        blocks.top().condBr(getBackAt(6), getBackAt(2));
+    }
+
+
 
     // begin
     void beginBlock(TokenDesc* desc)
@@ -339,6 +388,7 @@ namespace
     // end
     void endBlock(TokenDesc* desc)
     {
+        if(!isDeepEqu()) return;
         getSymbolTable().leaveScope();
         --realDeep;
     }
@@ -397,9 +447,13 @@ inline ReduceTable& getReduceTable()
             {69, assignExp},
             {70, retExp},
 
+            {73, mergeForBlock},
+            {74, mergeBlock},
+            {75, mergeBlock},
             {76, callFuncNoParenExp},
             {77, callFuncExp},
             {78, callFuncVoidExp},
+            {79, elseBlock},
 
             {81, addExpList},
             {82, addExpList},
@@ -423,8 +477,12 @@ inline ReduceTable& getReduceTable()
             
             {98, thenBlock},
             {99, elseBlock},
+            {100, doBlock},
+            {101, toBlock},
             {102, ifBlock},
+            {103, whileBlock},
             {105, endBlock},
+            {106, todoBlock}
         };
     return reduceTable;
 }
