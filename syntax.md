@@ -228,3 +228,10 @@ factor -> op_neg factor
 
 factor -> op_pos factor
 
+factor -> boolean
+
+const -> boolean
+
+boolean -> true
+
+boolean -> false

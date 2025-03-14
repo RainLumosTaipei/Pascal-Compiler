@@ -3,11 +3,12 @@
 #include <stack>
 
 #include "semantic/Ast.h"
-#include "semantic/Exp.h"
+#include "semantic/ExpIR.h"
 #include "syntax/SyntaxCheck.h"
-#include "semantic/VarDef.h"
-#include "semantic/FuncDef.h"
+#include "semantic/VarIR.h"
+#include "semantic/FuncIR.h"
 #include "semantic/SymbolTable.h"
+#include "semantic/TypeIR.h"
 
 using namespace std;
 using namespace llvm;
@@ -43,7 +44,7 @@ namespace
         *desc = *waits.back();
         desc->save = waits.back()->token;
     }
-    
+
     TokenDesc* getBackAt(int pos)
     {
         auto& waits = syntax::lr::getWaitTokens();
@@ -67,9 +68,6 @@ namespace
     {
         return getSymbolTable().deep() == realDeep;
     }
-
-    
-    
 }
 
 // type
@@ -106,7 +104,7 @@ namespace
     // period_with_type -> digit .. digit ] key_of type_base
     void typeArrayBaseDef(TokenDesc* desc)
     {
-        typeArray(getBackAt(1),  getArraySize(4));
+        typeArray(getBackAt(1), getArraySize(4));
         copyBack(desc);
     }
 
@@ -134,7 +132,7 @@ namespace
     // const_def -> const_def ; id = const 
     void constDef(TokenDesc* desc)
     {
-        regisConstWithValue(getBackAt(3), getBackAt(1), isGlobal());
+        regisConst(getBackAt(3), getBackAt(1), isGlobal());
         copyBack(desc);
     }
 
@@ -142,10 +140,8 @@ namespace
     void negNum(TokenDesc* desc)
     {
         getBackAt(1)->str.insert(0, "-");
-        copyBack(desc);
+        saveBack(desc);
     }
-    
-
 }
 
 // func
@@ -169,7 +165,6 @@ namespace
         regisFunc(funcDesc);
         funcDesc.paraName.clear();
         funcDesc.paraType.clear();
-
     }
 
     // sub_prog_head -> key_proc idf formal_para
@@ -186,7 +181,7 @@ namespace
     void retFuncBlock(TokenDesc* desc)
     {
         endFuncBlock();
-        if(funcDesc.isVoid)
+        if (funcDesc.isVoid)
             retFunc();
     }
 }
@@ -209,6 +204,13 @@ namespace
         copyBack(desc);
     }
 
+    // factor -> boolean
+    void boolExp(TokenDesc* desc)
+    {
+        semantic::boolean(getBackAt(1));
+        copyBack(desc);
+    }
+
     // factor -> ( exp )
     void parenExp(TokenDesc* desc)
     {
@@ -218,7 +220,7 @@ namespace
     // var -> id
     void leftVar(TokenDesc* desc)
     {
-        if(getSymbolTable().findVar(getBackAt(1)))
+        if (getSymbolTable().findVar(getBackAt(1)))
             return copyBack(desc);
         throw runtime_error("var does not exist");
     }
@@ -227,7 +229,7 @@ namespace
     void leftArray(TokenDesc* desc)
     {
         auto* id = getBackAt(4);
-        if(getSymbolTable().findVar(id))
+        if (getSymbolTable().findVar(id))
         {
             getArrayElement(id, expList);
             *desc = *id;
@@ -303,7 +305,6 @@ namespace
         callFunc(idf, expList);
         *desc = *idf;
     }
-    
 }
 
 // block
@@ -321,7 +322,6 @@ namespace
     {
         blocks.top().thenBr();
     }
-
     
     // stmt_base -> if exp then stmt else_part
     // stmt_base -> while exp do stmt_base
@@ -337,7 +337,6 @@ namespace
         blocks.top().elsBr(getBackAt(7));
         blocks.pop();
     }
-
     
     // if exp then -> if exp key_then
     void thenBlock(TokenDesc* desc)
@@ -372,11 +371,10 @@ namespace
     }
 
 
-
     // begin
     void beginBlock(TokenDesc* desc)
     {
-        if(isDeepEqu())
+        if (isDeepEqu())
         {
             startFuncBlock("entry");
             ++realDeep;
@@ -388,9 +386,23 @@ namespace
     // end
     void endBlock(TokenDesc* desc)
     {
-        if(!isDeepEqu()) return;
-        getSymbolTable().leaveScope();
+        int deep =  getSymbolTable().deep();
+        if (!isDeepEqu()) return;
         --realDeep;
+    }
+}
+
+// read write
+namespace
+{
+    void callRead(TokenDesc* desc)
+    {
+        expList.clear();
+    }
+
+    void callWrite(TokenDesc* desc)
+    {
+        expList.clear();
     }
 }
 
@@ -398,100 +410,107 @@ inline ReduceTable& getReduceTable()
 {
     static ReduceTable reduceTable{
 
-            {8, retFuncBlock},
-            {9, procDef},
-            {10, funcDef},
-        
-            {22, constDef},
-            {23, constDef},
+        {8, retFuncBlock},
+        {9, procDef},
+        {10, funcDef},
 
-            {24, copyBack},
-            {25, negNum},
-            {26, copyBack},
-            {27, copyBack},
+        {22, constDef},
+        {23, constDef},
 
-            {32, varDef},
-            {33, varDef},
-            {34, copyBack},
-            {35, copyBack},
-            
-            {36, typeIntDef},
-            {37, typeRealDef},
-            {38, typeCharDef},
-            {39, typeBoolDef},
-            {40, typeArrayDef},
-            {41, typeArrayBaseDef},
-        
-            {42, addPara},
-            {43, addPara},
-            {44, leftVar},
-            {45, leftArray},
+        {24, saveBack},
+        {25, negNum},
+        {26, saveBack},
+        {27, saveBack},
 
-            {48, saveBack},
-            {49, saveBack},
-            {50, saveBack},
-            {51, saveBack},
-            {52, saveBack},
-            {53, saveBack},
-            {54, saveBack},
-            {55, saveBack},
-            {56, saveBack},
-            {57, saveBack},
-            {58, saveBack},
-            {59, saveBack},
-            {60, saveBack},
+        {32, varDef},
+        {33, varDef},
+        {34, copyBack},
+        {35, copyBack},
 
-            {62, beginBlock},
+        {36, typeIntDef},
+        {37, typeRealDef},
+        {38, typeCharDef},
+        {39, typeBoolDef},
+        {40, typeArrayDef},
+        {41, typeArrayBaseDef},
 
-            {68, copyBack},
-            {69, assignExp},
-            {70, retExp},
+        {42, addPara},
+        {43, addPara},
+        {44, leftVar},
+        {45, leftArray},
 
-            {73, mergeForBlock},
-            {74, mergeBlock},
-            {75, mergeBlock},
-            {76, callFuncNoParenExp},
-            {77, callFuncExp},
-            {78, callFuncVoidExp},
-            {79, elseBlock},
+        {48, saveBack},
+        {49, saveBack},
+        {50, saveBack},
+        {51, saveBack},
+        {52, saveBack},
+        {53, saveBack},
+        {54, saveBack},
+        {55, saveBack},
+        {56, saveBack},
+        {57, saveBack},
+        {58, saveBack},
+        {59, saveBack},
+        {60, saveBack},
 
-            {81, addExpList},
-            {82, addExpList},
-            {83, copyBack},
-            {84, binaryExp},
-            {85, copyBack},
-            {86, binaryExp},
-            {87, copyBack},
-            {88, binaryExp},
+        {62, beginBlock},
 
-            {89, numExp},
-            {90, varExp},
-            {91, parenExp},
-            {92, callFuncExp},
-            {93, callFuncVoidExp},
-            {94, callFuncNoParenExp},
-            {95, unaryExp},
-            {96, unaryExp},
-            {97, unaryExp},
+        {68, copyBack},
+        {69, assignExp},
+        {70, retExp},
+        {71, callRead},
+        {72, callWrite},
 
-            
-            {98, thenBlock},
-            {99, elseBlock},
-            {100, doBlock},
-            {101, toBlock},
-            {102, ifBlock},
-            {103, whileBlock},
-            {105, endBlock},
-            {106, todoBlock}
-        };
+        {73, mergeForBlock},
+        {74, mergeBlock},
+        {75, mergeBlock},
+        {76, callFuncNoParenExp},
+        {77, callFuncExp},
+        {78, callFuncVoidExp},
+        {79, elseBlock},
+
+        {81, addExpList},
+        {82, addExpList},
+        {83, copyBack},
+        {84, binaryExp},
+        {85, copyBack},
+        {86, binaryExp},
+        {87, copyBack},
+        {88, binaryExp},
+
+        {89, numExp},
+        {90, varExp},
+        {91, parenExp},
+        {92, callFuncExp},
+        {93, callFuncVoidExp},
+        {94, callFuncNoParenExp},
+        {95, unaryExp},
+        {96, unaryExp},
+        {97, unaryExp},
+
+
+        {98, thenBlock},
+        {99, elseBlock},
+        {100, doBlock},
+        {101, toBlock},
+        {102, ifBlock},
+        {103, whileBlock},
+        {105, endBlock},
+        {106, todoBlock},
+
+        {107, boolExp},
+        {108, saveBack},
+        {109, saveBack},
+        {110, saveBack},
+    };
     return reduceTable;
 }
 
 TokenDesc* semantic::callReduce(size_t id, TokenState t)
 {
     auto& table = getReduceTable();
-    TokenDesc* desc = new TokenDesc(t);
-    if(table.find(id) == table.end()) return desc;
+    auto desc = new TokenDesc(t);
+    if (table.find(id) == table.end()) return desc;
     table[id](desc);
     return desc;
 }

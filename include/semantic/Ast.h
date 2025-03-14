@@ -15,5 +15,4 @@ namespace ast
 
     void printCode();
     void printCodeToFile();
-
 }

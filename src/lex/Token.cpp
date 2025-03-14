@@ -5,14 +5,14 @@ using namespace token;
 
 std::string token::tokenNames[] = {
     "real_start",
-    
+
     "prog",
     "prog_head",
     "prog_body",
 
-    "sub_prog_def",            // sub program declare
-    "sub_prog",                // sub program
-    "sub_prog_head",           // sub program head
+    "sub_prog_def", // sub program declare
+    "sub_prog", // sub program
+    "sub_prog_head", // sub program head
     "sub_prog_body",
 
     "var_para",
@@ -29,7 +29,7 @@ std::string token::tokenNames[] = {
     "main",
     "begin",
     "end",
-    "then",                   
+    "then",
     "else",
     "to",
     "do",
@@ -40,7 +40,7 @@ std::string token::tokenNames[] = {
     "stmt",
     "stmt_base",
     "stmt_list",
-    
+
     "exp_list",
     "exp",
     "sub_exp",
@@ -48,11 +48,12 @@ std::string token::tokenNames[] = {
     "factor",
     "else-part",
     "proc-call",
-    
+
     "var",
     "var_list",
     "cont",
-    
+    "boolean",
+
     "type_base",
     "type",
     "period",
@@ -75,6 +76,8 @@ std::string token::tokenNames[] = {
     "number",
     "str",
     "digit",
+    "true",
+    "false",
 
     "{",
     "}",
@@ -85,7 +88,7 @@ std::string token::tokenNames[] = {
     ";",
     "..",
     ".",
-    
+
     "=",
     "+",
     "-",
@@ -123,7 +126,7 @@ std::string token::tokenNames[] = {
     "function",
     "read",
     "write",
-    
+
     "null",
     "$"
 };

@@ -5,20 +5,21 @@
 
 namespace syntax
 {
-
     struct SyntaxEntry
     {
         size_t id;
         token::Token l;
         std::vector<token::Token> r;
-        
+
         explicit SyntaxEntry(size_t id);
-        
-        inline bool operator==(const SyntaxEntry &other) const {
+
+        inline bool operator==(const SyntaxEntry& other) const
+        {
             return id == other.id;
         }
 
-        inline bool operator<(const SyntaxEntry &other) const {
+        inline bool operator<(const SyntaxEntry& other) const
+        {
             return id < other.id;
         }
 
@@ -28,7 +29,8 @@ namespace syntax
         }
     };
 
-    inline std::ostream &operator<<(std::ostream &os, const SyntaxEntry &s) {
+    inline std::ostream& operator<<(std::ostream& os, const SyntaxEntry& s)
+    {
         for (auto token : s.r)
             os << token << " ";
         if (s.isNull()) os << "null ";
@@ -36,9 +38,8 @@ namespace syntax
         return os;
     }
 
-    typedef std::vector<SyntaxEntry> SyntaxArray;
+    using SyntaxArray = std::vector<SyntaxEntry>;
 
     SyntaxArray& getSyntaxes();
     void initSyntaxes();
 }
-

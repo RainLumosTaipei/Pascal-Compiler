@@ -10,14 +10,14 @@
 namespace semantic
 {
     struct SymbolEntry;
-    typedef std::unordered_map<std::string, SymbolEntry> ScopeTable;
+    using ScopeTable = std::unordered_map<std::string, SymbolEntry>;
 
-    class SymbolTable {
+    class SymbolTable
+    {
     private:
         std::vector<ScopeTable> scopes;
 
     public:
-
         void enterScope();
         void leaveScope();
         void addVar(const std::string& name, llvm::Value* val, llvm::Type* type);
@@ -33,5 +33,4 @@ namespace semantic
     };
 
     SymbolTable& getSymbolTable();
-
 }

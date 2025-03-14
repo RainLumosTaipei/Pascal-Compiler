@@ -1,5 +1,5 @@
 ﻿#pragma once
-#include "SymbolTable.h"
+
 #include "llvm/IR/Value.h"
 
 #include "lex/Lexer.h"
@@ -11,6 +11,7 @@ namespace semantic
     void store(token::TokenDesc* exp, token::TokenDesc* ptr);
     void loadIfPointer(SymbolEntry& entry);
     void num(token::TokenDesc* t);
-    void unaryOp(token::TokenDesc* op, token::TokenDesc* factor );
-    void binaryOp (token::TokenDesc* op, token::TokenDesc* L, token::TokenDesc* R, token::TokenDesc* ret);
+    void boolean(token::TokenDesc* t);
+    void unaryOp(token::TokenDesc* op, token::TokenDesc* factor);
+    void binaryOp(token::TokenDesc* op, token::TokenDesc* L, token::TokenDesc* R, token::TokenDesc* ret);
 }

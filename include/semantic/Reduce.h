@@ -5,12 +5,12 @@
 #include "SymbolTable.h"
 #include "lex/Lexer.h"
 
-namespace semantic{
+namespace semantic
+{
+    using ReduceFn = void(*)(token::TokenDesc*);
 
-    typedef void (*ReduceFn)(token::TokenDesc*);
-    
 
-    typedef std::unordered_map<size_t, ReduceFn> ReduceTable;
+    using ReduceTable = std::unordered_map<size_t, ReduceFn>;
 
     token::TokenDesc* callReduce(size_t id, token::TokenState t);
 }

@@ -35,7 +35,8 @@ void ast::printCodeToFile()
 {
     std::error_code EC;
     raw_fd_ostream fileStream("output.ll", EC);
-    if (EC) {
+    if (EC)
+    {
         errs() << "Error opening file: " << EC.message() << "\n";
         return;
     }
@@ -44,7 +45,8 @@ void ast::printCodeToFile()
 }
 
 
-Value* logError(const char* Str) {
+Value* logError(const char* Str)
+{
     cerr << Str << '\n';
     return nullptr;
 }

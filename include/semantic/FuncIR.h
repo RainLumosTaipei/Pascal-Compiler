@@ -9,28 +9,28 @@
 
 namespace semantic
 {
-    typedef struct
+    using FuncDesc = struct
     {
         std::vector<token::TokenDesc*> paraType;
         std::vector<token::TokenDesc*> paraName;
         token::TokenDesc* rev;
         token::TokenDesc* name;
         bool isVoid;
-    } FuncDesc;
+    };
 
-    typedef enum 
+    using BlockType = enum
     {
         iff,
         whl,
         fore
-    }BlockType;
+    };
 
-    typedef struct BlockDesc
+    using BlockDesc = struct BlockDesc
     {
-        llvm::BasicBlock *entry;
-        llvm::BasicBlock *then;
-        llvm::BasicBlock *els;
-        llvm::BasicBlock *merge;
+        llvm::BasicBlock* entry;
+        llvm::BasicBlock* then;
+        llvm::BasicBlock* els;
+        llvm::BasicBlock* merge;
 
         BlockType type;
 
@@ -40,7 +40,7 @@ namespace semantic
         void thenBr();
         void elsBr();
         void elsBr(token::TokenDesc* desc);
-    } BlockDesc;
+    };
 
     void regisFunc(const FuncDesc& desc);
     void retFunc(token::TokenDesc* ret);

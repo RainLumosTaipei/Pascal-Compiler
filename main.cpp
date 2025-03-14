@@ -24,8 +24,8 @@ static void test()
     ast::printCodeToFile();
 }
 
-int main() {
-
+int main()
+{
     syntax::initSyntaxes();
 
     //init();
