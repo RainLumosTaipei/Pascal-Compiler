@@ -163,11 +163,11 @@ static Token lhs[] = {
 static std::vector<Token> rhs[] = {
 
     // program
-    {prog, real_end},
-    {prog_head, p_semicolon, prog_body, p_dot},
-    {key_prog, id},
-    {key_prog, id, p_l_paren, id, p_r_paren},
-    {const_defs, var_defs, sub_prog_def, main},
+    {prog, real_end},  // 0
+    {prog_head, p_semicolon, prog_body, p_dot},  // 1
+    {key_prog, id},  // 2
+    {key_prog, id, p_l_paren, id, p_r_paren},  // 3
+    {const_defs, var_defs, sub_prog_def, main},   // 4
 
     // sub program 5-10
     {},

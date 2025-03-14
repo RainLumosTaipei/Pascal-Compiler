@@ -15,22 +15,31 @@ static void init()
     syntax::ll::printFollow();
 }
 
-static void test()
+static void test(const string& fileName)
 {
     syntax::lr::loadTable();
-    token::lex("open_set/69_matrix_tran.pas");
+    token::lex(fileName);
     //token::printTokens();
     ast::initPass();
     syntax::lr::lrCheck();
-    ast::printCodeToFile();
+    ast::saveIR();
+    ast::saveASM();
 }
 
-int main()
+int main(int argc, char* argv[])
 {
+    if (argc < 2) {
+        cerr << "Usage: " << argv[0] << " <filename>" << endl;
+        return 1;
+    }
+
+    // 获取传入的文件名
     syntax::initSyntaxes();
 
     //init();
-    test();
+    test(argv[1]);
 
     return 0;
 }
+
+

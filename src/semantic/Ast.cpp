@@ -8,8 +8,16 @@
 #include "llvm/Transforms/Scalar/GVN.h"
 #include "llvm/Transforms/Scalar/Reassociate.h"
 #include "llvm/Transforms/Scalar/SimplifyCFG.h"
+#include "llvm/Target/TargetMachine.h"
+#include "llvm/Target/TargetOptions.h"
+#include "llvm/TargetParser/Host.h"
+#include "llvm/MC/TargetRegistry.h"
+#include "llvm/Support/FileSystem.h"
+#include "llvm/Support/TargetSelect.h"
+#include "llvm/IR/LegacyPassManager.h"
 
 #include <iostream>
+#include <llvm/IR/Verifier.h>
 
 using namespace llvm;
 using namespace std;
@@ -64,12 +72,12 @@ void ast::initPass()
     PB.crossRegisterProxies(TheLAM, getFAM(), TheCGAM, TheMAM);
 }
 
-void ast::printCode()
+void ast::printIR()
 {
     getModule().print(errs(), nullptr);
 }
 
-void ast::printCodeToFile()
+void ast::saveIR()
 {
     std::error_code EC;
     raw_fd_ostream fileStream("output.ll", EC);
@@ -80,6 +88,57 @@ void ast::printCodeToFile()
     }
     getModule().print(fileStream, nullptr);
     fileStream.close();
+}
+
+void ast::saveASM()
+{
+    InitializeAllTargetInfos();
+    InitializeAllTargets();
+    InitializeAllTargetMCs();
+    InitializeAllAsmParsers();
+    InitializeAllAsmPrinters();
+
+    string TargetTriple = sys::getDefaultTargetTriple();
+    getModule().setTargetTriple(TargetTriple);
+
+    std::string Error;
+    auto Target = TargetRegistry::lookupTarget(TargetTriple, Error);
+    if (!Target) {
+        errs() << Error;
+        return;
+    }
+
+    auto CPU = "generic";
+    auto Features = "";
+
+    TargetOptions opt;
+    auto TheTargetMachine = Target->createTargetMachine(TargetTriple, CPU, Features, opt, Reloc::PIC_);
+
+    getModule().setDataLayout(TheTargetMachine->createDataLayout());
+
+    if (verifyModule(getModule(), &errs())) {
+        errs() << "Module verification failed\n";
+        return ;
+    }
+
+    auto Filename = "output.o";
+    std::error_code EC;
+    raw_fd_ostream dest(Filename, EC, sys::fs::OF_None);
+    if (EC) {
+        errs() << "Could not open file: " << EC.message();
+        return ;
+    }
+
+    legacy::PassManager pass;
+    auto FileType = CodeGenFileType::ObjectFile;
+    if (TheTargetMachine->addPassesToEmitFile(pass, dest, nullptr, FileType)) {
+        errs() << "TheTargetMachine can't emit a file of this type";
+        return ;
+    }
+
+    pass.run(getModule());
+    dest.flush();
+    outs() << "ASM has written to" << Filename << "\n";
 }
 
 

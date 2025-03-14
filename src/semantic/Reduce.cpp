@@ -185,6 +185,12 @@ namespace
             retFunc();
         endFuncBlock();
     }
+
+    // prog_body -> const_defs var_defs sub_prog_def main
+    void retMainFunc(TokenDesc* desc)
+    {
+        retMain();
+    }
 }
 
 // exp
@@ -419,7 +425,9 @@ namespace
 inline ReduceTable& getReduceTable()
 {
     static ReduceTable reduceTable{
-
+        
+        {4, retMainFunc},
+        
         {8, retFuncBlock},
         {9, procDef},
         {10, funcDef},

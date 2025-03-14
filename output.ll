@@ -168,6 +168,7 @@ then35:                                           ; preds = %entry34
   br label %entry34
 
 merge36:                                          ; preds = %entry34
+  ret i32 0
 }
 
 declare void @scanf(ptr, ...)

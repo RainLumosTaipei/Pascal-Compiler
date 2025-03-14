@@ -40,8 +40,8 @@ namespace
         // 添加 main 函数
         if (funcScope.empty())
         {
-            FunctionType* MainFT = FunctionType::get(Type::getInt32Ty(getContext()), false);
-            Function* MainF = Function::Create(MainFT, Function::ExternalLinkage, "main", getModule());
+            FunctionType* MainFT = FunctionType::get(intTy, false);
+            Function* MainF = Function::Create(MainFT, Function::ExternalLinkage, "PascalMain", getModule());
             funcScope.push(MainF);
 
             regisRead();
@@ -153,6 +153,11 @@ void semantic::retFunc(token::TokenDesc* ret)
 void semantic::retFunc()
 {
     getBuilder().CreateRetVoid();
+}
+
+void semantic::retMain()
+{
+    getBuilder().CreateRet(zeroInt);
 }
 
 void semantic::regisFunc(const FuncDesc& desc)

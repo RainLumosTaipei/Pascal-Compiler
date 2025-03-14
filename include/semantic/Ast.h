@@ -15,6 +15,7 @@ namespace ast
     llvm::FunctionPassManager& getFPM();
     llvm::FunctionAnalysisManager& getFAM();
 
-    void printCode();
-    void printCodeToFile();
+    void printIR();
+    void saveIR();
+    void saveASM();
 }
