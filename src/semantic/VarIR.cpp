@@ -69,14 +69,14 @@ void semantic::regisConst(const token::TokenDesc* id, token::TokenDesc* cont, bo
         if (cont->str.find('.') != string::npos)
             return regis(id->str, true, realTy, toReal(cont->str), isGlobal);
         return regis(id->str, true, intTy, toInt(cont->str), isGlobal);
-        
+
     case token::TokenState::letter:
         return regis(id->str, true, charTy, toChar(cont->str), isGlobal);
-        
+
     case token::TokenState::truly:
     case token::TokenState::falsely:
         return regis(id->str, true, boolTy, toBool(cont->str), isGlobal);
-        
+
     default:
         throw runtime_error("Unknown const type");
     }

@@ -1,7 +1,13 @@
 ﻿#include "semantic/Ast.h"
 #include "llvm/IR/IRBuilder.h"
 #include "llvm/IR/LLVMContext.h"
-#include "llvm/IR/Verifier.h"
+#include "llvm/Support/CommandLine.h"
+#include "llvm/Passes/PassBuilder.h"
+#include "llvm/Passes/StandardInstrumentations.h"
+#include "llvm/Transforms/InstCombine/InstCombine.h"
+#include "llvm/Transforms/Scalar/GVN.h"
+#include "llvm/Transforms/Scalar/Reassociate.h"
+#include "llvm/Transforms/Scalar/SimplifyCFG.h"
 
 #include <iostream>
 
@@ -24,6 +30,38 @@ IRBuilder<>& ast::getBuilder()
 {
     static IRBuilder<> builder(getContext());
     return builder;
+}
+
+FunctionPassManager& ast::getFPM()
+{
+    static auto TheFPM = FunctionPassManager();
+    return TheFPM;
+}
+
+FunctionAnalysisManager& ast::getFAM()
+{
+    static auto TheFAM = FunctionAnalysisManager();
+    return TheFAM;
+}
+
+void ast::initPass()
+{
+    static auto TheLAM = LoopAnalysisManager();
+    static auto TheCGAM = CGSCCAnalysisManager();
+    static auto TheMAM = ModuleAnalysisManager();
+    static auto ThePIC = PassInstrumentationCallbacks();
+    static auto TheSI = StandardInstrumentations(ast::getContext(), true);
+
+    TheSI.registerCallbacks(ThePIC, &TheMAM);
+    getFPM().addPass(InstCombinePass());
+    getFPM().addPass(ReassociatePass());
+    getFPM().addPass(GVNPass());
+    getFPM().addPass(SimplifyCFGPass());
+
+    static PassBuilder PB;
+    PB.registerModuleAnalyses(TheMAM);
+    PB.registerFunctionAnalyses(getFAM());
+    PB.crossRegisterProxies(TheLAM, getFAM(), TheCGAM, TheMAM);
 }
 
 void ast::printCode()
@@ -50,40 +88,3 @@ Value* logError(const char* Str)
     cerr << Str << '\n';
     return nullptr;
 }
-
-
-//
-// // 函数定义
-// Function* ast::FunctionAST::codegen() {
-//     // First, check for an existing function from a previous 'extern' declaration.
-//     Function* TheFunction = module->getFunction(proto->getName());
-//
-//     if (!TheFunction)
-//         TheFunction = proto->codegen();
-//
-//     if (!TheFunction)
-//         return nullptr;
-//
-//     // Create a new basic block to start insertion into.
-//     BasicBlock* BB = BasicBlock::Create(*context, "entry", TheFunction);
-//     builder->SetInsertPoint(BB);
-//
-//     // Record the function arguments in the NamedValues map.
-//     idTable.clear();
-//     for (auto& Arg : TheFunction->args())
-//         idTable[std::string(Arg.getName())] = &Arg;
-//
-//     if (Value* RetVal = body->codegen()) {
-//         // Finish off the function.
-//         builder->CreateRet(RetVal);
-//
-//         // Validate the generated code, checking for consistency.
-//         verifyFunction(*TheFunction);
-//
-//         return TheFunction;
-//     }
-//
-//     // Error reading body, remove function.
-//     TheFunction->eraseFromParent();
-//     return nullptr;
-//}

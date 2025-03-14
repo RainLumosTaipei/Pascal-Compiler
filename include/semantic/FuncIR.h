@@ -48,4 +48,6 @@ namespace semantic
     void callFunc(token::TokenDesc* idf, const std::vector<token::TokenDesc*>& exps);
     void startFuncBlock(const std::string& name);
     void endFuncBlock();
+    void callRead(const std::vector<token::TokenDesc*>& vars);
+    void callWrite(const std::vector<token::TokenDesc*>& exps);
 }

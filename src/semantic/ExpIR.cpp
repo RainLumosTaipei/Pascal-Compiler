@@ -177,7 +177,7 @@ void semantic::binaryOp(token::TokenDesc* op, token::TokenDesc* L, token::TokenD
         }
         ret->entry.val = getBuilder().CreateFSub(L->entry.val, R->entry.val, "fsub");
         return;
-        
+
     case token::op_mul:
         if (t->isIntegerTy())
         {
@@ -186,7 +186,7 @@ void semantic::binaryOp(token::TokenDesc* op, token::TokenDesc* L, token::TokenD
         }
         ret->entry.val = getBuilder().CreateFMul(L->entry.val, R->entry.val, "fmul");
         return;
-        
+
     case token::op_div:
         if (t->isIntegerTy())
         {
@@ -195,7 +195,7 @@ void semantic::binaryOp(token::TokenDesc* op, token::TokenDesc* L, token::TokenD
         }
         ret->entry.val = getBuilder().CreateFDiv(L->entry.val, R->entry.val, "fdiv");
         return;
-        
+
     case token::op_mod:
         if (t->isIntegerTy())
         {
@@ -212,7 +212,7 @@ void semantic::binaryOp(token::TokenDesc* op, token::TokenDesc* L, token::TokenD
     case token::op_or:
         ret->entry.val = getBuilder().CreateOr(L->entry.val, R->entry.val, "or");
         return;
-        
+
     // cmp operator
     case token::op_equal:
         if (t->isIntegerTy())
@@ -222,7 +222,7 @@ void semantic::binaryOp(token::TokenDesc* op, token::TokenDesc* L, token::TokenD
         }
         ret->entry.val = getBuilder().CreateFCmpOEQ(L->entry.val, R->entry.val, "feq");
         return;
-        
+
     case token::op_not_equ:
         if (t->isIntegerTy())
         {
@@ -231,7 +231,7 @@ void semantic::binaryOp(token::TokenDesc* op, token::TokenDesc* L, token::TokenD
         }
         ret->entry.val = getBuilder().CreateFCmpONE(L->entry.val, R->entry.val, "fne");
         return;
-        
+
     case token::op_less:
         if (t->isIntegerTy())
         {
@@ -240,7 +240,7 @@ void semantic::binaryOp(token::TokenDesc* op, token::TokenDesc* L, token::TokenD
         }
         ret->entry.val = getBuilder().CreateFCmpOLT(L->entry.val, R->entry.val, "flt");
         return;
-        
+
     case token::op_great:
         if (t->isIntegerTy())
         {
@@ -267,7 +267,7 @@ void semantic::binaryOp(token::TokenDesc* op, token::TokenDesc* L, token::TokenD
         }
         ret->entry.val = getBuilder().CreateFCmpOGE(L->entry.val, R->entry.val, "fge");
         return;
-        
+
     default:
         throw std::runtime_error("Unsupported binary operator");
     }

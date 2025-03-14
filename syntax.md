@@ -108,7 +108,7 @@ var -> id [ exp_list ]
 
 var_list -> var
 
-var_list -> var , var_list
+var_list -> var_list , var
 
 ## op
 

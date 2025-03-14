@@ -222,8 +222,8 @@ static std::vector<Token> rhs[] = {
     {id, p_comma, id_with_type},
     {id}, // 44
     {id, op_l_squ, exp_list, op_r_squ}, // 45
-    {var},
-    {var, p_comma, var_list},
+    {var}, // 46
+    {var_list, p_comma, var}, // 47
 
     // op 48-60
     {op_great},

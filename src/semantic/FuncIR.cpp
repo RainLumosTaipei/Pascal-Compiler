@@ -2,9 +2,12 @@
 
 #include <stack>
 
+#include <llvm/IR/Verifier.h>
+
 #include "semantic/Ast.h"
 #include "semantic/ExpIR.h"
 #include "semantic/SymbolTable.h"
+#include "semantic/TypeIR.h"
 #include "semantic/VarIR.h"
 
 using namespace std;
@@ -14,6 +17,23 @@ using namespace llvm;
 
 namespace
 {
+    void regisRead()
+    {
+        Type* ptrTy = PointerType::get(intTy, 0);
+        std::vector<Type*> args = {ptrTy};
+        FunctionType* readTy = FunctionType::get(voidTy, args, true);
+
+        Function::Create(readTy, Function::ExternalLinkage, "scanf", getModule());
+    }
+
+    void regisWrite()
+    {
+        Type* ptrTy = PointerType::get(intTy, 0);
+        std::vector<Type*> args = {ptrTy};
+        FunctionType* writeIntTy = FunctionType::get(voidTy, args, true);
+        Function::Create(writeIntTy, Function::ExternalLinkage, "printf", getModule());
+    }
+
     stack<Function*>& getFuncScope()
     {
         static stack<Function*> funcScope;
@@ -23,11 +43,13 @@ namespace
             FunctionType* MainFT = FunctionType::get(Type::getInt32Ty(getContext()), false);
             Function* MainF = Function::Create(MainFT, Function::ExternalLinkage, "main", getModule());
             funcScope.push(MainF);
+
+            regisRead();
+            regisWrite();
         }
         return funcScope;
     }
 }
-
 
 void semantic::startFuncBlock(const string& name)
 {
@@ -36,9 +58,11 @@ void semantic::startFuncBlock(const string& name)
     getSymbolTable().enterScope();
 }
 
-
 void semantic::endFuncBlock()
 {
+    auto* func = getFuncScope().top();
+    verifyFunction(*func);
+    getFPM().run(*func, getFAM());
     getFuncScope().pop();
     getSymbolTable().leaveScope();
 }
@@ -121,7 +145,6 @@ void BlockDesc::elsBr(token::TokenDesc* desc)
     elsBr();
 }
 
-
 void semantic::retFunc(token::TokenDesc* ret)
 {
     getBuilder().CreateRet(ret->entry.val);
@@ -131,7 +154,6 @@ void semantic::retFunc()
 {
     getBuilder().CreateRetVoid();
 }
-
 
 void semantic::regisFunc(const FuncDesc& desc)
 {
@@ -180,4 +202,45 @@ void semantic::callFunc(token::TokenDesc* idf, const vector<token::TokenDesc*>& 
     CallInst* call = getBuilder().CreateCall(func, args);
     idf->entry.val = call;
     idf->entry.type = call->getType();
+}
+
+void semantic::callRead(const vector<token::TokenDesc*>& vars)
+{
+    string formatStr;
+    vector<Value*> args;
+    args.push_back(nullptr);
+    for (auto it : vars)
+    {
+        args.push_back(it->entry.val);
+        auto* ty = it->entry.type;
+        if (ty->isIntegerTy())
+            formatStr.append("%d");
+        else if (ty->isFloatTy())
+            formatStr.append("%f");
+    }
+    Constant* format = getBuilder().CreateGlobalString(formatStr);
+    args[0] = format;
+    Function* func = getModule().getFunction("scanf");
+    getBuilder().CreateCall(func, args);
+}
+
+void semantic::callWrite(const vector<token::TokenDesc*>& exps)
+{
+    string formatStr;
+    vector<Value*> args;
+    args.push_back(nullptr);
+    for (auto it : exps)
+    {
+        args.push_back(it->entry.val);
+        auto* ty = it->entry.type;
+        if (ty->isIntegerTy())
+            formatStr.append("%d");
+        else if (ty->isFloatTy())
+            formatStr.append("%f");
+    }
+    formatStr.append("\n");
+    Constant* format = getBuilder().CreateGlobalString(formatStr);
+    args[0] = format;
+    Function* func = getModule().getFunction("printf");
+    getBuilder().CreateCall(func, args);
 }

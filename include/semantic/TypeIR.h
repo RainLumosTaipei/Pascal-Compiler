@@ -12,6 +12,7 @@ namespace semantic
     inline llvm::Type* charTy = llvm::IntegerType::get(ast::getContext(), 8);
     inline llvm::Type* boolTy = llvm::IntegerType::get(ast::getContext(), 1);
     inline llvm::Type* realTy = llvm::Type::getFloatTy(ast::getContext());
+    inline llvm::Type* voidTy = llvm::Type::getVoidTy(ast::getContext());
 
     inline llvm::Constant* trueBool = llvm::ConstantInt::get(boolTy, 1, false);
     inline llvm::Constant* falseBool = llvm::ConstantInt::get(boolTy, 0, false);

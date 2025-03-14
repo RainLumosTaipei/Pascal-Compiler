@@ -18,8 +18,9 @@ static void init()
 static void test()
 {
     syntax::lr::loadTable();
-    token::lex("open_set/45_dijkstra.pas");
+    token::lex("open_set/69_matrix_tran.pas");
     //token::printTokens();
+    ast::initPass();
     syntax::lr::lrCheck();
     ast::printCodeToFile();
 }

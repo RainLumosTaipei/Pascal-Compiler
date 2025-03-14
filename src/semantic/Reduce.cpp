@@ -20,11 +20,12 @@ namespace
 {
     // func para
     FuncDesc funcDesc;
-    // exp list
+    // exp/var list
     vector<TokenDesc*> expList;
-    size_t realDeep = 1;
+    vector<TokenDesc*> varList;
     // block
     stack<BlockDesc> blocks;
+    size_t realDeep = 1;
 }
 
 
@@ -180,9 +181,9 @@ namespace
     // sub_prog_body -> const_defs var_defs main
     void retFuncBlock(TokenDesc* desc)
     {
-        endFuncBlock();
         if (funcDesc.isVoid)
             retFunc();
+        endFuncBlock();
     }
 }
 
@@ -237,6 +238,14 @@ namespace
             return;
         }
         throw runtime_error("var does not exist");
+    }
+
+    // var_list -> var
+    // var_list -> var_list , var
+    void leftList(TokenDesc* desc)
+    {
+        varList.push_back(getBackAt(1));
+        copyBack(desc);
     }
 
     // stmt_base -> var := exp 
@@ -322,7 +331,7 @@ namespace
     {
         blocks.top().thenBr();
     }
-    
+
     // stmt_base -> if exp then stmt else_part
     // stmt_base -> while exp do stmt_base
     void mergeBlock(TokenDesc* desc)
@@ -337,7 +346,7 @@ namespace
         blocks.top().elsBr(getBackAt(7));
         blocks.pop();
     }
-    
+
     // if exp then -> if exp key_then
     void thenBlock(TokenDesc* desc)
     {
@@ -386,7 +395,6 @@ namespace
     // end
     void endBlock(TokenDesc* desc)
     {
-        int deep =  getSymbolTable().deep();
         if (!isDeepEqu()) return;
         --realDeep;
     }
@@ -395,13 +403,15 @@ namespace
 // read write
 namespace
 {
-    void callRead(TokenDesc* desc)
+    void readFunc(TokenDesc* desc)
     {
-        expList.clear();
+        callRead(varList);
+        varList.clear();
     }
 
-    void callWrite(TokenDesc* desc)
+    void writeFunc(TokenDesc* desc)
     {
+        callWrite(expList);
         expList.clear();
     }
 }
@@ -438,6 +448,8 @@ inline ReduceTable& getReduceTable()
         {43, addPara},
         {44, leftVar},
         {45, leftArray},
+        {46, leftList},
+        {47, leftList},
 
         {48, saveBack},
         {49, saveBack},
@@ -458,8 +470,8 @@ inline ReduceTable& getReduceTable()
         {68, copyBack},
         {69, assignExp},
         {70, retExp},
-        {71, callRead},
-        {72, callWrite},
+        {71, readFunc},
+        {72, writeFunc},
 
         {73, mergeForBlock},
         {74, mergeBlock},
