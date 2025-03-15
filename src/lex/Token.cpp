@@ -1,18 +1,18 @@
-﻿#include "Token.h"
+﻿#include "lex/Token.h"
 
 using namespace std;
 using namespace token;
 
 std::string token::tokenNames[] = {
     "real_start",
-    
+
     "prog",
     "prog_head",
     "prog_body",
 
-    "sub_prog_def",            // sub program declare
-    "sub_prog",                // sub program
-    "sub_prog_head",           // sub program head
+    "sub_prog_def", // sub program declare
+    "sub_prog", // sub program
+    "sub_prog_head", // sub program head
     "sub_prog_body",
 
     "var_para",
@@ -23,14 +23,24 @@ std::string token::tokenNames[] = {
 
     "var_def",
     "var_defs",
+    "var_with_type",
     "const_def",
     "const_defs",
     "main",
     "begin",
+    "end",
+    "then",
+    "else",
+    "to",
+    "do",
+    "todo",
+    "if",
+    "while",
+    "for",
     "stmt",
     "stmt_base",
     "stmt_list",
-    
+
     "exp_list",
     "exp",
     "sub_exp",
@@ -38,15 +48,17 @@ std::string token::tokenNames[] = {
     "factor",
     "else-part",
     "proc-call",
-    
+
     "var",
     "var_list",
     "cont",
-    
+    "boolean",
+
     "type_base",
     "type",
     "period",
-    "ids",
+    "period_with_type",
+    "id_with_type",
     "op_cmp",
     "op_add_sub",
     "op_div_mul",
@@ -64,6 +76,8 @@ std::string token::tokenNames[] = {
     "number",
     "str",
     "digit",
+    "true",
+    "false",
 
     "{",
     "}",
@@ -74,7 +88,7 @@ std::string token::tokenNames[] = {
     ";",
     "..",
     ".",
-    
+
     "=",
     "+",
     "-",
@@ -112,7 +126,7 @@ std::string token::tokenNames[] = {
     "function",
     "read",
     "write",
-    
+
     "null",
     "$"
 };

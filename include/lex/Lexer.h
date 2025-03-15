@@ -3,18 +3,21 @@
 #include <deque>
 #include <unordered_map>
 
+
 #include "Token.h"
+
 
 namespace token
 {
     struct TokenDesc;
 
-    enum LexerState{
+    enum LexerState
+    {
         normal,
         array,
         func
     };
-    
+
     class Lexer
     {
     public:
@@ -22,11 +25,13 @@ namespace token
         static size_t col;
         static LexerState state;
         static TokenState prev;
-        
-        Lexer(std::string input):input_(input), pos_(0) {}
-        
+
+        Lexer(std::string input): input_(input), pos_(0)
+        {
+        }
+
         TokenDesc* getNextToken();
-        
+
     private:
         std::string input_;
         size_t pos_;
@@ -44,30 +49,48 @@ namespace token
         TokenState doublePunc(const std::string& value);
     };
 
-    struct TokenDesc {
-        
+    struct TokenDesc
+    {
         size_t line;
         size_t col;
-        
-        Token token;
-        std::string value;
-        
-        TokenDesc(Token token, std::string value) :
-                line(Lexer::line),col(Lexer::col),
-                token(token),value(std::move(value)){}
 
-        explicit TokenDesc(Token t): token(t), line(0), col(0), value("undefined") {};
+
+        std::string str;
+
+        Token token;
+
+
+        explicit TokenDesc(Token t): line(0), col(0), token(t)
+        {
+        }
+
+        TokenDesc(Token token, std::string str) :
+            line(Lexer::line), col(Lexer::col),
+            str(std::move(str)), token(token)
+        {
+        }
+
+        TokenDesc(const TokenDesc& desc) = default;
+
+        TokenDesc& operator=(const TokenDesc& desc)
+        {
+            col = desc.col;
+            line = desc.line;
+            str = desc.str;
+            return *this;
+        }
     };
 
-    inline std::ostream &operator<<(std::ostream &os, const TokenDesc &s) {
+    inline std::ostream& operator<<(std::ostream& os, const TokenDesc& s)
+    {
         return os << s.token;
     }
 
-    typedef std::deque<TokenDesc*> TokenDeque;
+    using TokenDeque = std::deque<TokenDesc*>;
 
 
-    typedef std::unordered_map<std::string, TokenState> StrMap;
-    typedef std::unordered_map<char, TokenState> CharMap;
+    using StrMap = std::unordered_map<std::string, TokenState>;
+    using CharMap = std::unordered_map<char, TokenState>;
 
 
     TokenDeque& getTokens();
