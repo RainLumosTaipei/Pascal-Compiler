@@ -1,30 +1,10 @@
-﻿#include "lex/Lexer.h"
-#include "semantic/Ast.h"
+﻿#include "u.h"
+#include "syntax/SyntaxCheck.h"
+#include "syntax/SyntaxEntry.h"
 #include "syntax/SyntaxLl.h"
 #include "syntax/SyntaxLr.h"
-#include "syntax/SyntaxCheck.h"
 
 using namespace std;
-
-static void init()
-{
-    syntax::ll::initFirst();
-    syntax::lr::initLr();
-    syntax::lr::saveTable();
-    syntax::ll::printFirst();
-    syntax::ll::printFollow();
-}
-
-static void test(const string& fileName)
-{
-    syntax::lr::loadTable();
-    token::lex(fileName);
-    //token::printTokens();
-    ast::initPass();
-    syntax::lr::lrCheck();
-    ast::saveIR();
-    ast::saveASM();
-}
 
 int main(int argc, char* argv[])
 {
@@ -42,4 +22,22 @@ int main(int argc, char* argv[])
     return 0;
 }
 
+void init()
+{
+    syntax::ll::initFirst();
+    syntax::lr::initLr();
+    syntax::lr::saveTable();
+    syntax::ll::printFirst();
+    syntax::ll::printFollow();
+}
 
+void test(const string& fileName)
+{
+    syntax::lr::loadTable();
+    token::lex(fileName);
+    //token::printTokens();
+    ast::initPass();
+    syntax::lr::lrCheck();
+    ast::saveIR();
+    ast::saveASM();
+}

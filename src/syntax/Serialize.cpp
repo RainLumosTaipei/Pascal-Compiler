@@ -5,6 +5,8 @@
 using namespace std;
 using namespace syntax::lr;
 
+const string binPath = "misc/lrTable.bin";
+
 // 序列化 LrHashEntry
 void serializeLrHashEntry(std::ofstream& ofs, const LrHashEntry& entry)
 {
@@ -22,12 +24,12 @@ void deserializeLrHashEntry(std::ifstream& ifs, LrHashEntry& entry)
 // 序列化 LrTable
 void syntax::lr::serializeLrTable(const LrTable& table)
 {
-    string filename = "lrTable.bin";
 
-    std::ofstream ofs(filename, std::ios::binary);
+
+    std::ofstream ofs(binPath, std::ios::binary);
     if (!ofs)
     {
-        std::cerr << "Failed to open file for writing: " << filename << '\n';
+        std::cerr << "Failed to open file for writing: " << binPath << '\n';
         return;
     }
 
@@ -60,11 +62,11 @@ void syntax::lr::serializeLrTable(const LrTable& table)
 // 反序列化 LrTable
 void syntax::lr::deserializeLrTable(LrTable& table)
 {
-    string filename = "lrTable.bin";
-    std::ifstream ifs(filename, std::ios::binary);
+
+    std::ifstream ifs(binPath, std::ios::binary);
     if (!ifs)
     {
-        std::cerr << "Failed to open file for reading: " << filename << '\n';
+        std::cerr << "Failed to open file for reading: " << binPath << '\n';
         return;
     }
 

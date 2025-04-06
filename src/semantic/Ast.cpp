@@ -80,7 +80,7 @@ void ast::printIR()
 void ast::saveIR()
 {
     std::error_code EC;
-    raw_fd_ostream fileStream("output.ll", EC);
+    raw_fd_ostream fileStream("output/output.ll", EC);
     if (EC)
     {
         errs() << "Error opening file: " << EC.message() << "\n";
@@ -121,7 +121,7 @@ void ast::saveASM()
         return ;
     }
 
-    auto Filename = "output.o";
+    auto Filename = "output/output.o";
     std::error_code EC;
     raw_fd_ostream dest(Filename, EC, sys::fs::OF_None);
     if (EC) {
@@ -138,7 +138,7 @@ void ast::saveASM()
 
     pass.run(getModule());
     dest.flush();
-    outs() << "ASM has written to" << Filename << "\n";
+    outs() << "ASM has written to " << Filename << "\n";
 }
 
 

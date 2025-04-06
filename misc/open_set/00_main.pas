@@ -1,7 +1,8 @@
 program main;
 var
-  a: integer;
+    a, b: integer;
 begin
-  a := 3;
+  read(a);
   write(a);
 end.
+

@@ -255,6 +255,7 @@
         <ClInclude Include="include\syntax\SyntaxEntry.h"/>
         <ClInclude Include="include\syntax\SyntaxLl.h"/>
         <ClInclude Include="include\syntax\SyntaxLr.h"/>
+        <ClInclude Include="include\u.h" />
     </ItemGroup>
     <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets"/>
     <ImportGroup Label="ExtensionTargets">
