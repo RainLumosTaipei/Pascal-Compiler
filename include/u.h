@@ -1,7 +1,7 @@
 ﻿#pragma once
-
-#include "semantic/Ast.h"
+#include <string>
 
 
 void init();
 void test(const std::string& fileName);
+void usage();
