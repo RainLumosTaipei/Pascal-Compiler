@@ -5,5 +5,5 @@
 namespace syntax::lr
 {
     void serializeLrTable(const LrTable& table);
-    void deserializeLrTable(LrTable& table);
+    int deserializeLrTable(LrTable& table);
 }

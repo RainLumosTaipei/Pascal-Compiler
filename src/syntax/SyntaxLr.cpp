@@ -5,7 +5,6 @@
 #include "syntax/SyntaxLl.h"
 #include "syntax/Serialize.h"
 
-
 using namespace std;
 using namespace token;
 using namespace syntax::lr;
@@ -27,7 +26,7 @@ inline LrTable& syntax::lr::getLrTable()
 
 static LrSet statesSet;
 
-static inline void printTime()
+static void printTime()
 {
     auto now = std::chrono::system_clock::now();
     time_t currentTime = chrono::system_clock::to_time_t(now);
@@ -280,10 +279,10 @@ void syntax::lr::saveTable()
     serializeLrTable(table);
 }
 
-void syntax::lr::loadTable()
+int syntax::lr::loadTable()
 {
     auto& table = getLrTable();
-    deserializeLrTable(table);
+    return deserializeLrTable(table);
 }
 
 void syntax::lr::initLr()

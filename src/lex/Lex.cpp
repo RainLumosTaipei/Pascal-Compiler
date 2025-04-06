@@ -37,7 +37,7 @@ void token::lex()
 }
 
 
-void token::lex(const string& filename)
+int token::lex(const string& filename)
 {
     ifstream file(filename);
     if (!file.is_open())
@@ -45,7 +45,7 @@ void token::lex(const string& filename)
         cerr << "Failed to open file: " << filename << '\n';
         cerr << "Current working directory: " << filesystem::current_path() << '\n';
         cerr << "Please make sure the file exists in that directory." << '\n';
-        return;
+        return 1;
     }
 
     stringstream buffer;
@@ -61,7 +61,9 @@ void token::lex(const string& filename)
         s = lexer.getNextToken();
         tokens.push_back(s);
     }
-    while (s->token != TokenState::real_end);
+    while (s->token != real_end);
+
+    return 0;
 }
 
 

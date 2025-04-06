@@ -24,8 +24,7 @@ void deserializeLrHashEntry(std::ifstream& ifs, LrHashEntry& entry)
 // 序列化 LrTable
 void syntax::lr::serializeLrTable(const LrTable& table)
 {
-
-
+    
     std::ofstream ofs(binPath, std::ios::binary);
     if (!ofs)
     {
@@ -60,14 +59,14 @@ void syntax::lr::serializeLrTable(const LrTable& table)
 }
 
 // 反序列化 LrTable
-void syntax::lr::deserializeLrTable(LrTable& table)
+int syntax::lr::deserializeLrTable(LrTable& table)
 {
 
     std::ifstream ifs(binPath, std::ios::binary);
     if (!ifs)
     {
         std::cerr << "Failed to open file for reading: " << binPath << '\n';
-        return;
+        return 1;
     }
 
     // 读取表的大小
@@ -96,4 +95,6 @@ void syntax::lr::deserializeLrTable(LrTable& table)
             table[stateId][token] = entry;
         }
     }
+
+    return 0;
 }

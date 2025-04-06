@@ -30,7 +30,7 @@ LLVMContext& ast::getContext()
 
 Module& ast::getModule()
 {
-    static Module module("Pascal IR", getContext());
+    static Module module("Pascal Compiler", getContext());
     return module;
 }
 
@@ -77,20 +77,29 @@ void ast::printIR()
     getModule().print(errs(), nullptr);
 }
 
-void ast::saveIR()
+int ast::saveIR(char* filename)
 {
+    getModule().setSourceFileName(filename);
     std::error_code EC;
-    raw_fd_ostream fileStream("output/output.ll", EC);
+    std::string fullPath = filename;
+    size_t dotPos = fullPath.find_last_of('.');
+    if (dotPos != std::string::npos) {
+        fullPath = fullPath.substr(0, dotPos) + ".ll";
+    } else {
+        fullPath += ".ll";
+    }
+    raw_fd_ostream fileStream(fullPath, EC, sys::fs::CD_CreateAlways );
     if (EC)
     {
         errs() << "Error opening file: " << EC.message() << "\n";
-        return;
+        return 1;
     }
     getModule().print(fileStream, nullptr);
     fileStream.close();
+    return 0;
 }
 
-void ast::saveASM()
+int ast::saveASM(char* filename)
 {
     InitializeAllTargetInfos();
     InitializeAllTargets();
@@ -105,7 +114,7 @@ void ast::saveASM()
     auto Target = TargetRegistry::lookupTarget(TargetTriple, Error);
     if (!Target) {
         errs() << Error;
-        return;
+        return 1;
     }
 
     auto CPU = "generic";
@@ -118,27 +127,33 @@ void ast::saveASM()
 
     if (verifyModule(getModule(), &errs())) {
         errs() << "Module verification failed\n";
-        return ;
+        return 1;
     }
 
-    auto Filename = "output/output.o";
+    std::string fullPath = filename;
+    size_t dotPos = fullPath.find_last_of('.');
+    if (dotPos != std::string::npos) {
+        fullPath = fullPath.substr(0, dotPos) + ".o";
+    } else {
+        fullPath += ".o";
+    }
     std::error_code EC;
-    raw_fd_ostream dest(Filename, EC, sys::fs::OF_None);
+    raw_fd_ostream dest(fullPath, EC, sys::fs::CD_CreateAlways);
     if (EC) {
         errs() << "Could not open file: " << EC.message();
-        return ;
+        return 1;
     }
 
     legacy::PassManager pass;
     auto FileType = CodeGenFileType::ObjectFile;
     if (TheTargetMachine->addPassesToEmitFile(pass, dest, nullptr, FileType)) {
         errs() << "TheTargetMachine can't emit a file of this type";
-        return ;
+        return 1;
     }
 
     pass.run(getModule());
     dest.flush();
-    outs() << "ASM has written to " << Filename << "\n";
+    return 0;
 }
 
 

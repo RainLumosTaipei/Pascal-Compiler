@@ -112,5 +112,5 @@ namespace syntax::lr
     void initLr();
 
     void saveTable();
-    void loadTable();
+    int loadTable();
 }

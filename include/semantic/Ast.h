@@ -16,6 +16,6 @@ namespace ast
     llvm::FunctionAnalysisManager& getFAM();
 
     void printIR();
-    void saveIR();
-    void saveASM();
+    int saveIR(char* filename);
+    int saveASM(char* filename);
 }

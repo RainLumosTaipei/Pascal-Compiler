@@ -110,7 +110,7 @@ namespace token
 
 
     TokenDeque& getTokens();
-    void lex(const std::string& filename);
+    int lex(const std::string& filename);
     void lex();
     void printTokens();
 }
