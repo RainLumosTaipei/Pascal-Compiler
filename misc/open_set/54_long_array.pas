@@ -1,4 +1,4 @@
-program long_array;
+program main;
 
 function long_array(k: integer): integer;
 var

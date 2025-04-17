@@ -33,12 +33,14 @@ namespace
         FunctionType* writeIntTy = FunctionType::get(voidTy, args, true);
         Function::Create(writeIntTy, Function::ExternalLinkage, "printf", getModule());
     }
-
+    
     stack<Function*>& getFuncScope()
     {
         static stack<Function*> funcScope;
         return funcScope;
     }
+
+    
 }
 
 void semantic::regisProgram(token::TokenDesc* desc)
@@ -162,6 +164,18 @@ void semantic::retMain()
     getBuilder().CreateRet(zeroInt);
 }
 
+void semantic::retFuncAtEnd()
+{
+    auto* func = getFuncScope().top();
+    auto* retType = func->getReturnType();
+    if(retType->isEmptyTy())
+        getBuilder().CreateRetVoid();
+    else if(retType->isIntegerTy())
+        getBuilder().CreateRet(zeroInt);
+    else
+        getBuilder().CreateRet(zeroReal);
+}
+
 void semantic::regisFunc(const FuncDesc& desc)
 {
     FunctionType* funcTy;
@@ -209,6 +223,14 @@ void semantic::callFunc(token::TokenDesc* idf, const vector<token::TokenDesc*>& 
         args.push_back(it->entry.val);
     }
     CallInst* call = getBuilder().CreateCall(func, args);
+    idf->entry.val = call;
+    idf->entry.type = call->getType();
+}
+
+void semantic::callFunc(token::TokenDesc* idf)
+{
+    Function* func = getModule().getFunction(idf->str);
+    CallInst* call = getBuilder().CreateCall(func);
     idf->entry.val = call;
     idf->entry.type = call->getType();
 }

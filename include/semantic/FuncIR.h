@@ -46,7 +46,9 @@ namespace semantic
     void regisFunc(const FuncDesc& desc);
     void retFunc(token::TokenDesc* ret);
     void retFunc();
+    void retFuncAtEnd();
     void retMain();
+    void callFunc(token::TokenDesc* idf);
     void callFunc(token::TokenDesc* idf, const std::vector<token::TokenDesc*>& exps);
     void startFuncBlock(const std::string& name);
     void endFuncBlock();

@@ -18,10 +18,11 @@ using namespace token;
 
 namespace
 {
+    typedef vector<TokenDesc*> ExpList;
     // func para
     FuncDesc funcDesc;
     // exp/var list
-    vector<TokenDesc*> expList;
+    stack<ExpList> expStack;
     vector<TokenDesc*> varList;
     // block
     stack<BlockDesc> blocks;
@@ -204,8 +205,10 @@ namespace
     // sub_prog_body -> const_defs var_defs main
     void retFuncBlock(TokenDesc* desc)
     {
-        if (funcDesc.isVoid)
+        if(funcDesc.isVoid)
             retFunc();
+        else
+            retFuncAtEnd();
         endFuncBlock();
     }
 
@@ -259,11 +262,12 @@ namespace
     void leftArray(TokenDesc* desc)
     {
         auto* id = getBackAt(4);
+        auto expList  = expStack.top();
         if (getSymbolTable().findVar(id))
         {
             getArrayElement(id, expList);
             *desc = *id;
-            expList.clear();
+            expStack.pop();
             return;
         }
         throw runtime_error("var does not exist");
@@ -312,10 +316,18 @@ namespace
     }
 
     // exp_list -> exp
-    // exp_list -> exp_list , exp
     void addExpList(TokenDesc* desc)
     {
+        ExpList expList;
         expList.push_back(getBackAt(1));
+        expStack.push(move(expList));
+        copyBack(desc);
+    }
+
+    // exp_list -> exp_list , exp
+    void mergeExpList(TokenDesc* desc)
+    {
+        expStack.top().push_back(getBackAt(1));
         copyBack(desc);
     }
 
@@ -323,16 +335,17 @@ namespace
     void callFuncExp(TokenDesc* desc)
     {
         auto* idf = getBackAt(4);
+        auto expList = expStack.top();
         callFunc(idf, expList);
         *desc = *idf;
-        expList.clear();
+        expStack.pop();
     }
 
     // factor -> idf (  )
     void callFuncVoidExp(TokenDesc* desc)
     {
         auto* idf = getBackAt(3);
-        callFunc(idf, expList);
+        callFunc(idf);
         *desc = *idf;
     }
 
@@ -340,7 +353,7 @@ namespace
     void callFuncNoParenExp(TokenDesc* desc)
     {
         auto* idf = getBackAt(1);
-        callFunc(idf, expList);
+        callFunc(idf);
         *desc = *idf;
     }
 }
@@ -440,8 +453,9 @@ namespace
 
     void writeFunc(TokenDesc* desc)
     {
+        auto expList = expStack.top();
         callWrite(expList);
-        expList.clear();
+        expStack.pop();
     }
 }
 
@@ -513,7 +527,7 @@ inline ReduceTable& getReduceTable()
         {79, elseBlock},
 
         {81, addExpList},
-        {82, addExpList},
+        {82, mergeExpList},
         {83, copyBack},
         {84, binaryExp},
         {85, copyBack},
