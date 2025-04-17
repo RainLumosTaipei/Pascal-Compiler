@@ -37,18 +37,20 @@ namespace
     stack<Function*>& getFuncScope()
     {
         static stack<Function*> funcScope;
-        // 添加 main 函数
-        if (funcScope.empty())
-        {
-            FunctionType* MainFT = FunctionType::get(intTy, false);
-            Function* MainF = Function::Create(MainFT, Function::ExternalLinkage, "PascalMain", getModule());
-            funcScope.push(MainF);
-
-            regisRead();
-            regisWrite();
-        }
         return funcScope;
     }
+}
+
+void semantic::regisProgram(token::TokenDesc* desc)
+{
+    while (!getFuncScope().empty())  getFuncScope().pop();
+    
+    FunctionType* MainType = FunctionType::get(intTy, false);
+    Function* MainFunc = Function::Create(MainType, Function::ExternalLinkage, desc->str, getModule());
+    getFuncScope().push(MainFunc);
+
+    regisRead();
+    regisWrite();
 }
 
 void semantic::startFuncBlock(const string& name)
@@ -183,8 +185,10 @@ void semantic::regisFunc(const FuncDesc& desc)
         funcTy = FunctionType::get(retTy, false);
 
     Function* func = Function::Create(funcTy, Function::ExternalLinkage, desc.name->str, getModule());
+    
+    if(desc.isExtern) return;
+    
     getFuncScope().push(func);
-
     startFuncBlock("entry");
 
     int id = 0;

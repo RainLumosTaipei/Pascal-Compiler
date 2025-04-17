@@ -19,6 +19,7 @@ namespace token
         sub_prog, // sub program
         sub_prog_head, // sub program head
         sub_prog_body, // sub program body
+        ext_sub_prog_head,            // external def
 
         var_para,
         value_para,
@@ -132,6 +133,7 @@ namespace token
         key_func, // function
         key_read, // read
         key_write, // write
+        key_external, // external
         // other
         null, // null
         real_end // $

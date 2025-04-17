@@ -7,9 +7,12 @@
 
 using namespace std;
 
+void init();
+
 // pcc -O -c open_set/00_main.pas
 int main(int argc, char* argv[])
 {
+    //init();
     cmd(argc, argv);
     return 0;
 }

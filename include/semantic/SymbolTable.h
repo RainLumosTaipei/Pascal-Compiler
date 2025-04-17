@@ -25,7 +25,8 @@ namespace semantic
         bool findVar(const std::string& name);
         llvm::Value* randomVar();
         size_t deep();
-
+        void clear();
+        
         SymbolTable()
         {
             enterScope();

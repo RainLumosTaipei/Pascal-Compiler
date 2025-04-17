@@ -16,6 +16,13 @@ void semantic::SymbolTable::enterScope()
     scopes.emplace_back();
 }
 
+void semantic::SymbolTable::clear()
+{
+    scopes.clear();
+    enterScope();
+}
+
+
 
 void semantic::SymbolTable::leaveScope()
 {

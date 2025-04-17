@@ -15,9 +15,13 @@
 #include "llvm/Support/FileSystem.h"
 #include "llvm/Support/TargetSelect.h"
 #include "llvm/IR/LegacyPassManager.h"
+#include "llvm/ExecutionEngine/ExecutionEngine.h"
+
 
 #include <iostream>
 #include <llvm/IR/Verifier.h>
+
+#include "semantic/SymbolTable.h"
 
 using namespace llvm;
 using namespace std;
@@ -30,8 +34,13 @@ LLVMContext& ast::getContext()
 
 Module& ast::getModule()
 {
-    static Module module("Pascal Compiler", getContext());
-    return module;
+    return *getModules().back();
+}
+
+vector<unique_ptr<Module>>& ast::getModules()
+{
+    static vector<unique_ptr<Module>> modules;
+    return modules;
 }
 
 IRBuilder<>& ast::getBuilder()
@@ -39,6 +48,21 @@ IRBuilder<>& ast::getBuilder()
     static IRBuilder<> builder(getContext());
     return builder;
 }
+
+Linker& ast::getLinker()
+{
+    static Linker linker(getModule());
+    return linker;
+}
+
+void ast::resetModule()
+{
+    unique_ptr<Module> module = make_unique<Module>("Pascal Compiler", getContext());
+    getModules().push_back(move(module));
+    semantic::getSymbolTable().clear();
+    
+}
+
 
 FunctionPassManager& ast::getFPM()
 {
@@ -77,7 +101,7 @@ void ast::printIR()
     getModule().print(errs(), nullptr);
 }
 
-int ast::saveIR(char* filename)
+int ast::saveIR(string filename)
 {
     getModule().setSourceFileName(filename);
     std::error_code EC;
@@ -99,7 +123,7 @@ int ast::saveIR(char* filename)
     return 0;
 }
 
-int ast::saveASM(char* filename)
+int ast::saveASM(string filename)
 {
     InitializeAllTargetInfos();
     InitializeAllTargets();
@@ -153,6 +177,36 @@ int ast::saveASM(char* filename)
 
     pass.run(getModule());
     dest.flush();
+    return 0;
+}
+
+int ast::link()
+{
+    auto it = ++getModules().rbegin();
+    for(; it!=getModules().rend(); ++it)
+    {
+        if(getLinker().linkInModule(move(*it)))
+            return 1;
+    }
+    return 0;
+}
+
+int ast::execute()
+{
+    // ExecutionEngine *EE = EngineBuilder(std::move(getModule()))
+    //                       .create();
+    //
+    // if (!EE) {
+    //     return 1;
+    // }
+    //
+    // // 运行主函数（假设存在）
+    // Function *Main = EE->FindFunctionNamed("main");
+    // if (Main) {
+    //     std::vector<GenericValue> NoArgs;
+    //     EE->runFunction(Main, NoArgs);
+    // }
+
     return 0;
 }
 

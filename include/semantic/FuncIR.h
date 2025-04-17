@@ -1,22 +1,22 @@
 ﻿#pragma once
-#include <stack>
+
 #include <vector>
 #include <llvm/IR/Function.h>
-
-
 #include "lex/Lexer.h"
-#include "lex/Token.h"
 
 namespace semantic
 {
-    using FuncDesc = struct
+     typedef struct FuncDesc
     {
         std::vector<token::TokenDesc*> paraType;
         std::vector<token::TokenDesc*> paraName;
         token::TokenDesc* rev;
         token::TokenDesc* name;
         bool isVoid;
-    };
+        bool isExtern;
+
+        FuncDesc() : rev(nullptr), name(nullptr), isVoid(false), isExtern(false) {}
+    }FuncDesc;
 
     using BlockType = enum
     {
@@ -42,6 +42,7 @@ namespace semantic
         void elsBr(token::TokenDesc* desc);
     };
 
+    void regisProgram(token::TokenDesc* desc);
     void regisFunc(const FuncDesc& desc);
     void retFunc(token::TokenDesc* ret);
     void retFunc();

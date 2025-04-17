@@ -36,6 +36,7 @@ void cmd(int argc, char** argv)
         if('-' != argv[0][0])
         {
             opMap.emplace(argv[0], obj);
+            ++argv;
             continue;
         }
         
@@ -103,11 +104,13 @@ void cmpl()
     
     for(auto& kv : opMap)
     {
+        ast::resetModule();
         if(token::lex(kv.first))
         {
             std::cout << "[0/4] lex wrong in " << kv.first << std::endl;
             continue;
         }
+
         if(syntax::lr::lrCheck())
         {
             std::cout << "[1/4] syntax check wrong in " << kv.first << std::endl;
@@ -115,12 +118,30 @@ void cmpl()
         }
         if(ast::saveIR(kv.first))
         {
-            std::cout << "[2/4] generate IR wrong in " << kv.first << std::endl;
+            std::cout << "[2/4] " << kv.first <<  " llvm failed" << std::endl;
             continue;
         }
         if(kv.second == obj && ast::saveASM(kv.first))
         {
-            std::cout << "[3/4] generate asm wrong in " << kv.first << std::endl;
+            std::cout << "[3/4] " << kv.first <<  " obj failed" << std::endl;
         }
+    }
+
+    if(opMap.size() < 2) return;
+
+    if(ast::link())
+    {
+        std::cout << "[1/4] linking failed" << std::endl;
+        return;
+    }
+    if(ast::saveIR(outFilename))
+    {
+        std::cout << "[2/4] generate IR wrong in " << outFilename << std::endl;
+        return;
+    }
+    if(ast::saveASM(outFilename))
+    {
+        std::cout << "[3/4] generate obj wrong in " << outFilename << std::endl;
+        return;
     }
 }

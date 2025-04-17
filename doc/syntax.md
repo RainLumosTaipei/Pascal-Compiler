@@ -44,6 +44,13 @@ sub_prog_head -> key_proc idf formal_para
 
 sub_prog_head -> key_func idf formal_para : type_base
 
+sub_prog -> ext_sub_prog_head 
+
+ext_sub_prog_head -> key_external key_proc idf formal_para
+
+ext_sub_prog_head -> key_external key_func idf formal_para : type_base
+
+
 ## parameter
 
 formal_para -> null

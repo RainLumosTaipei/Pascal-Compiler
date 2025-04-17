@@ -157,6 +157,13 @@ namespace
         copyBack(desc);
     }
 
+    // prog_head -> program id 
+    void progDef(TokenDesc* desc)
+    {
+        regisProgram(getBackAt(1));
+        copyBack(desc);
+    }
+
     // sub_prog_head -> key_func idf formal_para : type_base
     void funcDef(TokenDesc* desc)
     {
@@ -176,6 +183,22 @@ namespace
         regisFunc(funcDesc);
         funcDesc.paraName.clear();
         funcDesc.paraType.clear();
+    }
+
+    // ext_sub_prog_head -> key_external key_func idf formal_para : type_base
+    void extFuncDef(TokenDesc* desc)
+    {
+        funcDesc.isExtern = true;
+        funcDef(desc);
+        funcDesc.isExtern = false;
+    }
+
+    // ext_sub_prog_head -> key_external key_proc idf formal_para
+    void extProcDef(TokenDesc* desc)
+    {
+        funcDesc.isExtern = true;
+        procDef(desc);
+        funcDesc.isExtern = false;
     }
 
     // sub_prog_body -> const_defs var_defs main
@@ -425,7 +448,7 @@ namespace
 inline ReduceTable& getReduceTable()
 {
     static ReduceTable reduceTable{
-        
+        {2, progDef},
         {4, retMainFunc},
         
         {8, retFuncBlock},
@@ -522,6 +545,9 @@ inline ReduceTable& getReduceTable()
         {108, saveBack},
         {109, saveBack},
         {110, saveBack},
+
+        {111, extProcDef},
+        {112, extFuncDef},
     };
     return reduceTable;
 }

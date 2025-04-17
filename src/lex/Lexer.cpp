@@ -81,11 +81,14 @@ static const StrMap keyMap = {
     {"or", TokenState::op_or},
     {"true", TokenState::truly},
     {"false", TokenState::falsely},
+    {"external", TokenState::key_external}
 };
 
 
 void Lexer::skip()
 {
+    // erase UTF-8 head
+    while(input_[pos_] < 0) ++pos_;
     while (pos_ < input_.size() && (std::isspace(input_[pos_]) || input_[pos_] == '\n'))
     {
         if (input_[pos_] == '\n')

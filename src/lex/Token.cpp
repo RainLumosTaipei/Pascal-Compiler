@@ -14,6 +14,7 @@ std::string token::tokenNames[] = {
     "sub_prog", // sub program
     "sub_prog_head", // sub program head
     "sub_prog_body",
+    "ext_sub_prog_head",
 
     "var_para",
     "value_para",
@@ -126,6 +127,7 @@ std::string token::tokenNames[] = {
     "function",
     "read",
     "write",
+    "external",
 
     "null",
     "$"

@@ -158,6 +158,10 @@ static Token lhs[] = {
     boolean, // 109
     boolean, // 110
 
+    ext_sub_prog_head,    // 111
+    ext_sub_prog_head,  // 112
+    sub_prog   // 113
+
 };
 
 static std::vector<Token> rhs[] = {
@@ -174,8 +178,8 @@ static std::vector<Token> rhs[] = {
     {sub_prog, p_semicolon, sub_prog_def},
     {sub_prog_head, p_semicolon, sub_prog_body},
     {const_defs, var_defs, main}, // 8
-    {key_proc, idf, formal_para},
-    {key_func, idf, formal_para, p_colon, type_base},
+    {key_proc, idf, formal_para}, // 9
+    { key_func, idf, formal_para, p_colon, type_base},  // 10
 
     // parameter
     {},
@@ -312,6 +316,10 @@ static std::vector<Token> rhs[] = {
     {boolean}, // 108
     {truly}, // 109
     {falsely}, // 110
+
+    {key_external, key_proc, idf, formal_para}, // 111
+    { key_external, key_func, idf, formal_para, p_colon, type_base},  // 112
+    {ext_sub_prog_head}, // 113
 
 };
 
