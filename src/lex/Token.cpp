@@ -73,7 +73,7 @@ std::string token::tokenNames[] = {
     // value
     "id",
     "idf",
-    "number",
+    "num",
     "str",
     "digit",
     "true",

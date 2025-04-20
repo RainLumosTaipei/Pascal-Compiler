@@ -4,4 +4,5 @@ var
 begin
   a := 3;
   write(a);
+
 end.

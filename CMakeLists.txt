@@ -8,6 +8,11 @@ file(GLOB_RECURSE SOURCES "src/**/*.cpp" "include/**/*.h")
 add_executable(Pascal-Compiler
         main.cpp
         ${SOURCES}
+        src/syntax/Ast.cpp
+        src/codegen/CodeGenerator.cpp   # 新增
+        src/codegen/SymbolTable.cpp     # 新增
+        src/codegen/CodeGenUtils.cpp 
+        include/syntax/Ast.h
 )
 
 target_include_directories(Pascal-Compiler PRIVATE

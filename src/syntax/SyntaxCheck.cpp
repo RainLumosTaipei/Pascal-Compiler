@@ -1,6 +1,7 @@
 ﻿#include "syntax/SyntaxCheck.h"
 #include "syntax/SyntaxLr.h"
 #include "semantic/Reduce.h"
+#include "syntax/Ast.h"
 
 #include <stack>
 #include <iomanip>
@@ -11,6 +12,7 @@ using namespace syntax::lr;
 using namespace token;
 
 static stack<LrStateId> stateStack;
+
 
 inline deque<TokenDesc*>& syntax::lr::getWaitTokens()
 {
@@ -103,16 +105,19 @@ void syntax::lr::lrCheck()
         case accept:
             cout << "No." << left << setw(3) << ++times << " accept (*^__^*) " << '\n';
             isAccept = true;
+            setAstHead();
             goto end;
 
         // shift
         case shift:
             cout << "No." << left << setw(3) << ++times << " shift" << '\n';
 
-        // 移进 token
+            // 移进 token
             getWaitTokens().push_back(tokens.front());
+            // move into ast stack
+            getAstStack().push( new Ast(tokens.front()));
             tokens.pop_front();
-        // 压入新的状态
+            // 压入新的状态
             stateStack.push(option.id);
             break;
 
@@ -123,11 +128,11 @@ void syntax::lr::lrCheck()
             cout << "No." << left << setw(3) << ++times << " reduce " << option.id << " ["
                 << entry << "]\n";
 
-        // 规约操作
+            // 规约操作
             TokenDesc* newT = semantic::callReduce(option.id, entry.l);
 
 
-        // 弹出符号和状态
+            // 弹出符号和状态
             for (size_t i = 0; i < entry.r.size(); ++i)
             {
                 getWaitTokens().pop_back();
@@ -135,8 +140,12 @@ void syntax::lr::lrCheck()
             }
 
             getWaitTokens().push_back(newT);
+            if(entry.isNull())
+                reduceAst(newT, 0);
+            else
+                reduceAst(newT, entry.r.size());
 
-        // goto 跳转状态
+            // goto 跳转状态
             auto s = stateStack.top();
             if (table.find(s) != table.end() &&
                 table[s].find(entry.l) != table[s].end())
