@@ -1,0 +1,96 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="D:\MY_HEART\Pascal-Compiler\main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\MY_HEART\Pascal-Compiler\src\codegen\CodeGenUtils.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\MY_HEART\Pascal-Compiler\src\codegen\CodeGenerator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\MY_HEART\Pascal-Compiler\src\codegen\SymbolTable.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\MY_HEART\Pascal-Compiler\src\lex\Lex.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\MY_HEART\Pascal-Compiler\src\lex\Lexer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\MY_HEART\Pascal-Compiler\src\lex\Token.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\MY_HEART\Pascal-Compiler\src\semantic\Reduce.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\MY_HEART\Pascal-Compiler\src\syntax\Ast.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\MY_HEART\Pascal-Compiler\src\syntax\Serialize.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\MY_HEART\Pascal-Compiler\src\syntax\SyntaxCheck.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\MY_HEART\Pascal-Compiler\src\syntax\SyntaxEntry.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\MY_HEART\Pascal-Compiler\src\syntax\SyntaxLl.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\MY_HEART\Pascal-Compiler\src\syntax\SyntaxLr.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="D:\MY_HEART\Pascal-Compiler\include\codegen\CodeGenUtils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\MY_HEART\Pascal-Compiler\include\codegen\CodeGenerator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\MY_HEART\Pascal-Compiler\include\codegen\SymbolTable.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\MY_HEART\Pascal-Compiler\include\lex\Lexer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\MY_HEART\Pascal-Compiler\include\lex\Token.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\MY_HEART\Pascal-Compiler\include\semantic\Reduce.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\MY_HEART\Pascal-Compiler\include\syntax\Ast.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\MY_HEART\Pascal-Compiler\include\syntax\Serialize.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\MY_HEART\Pascal-Compiler\include\syntax\SyntaxCheck.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\MY_HEART\Pascal-Compiler\include\syntax\SyntaxEntry.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\MY_HEART\Pascal-Compiler\include\syntax\SyntaxLl.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\MY_HEART\Pascal-Compiler\include\syntax\SyntaxLr.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="D:\MY_HEART\Pascal-Compiler\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{8584D76D-020F-36B1-8D76-B636516F47C2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{790623D7-46C5-3831-90AF-D0FB969E4AA0}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
