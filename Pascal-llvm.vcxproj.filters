@@ -69,6 +69,9 @@
     <ClCompile Include="src\pass\RmTerminatorPass.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="src\test\test.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\lex\Lexer.h">
@@ -117,6 +120,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="include\pass\RmTerminatorPass.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\test\test.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

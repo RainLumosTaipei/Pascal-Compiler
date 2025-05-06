@@ -9,7 +9,6 @@ namespace token
     enum TokenState
     {
         // non terminal
-
         real_start, // S
 
         prog,

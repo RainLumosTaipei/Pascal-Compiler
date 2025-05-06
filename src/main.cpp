@@ -4,6 +4,8 @@
 #include "syntax/SyntaxEntry.h"
 #include "syntax/SyntaxLl.h"
 #include "syntax/SyntaxLr.h"
+#include "gtest/gtest.h"
+#include "test/test.h"
 
 using namespace std;
 
@@ -13,7 +15,8 @@ void init();
 int main(int argc, char* argv[])
 {
     //init();
-    cmd(argc, argv);
+    test::testAll();
+    //cmd(argc, argv);
     return 0;
 }
 
