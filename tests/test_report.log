@@ -1,0 +1,50 @@
+=== Testing case01 ===
+✅ case01: Passed
+=== Testing case02 ===
+✅ case02: Passed
+=== Testing case03 ===
+✅ case03: Passed
+=== Testing case04 ===
+✅ case04: Passed
+=== Testing case05 ===
+✅ case05: Passed
+=== Testing case06 ===
+✅ case06: Passed
+=== Testing case07 ===
+✅ case07: Passed
+=== Testing case08 ===
+✅ case08: Passed
+=== Testing case09 ===
+✅ case09: Passed
+=== Testing case10 ===
+✅ case10: Passed
+=== Testing case11 ===
+✅ case11: Passed
+=== Testing case12 ===
+✅ case12: Passed
+=== Testing case13 ===
+✅ case13: Passed
+=== Testing case14 ===
+✅ case14: Passed
+=== Testing case15 ===
+✅ case15: Passed
+=== Testing case16 ===
+✅ case16: Passed
+=== Testing case17 ===
+✅ case17: Passed
+=== Testing case18 ===
+✅ case18: Passed
+=== Testing case19 ===
+✅ case19: Passed
+=== Testing case20 ===
+✅ case20: Passed
+=== Testing case21 ===
+✅ case21: Passed
+=== Testing case22 ===
+5:[01;31m 	error[0m : incompatible type assigning 'integer' from 'boolean'
+❌ case22: Pascal to C failed
+=== Testing case23 ===
+✅ case23: Passed
+=== Test Summary ===
+Passed:  22
+Failed:  1
