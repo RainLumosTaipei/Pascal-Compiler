@@ -3,6 +3,6 @@
 
 namespace syntax::lr
 {
-    int lrCheck();
+    int syntaxCheck();
     std::deque<token::TokenDesc*>& getWaitTokens();
 }

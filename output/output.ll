@@ -1,5 +1,5 @@
 ; ModuleID = 'Pascal Compiler'
-source_filename = "output/output.exe"
+source_filename = "misc/test_set/link/main.pas"
 target datalayout = "e-m:w-p270:32:32-p271:32:32-p272:64:64-i64:64-i128:128-f80:128-n8:16:32:64-S128"
 target triple = "x86_64-pc-windows-msvc"
 

@@ -4,4 +4,24 @@
 	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=7020124F_002D9FFC_002D4AC3_002D8F3D_002DAAB8E0240759_002Ff_003ANocixah_002Easm_002Fl_003AC_0021_003FUsers_003F86182_003FAppData_003FLocal_003FTemp_003FSandboxFiles_003FTokabad_003FNocixah_002Easm/@EntryIndexedValue">ForceIncluded</s:String>
 	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=7020124F_002D9FFC_002D4AC3_002D8F3D_002DAAB8E0240759_002Ff_003AQibagov_002Easm_002Fl_003AC_0021_003FUsers_003F86182_003FAppData_003FLocal_003FTemp_003FSandboxFiles_003FBemofob_003FQibagov_002Easm/@EntryIndexedValue">ForceIncluded</s:String>
 	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=7020124F_002D9FFC_002D4AC3_002D8F3D_002DAAB8E0240759_002Ff_003AVubofug_002Easm_002Fl_003AC_0021_003FUsers_003F86182_003FAppData_003FLocal_003FTemp_003FSandboxFiles_003FZahinem_003FVubofug_002Easm/@EntryIndexedValue">ForceIncluded</s:String>
-	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=7020124F_002D9FFC_002D4AC3_002D8F3D_002DAAB8E0240759_002Ff_003AXybuwel_002Easm_002Fl_003AC_0021_003FUsers_003F86182_003FAppData_003FLocal_003FTemp_003FSandboxFiles_003FNypeliq_003FXybuwel_002Easm/@EntryIndexedValue">ForceIncluded</s:String></wpf:ResourceDictionary>
+	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=7020124F_002D9FFC_002D4AC3_002D8F3D_002DAAB8E0240759_002Ff_003AXybuwel_002Easm_002Fl_003AC_0021_003FUsers_003F86182_003FAppData_003FLocal_003FTemp_003FSandboxFiles_003FNypeliq_003FXybuwel_002Easm/@EntryIndexedValue">ForceIncluded</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=dd298e0b_002D4664_002D4a46_002Da4a5_002Dddeb8893083a/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="simple" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;TestAncestor&gt;&#xD;
+    &lt;TestId&gt;GTest::0E241E1B-8CC8-45C8-B320-5FBBA5102D91::Windows,Version=v10.0.22621::var.simple&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;GTest::0E241E1B-8CC8-45C8-B320-5FBBA5102D91::Windows,Version=v10.0.22621::var.const&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;GTest::0E241E1B-8CC8-45C8-B320-5FBBA5102D91::Windows,Version=v10.0.22621::var.array&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;GTest::0E241E1B-8CC8-45C8-B320-5FBBA5102D91::Windows,Version=v10.0.22621::stmt.def&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;GTest::0E241E1B-8CC8-45C8-B320-5FBBA5102D91::Windows,Version=v10.0.22621::func.def&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;GTest::0E241E1B-8CC8-45C8-B320-5FBBA5102D91::Windows,Version=v10.0.22621::err.def&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;GTest::0E241E1B-8CC8-45C8-B320-5FBBA5102D91::Windows,Version=v10.0.22621::link.def&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;GTest::0E241E1B-8CC8-45C8-B320-5FBBA5102D91::Windows,Version=v10.0.22621::warn.def&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;GTest::0E241E1B-8CC8-45C8-B320-5FBBA5102D91::Windows,Version=v10.0.22621::block.procedure&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;GTest::0E241E1B-8CC8-45C8-B320-5FBBA5102D91::Windows,Version=v10.0.22621::block.function&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;GTest::0E241E1B-8CC8-45C8-B320-5FBBA5102D91::Windows,Version=v10.0.22621::stmt.io&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;GTest::0E241E1B-8CC8-45C8-B320-5FBBA5102D91::Windows,Version=v10.0.22621::stmt.operator&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;GTest::0E241E1B-8CC8-45C8-B320-5FBBA5102D91::Windows,Version=v10.0.22621::stmt.loop&lt;/TestId&gt;&#xD;
+  &lt;/TestAncestor&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
+	
+	
+	</wpf:ResourceDictionary>

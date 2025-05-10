@@ -4,6 +4,8 @@
 #include <vector>
 #include <set>
 
+#include "lex/LexErr.h"
+
 using namespace token;
 using namespace std;
 
@@ -11,6 +13,7 @@ size_t token::Lexer::col = 1;
 size_t token::Lexer::line = 1;
 LexerState token::Lexer::state = normal;
 TokenState token::Lexer::prev = TokenState::null;
+std::string token::Lexer::filename = " ";
 
 static const CharMap puncMap = {
     {'{', TokenState::p_l_bracket},
@@ -150,11 +153,11 @@ start:
     {
         return idOrKey();
     }
-    else if (isdigit(ch))
+    if (isdigit(ch))
     {
         return num();
     }
-    else if (ch == '\'')
+    if (ch == '\'')
     {
         return str();
     }
@@ -278,30 +281,29 @@ TokenState Lexer::doublePunc(const std::string& value)
         Lexer::prev = op_not_equ;
         return TokenState::op_not_equ;
     }
-    else if (value == "<=")
+    if (value == "<=")
     {
         Lexer::prev = op_less_equ;
         return TokenState::op_less_equ;
     }
-    else if (value == ">=")
+    if (value == ">=")
     {
         Lexer::prev = op_great_equ;
         return TokenState::op_great_equ;
     }
-    else if (value == ":=")
+    if (value == ":=")
     {
         Lexer::prev = op_assign;
         return TokenState::op_assign;
     }
-    else if (value == "..")
+    if (value == "..")
     {
         Lexer::prev = p_dotdot;
         return TokenState::p_dotdot;
     }
-    else
-    {
-        return TokenState::null;
-    }
+
+    return TokenState::null;
+    
 }
 
 TokenState Lexer::singlePunc(char value)
@@ -311,5 +313,5 @@ TokenState Lexer::singlePunc(char value)
     {
         return it->second;
     }
-    return TokenState::null;
+    throw LexErr("unknown punctuation", string(1, value));
 }

@@ -24,3 +24,4 @@ inline OpMap opMap;
 void cmd(int argc, char** argv);
 void usage();
 void cmpl();
+void init();

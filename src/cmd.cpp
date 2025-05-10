@@ -5,7 +5,9 @@
 #include "semantic/Ast.h"
 #include "syntax/SyntaxCheck.h"
 #include "syntax/SyntaxEntry.h"
+#include "syntax/SyntaxLl.h"
 #include "syntax/SyntaxLr.h"
+#include "test/test.h"
 
 
 namespace
@@ -55,6 +57,13 @@ void cmd(int argc, char** argv)
                 optFlag = argv[0][2] - '0';
             break;
             
+        case 't':
+            test::testAll();
+            break;
+        case 'i':
+            init();
+            break;
+            
         case 'c':
             getFilename(&filename, &argv);
             opMap.emplace(filename, obj);
@@ -86,11 +95,25 @@ void usage()
     << "\t-g\t" << "generate debug info" << '\n'
     << "\t-W\t" << "use warning hint" << '\n'
     
+    << "\t-t\t" << "run unit tests" << '\n'
+    << "\t-i\t" << "init lr syntax table" << '\n'
+    
     << "\t-c\t" << "<filename> compile to .o file" << '\n'
     << "\t-S\t" << "<filename> compile to .ll file" << '\n'
     << "\t-o\t" << "<filename> rename output filename" << '\n'
     << std::endl;
 }
+
+void init()
+{
+    syntax::initSyntaxes();
+    syntax::ll::initFirst();
+    syntax::lr::initLr();
+    syntax::lr::saveTable();
+    syntax::ll::printFirst();
+    syntax::ll::printFollow();
+}
+
 
 void cmpl()
 {
@@ -111,7 +134,7 @@ void cmpl()
             continue;
         }
 
-        if(syntax::lr::lrCheck())
+        if(syntax::lr::syntaxCheck())
         {
             std::cout << "[1/4] syntax check wrong in " << kv.first << std::endl;
             continue;

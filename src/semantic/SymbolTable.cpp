@@ -1,6 +1,7 @@
 ﻿#include "semantic/SymbolTable.h"
 
 #include "semantic/ExpIR.h"
+#include "semantic/SemanticErr.h"
 
 using namespace std;
 using namespace semantic;
@@ -21,8 +22,6 @@ void semantic::SymbolTable::clear()
     scopes.clear();
     enterScope();
 }
-
-
 
 void semantic::SymbolTable::leaveScope()
 {
@@ -57,7 +56,7 @@ bool semantic::SymbolTable::findVar(const std::string& name)
             return true;
         }
     }
-    return false;
+    throw runtime_error("variable can't be found");
 }
 
 
@@ -72,7 +71,7 @@ bool semantic::SymbolTable::findVar(token::TokenDesc* desc)
             return true;
         }
     }
-    return false;
+    throw SemanticErr("variable can't be found", desc);
 }
 
 llvm::Value* semantic::SymbolTable::randomVar()

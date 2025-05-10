@@ -1,6 +1,7 @@
 ﻿#include "semantic/ExpIR.h"
 #include "llvm/IR/Value.h"
 #include "semantic/Ast.h"
+#include "semantic/SemanticErr.h"
 #include "semantic/TypeIR.h"
 
 using namespace std;
@@ -21,6 +22,7 @@ namespace
         {
             l.val = getBuilder().CreateSIToFP(l.val, rt, "int_to_float");
             l.type = rt;
+            
             return;
         }
         if (rt->isIntegerTy() && lt->isFloatingPointTy())
@@ -58,7 +60,7 @@ namespace
             return;
         }
 
-        cerr << "Unsupported type conversion" << '\n';
+        throw runtime_error("unsupported type conversion");
     }
 }
 
@@ -98,8 +100,14 @@ void semantic::num(token::TokenDesc* t)
         t->entry.type = intTy;
         return;
     default:
-        throw runtime_error("Unknown const type");
+        throw SemanticErr("unknown num value", t);
     }
+}
+
+void semantic::letter(token::TokenDesc* t)
+{
+    t->entry.type = charTy;
+    t->entry.val = toChar(t->str);
 }
 
 void semantic::boolean(token::TokenDesc* t)
@@ -115,7 +123,7 @@ void semantic::boolean(token::TokenDesc* t)
         t->entry.type = boolTy;
         return;
     default:
-        throw runtime_error("Unknown const type");
+        throw SemanticErr("unknown boolean value", t);
     }
 }
 
@@ -143,7 +151,7 @@ void semantic::unaryOp(token::TokenDesc* op, token::TokenDesc* factor)
     case token::op_pos:
         return;
     default:
-        throw std::runtime_error("Unsupported operator");
+        throw SemanticErr("unsupported unary operator", op);
     }
 }
 
@@ -153,7 +161,14 @@ void semantic::binaryOp(token::TokenDesc* op, token::TokenDesc* L, token::TokenD
     if (!L->entry.val || !R->entry.val)
         return;
 
-    convertType(L->entry, R->entry);
+    try
+    {
+        convertType(L->entry, R->entry);
+    }catch (runtime_error& err)
+    {
+        throw SemanticErr(err.what(), R);
+    }
+    
     Type* t = R->entry.type;
     ret->entry.type = R->entry.type;
 
@@ -269,6 +284,6 @@ void semantic::binaryOp(token::TokenDesc* op, token::TokenDesc* L, token::TokenD
         return;
 
     default:
-        throw std::runtime_error("Unsupported binary operator");
+        throw SemanticErr("unsupported binary operator", op);
     }
 }

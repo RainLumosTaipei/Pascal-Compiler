@@ -9,26 +9,16 @@
 
 using namespace std;
 
-void init();
-
-// pcc -O -c open_set/00_main.pas
+// .\pcc.exe -g -c open_set/00_main.pas
+// .\pcc.exe -g -c misc/test_set/link/add.pas  misc/test_set/link/main.pas
+// .\pcc.exe -i
+// .\pcc.exe -t
 int main(int argc, char* argv[])
 {
-    //init();
-    test::testAll();
-    //cmd(argc, argv);
+    cmd(argc, argv);
     return 0;
 }
 
-void init()
-{
-    syntax::initSyntaxes();
-    syntax::ll::initFirst();
-    syntax::lr::initLr();
-    syntax::lr::saveTable();
-    syntax::ll::printFirst();
-    syntax::ll::printFollow();
-}
 
 
 

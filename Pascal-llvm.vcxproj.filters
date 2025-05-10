@@ -72,6 +72,15 @@
     <ClCompile Include="src\test\test.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="src\lex\LexErr.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\semantic\SemanticErr.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\syntax\SyntaxErr.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\lex\Lexer.h">
@@ -123,6 +132,15 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="include\test\test.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\lex\LexErr.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\semantic\SemanticErr.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\syntax\SyntaxErr.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

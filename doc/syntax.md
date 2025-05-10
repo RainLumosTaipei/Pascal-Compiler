@@ -30,6 +30,12 @@ const -> op_neg num
 
 const -> num
 
+const -> boolean
+
+boolean -> true
+
+boolean -> false
+
 ## sub program
 
 sub_prog_def -> null
@@ -237,8 +243,4 @@ factor -> op_pos factor
 
 factor -> boolean
 
-const -> boolean
-
-boolean -> true
-
-boolean -> false
+factor -> char

@@ -4,6 +4,7 @@
 #include "llvm/IR/DerivedTypes.h"
 #include "llvm/IR/Type.h"
 #include "llvm/IR/Verifier.h"
+#include "semantic/SemanticErr.h"
 #include "semantic/SymbolTable.h"
 #include "semantic/TypeIR.h"
 
@@ -73,12 +74,11 @@ void semantic::regisConst(const token::TokenDesc* id, token::TokenDesc* cont, bo
     case token::TokenState::letter:
         return regis(id->str, true, charTy, toChar(cont->str), isGlobal);
 
-    case token::TokenState::truly:
-    case token::TokenState::falsely:
+    case token::TokenState::boolean:
         return regis(id->str, true, boolTy, toBool(cont->str), isGlobal);
 
     default:
-        throw runtime_error("Unknown const type");
+        throw SemanticErr("unknown const value", cont);
     }
 }
 

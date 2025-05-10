@@ -1,6 +1,8 @@
 #include <fstream>
 
-#include "syntax//Serialize.h"
+#include "syntax/Serialize.h"
+
+#include "util/FileUtil.h"
 
 using namespace std;
 using namespace syntax::lr;
@@ -24,7 +26,7 @@ void deserializeLrHashEntry(std::ifstream& ifs, LrHashEntry& entry)
 // 序列化 LrTable
 void syntax::lr::serializeLrTable(const LrTable& table)
 {
-    
+    createFile(binPath);
     std::ofstream ofs(binPath, std::ios::binary);
     if (!ofs)
     {

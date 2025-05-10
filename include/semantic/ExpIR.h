@@ -12,6 +12,7 @@ namespace semantic
     void loadIfPointer(SymbolEntry& entry);
     void num(token::TokenDesc* t);
     void boolean(token::TokenDesc* t);
+    void letter(token::TokenDesc* t);
     void unaryOp(token::TokenDesc* op, token::TokenDesc* factor);
     void binaryOp(token::TokenDesc* op, token::TokenDesc* L, token::TokenDesc* R, token::TokenDesc* ret);
 }

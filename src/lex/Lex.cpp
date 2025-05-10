@@ -3,6 +3,8 @@
 #include <filesystem>
 
 #include "lex/Lexer.h"
+#include "lex/LexErr.h"
+#include "semantic/Ast.h"
 
 using namespace std;
 using namespace token;
@@ -13,32 +15,9 @@ inline TokenDeque& token::getTokens()
     return t;
 }
 
-void token::lex()
-{
-    string test = "program main; "
-        "  var "
-        "      a: integer; "
-        "      b, c: real; "
-        "begin "
-        "  a := 3;"
-        "  c := 6; "
-        "end.";
-
-    Lexer lexer(test);
-    auto& tokens = getTokens();
-
-    TokenDesc* s;
-    do
-    {
-        s = lexer.getNextToken();
-        tokens.push_back(s);
-    }
-    while (s->token != TokenState::real_end);
-}
-
-
 int token::lex(const string& filename)
 {
+    
     ifstream file(filename);
     if (!file.is_open())
     {
@@ -53,16 +32,26 @@ int token::lex(const string& filename)
     string test = buffer.str();
 
     Lexer lexer(test);
+    Lexer::filename = filename;
+    ast::getModule().setSourceFileName(filename);
     auto& tokens = getTokens();
 
-    TokenDesc* s;
-    do
+    try
     {
-        s = lexer.getNextToken();
-        tokens.push_back(s);
+        TokenDesc* s;
+        do
+        {
+            s = lexer.getNextToken();
+            tokens.push_back(s);
+        }
+        while (s->token != real_end);
     }
-    while (s->token != real_end);
-
+    catch (LexErr& err)
+    {
+        cout << err << endl;
+        return 1;
+    }
+    
     return 0;
 }
 
@@ -75,8 +64,8 @@ void token::printTokens()
         auto& t = tokens.front()->token;
         cout << t << " ";
         if (TokenState::p_semicolon == t || TokenState::key_begin == t)
-            cout << '\n';
+            cout << endl;
         tokens.pop_front();
     }
-    cout << "\n\n";
+    cout << endl << endl;
 }

@@ -6,6 +6,9 @@
 #include <stack>
 #include <iomanip>
 
+#include "semantic/SemanticErr.h"
+#include "syntax/SyntaxErr.h"
+
 using namespace std;
 using namespace syntax;
 using namespace syntax::lr;
@@ -53,19 +56,17 @@ namespace
         cout << endl << endl;
     }
 
-    void printError()
+
+    void printError() 
     {
         auto& tokens = getTokens();
-        auto& t = tokens.front();
-        cout << "Error: "
-            << "possible token is wrong " + t->str
-            << " at line " << t->line
-            << ", col " << t->col
-            << '\n';
+        auto t = tokens.front();
+        throw SyntaxErr("syntax wrong", t);
     }
 }
 
-int syntax::lr::lrCheck()
+
+static int lrCheck()
 {
     auto& table = getLrTable();
     auto& tokens = getTokens();
@@ -90,7 +91,7 @@ int syntax::lr::lrCheck()
         {
             option = table[curState][curToken];
         }
-        else goto end;
+        else printError();
 
 
         // 判断操作
@@ -98,14 +99,15 @@ int syntax::lr::lrCheck()
         {
         // goto
         case go:
-            goto end;
+            printError();
+            break;
 
         // accept
         case accept:
             if(debugFlag)
                 cout << "No." << left << setw(3) << ++times << " accept (*^__^*) " << '\n';
             isAccept = 0;
-            goto end;
+            return isAccept;
 
         // shift
         case shift:
@@ -147,17 +149,35 @@ int syntax::lr::lrCheck()
             {
                 stateStack.push(table[s][entry.l].id);
             }
-            else goto end;
+            else printError();
             break;
         }
     }
+    return isAccept;
+}
 
-end:
-    if (isAccept) printError();
+
+int syntax::lr::syntaxCheck()
+{
+    int res = 1;
+    try
+    {
+        res = lrCheck();
+    }
+    catch (SyntaxErr& err)
+    {
+        cout << err << endl;
+        res = 1;
+    }
+    catch (semantic::SemanticErr& err)
+    {
+        cout << err << endl;
+        res = 1;
+    }
     
-    tokens.clear();
+    getTokens().clear();
     while (!getWaitTokens().empty()) getWaitTokens().pop_back();
     while (!stateStack.empty()) stateStack.pop();
 
-    return isAccept;
+    return res;
 }

@@ -7,6 +7,7 @@
 #include "syntax/SyntaxCheck.h"
 #include "semantic/VarIR.h"
 #include "semantic/FuncIR.h"
+#include "semantic/SemanticErr.h"
 #include "semantic/SymbolTable.h"
 #include "semantic/TypeIR.h"
 
@@ -244,6 +245,13 @@ namespace
         copyBack(desc);
     }
 
+    // factor -> letter
+    void letterExp(TokenDesc* desc)
+    {
+        semantic::letter(getBackAt(1));
+        copyBack(desc);
+    }
+
     // factor -> ( exp )
     void parenExp(TokenDesc* desc)
     {
@@ -255,7 +263,6 @@ namespace
     {
         if (getSymbolTable().findVar(getBackAt(1)))
             return copyBack(desc);
-        throw runtime_error("var does not exist");
     }
 
     // var -> id [ exp_list ]
@@ -270,7 +277,6 @@ namespace
             expStack.pop();
             return;
         }
-        throw runtime_error("var does not exist");
     }
 
     // var_list -> var
@@ -562,6 +568,7 @@ inline ReduceTable& getReduceTable()
 
         {111, extProcDef},
         {112, extFuncDef},
+        {114, letterExp},
     };
     return reduceTable;
 }

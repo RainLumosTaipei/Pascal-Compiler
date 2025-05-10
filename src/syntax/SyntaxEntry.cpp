@@ -160,7 +160,8 @@ static Token lhs[] = {
 
     ext_sub_prog_head,    // 111
     ext_sub_prog_head,  // 112
-    sub_prog   // 113
+    sub_prog,   // 113
+    factor,     // 114
 
 };
 
@@ -320,6 +321,7 @@ static std::vector<Token> rhs[] = {
     {key_external, key_proc, idf, formal_para}, // 111
     { key_external, key_func, idf, formal_para, p_colon, type_base},  // 112
     {ext_sub_prog_head}, // 113
+    {letter},          // 114
 
 };
 

@@ -39,6 +39,7 @@ namespace token
         static size_t col;
         static LexerState state;
         static TokenState prev;
+        static std::string filename;
 
         Lexer(std::string input): input_(input), pos_(0)
         {
@@ -111,6 +112,5 @@ namespace token
 
     TokenDeque& getTokens();
     int lex(const std::string& filename);
-    void lex();
     void printTokens();
 }

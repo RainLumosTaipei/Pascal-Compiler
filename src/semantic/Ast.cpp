@@ -59,9 +59,8 @@ Linker& ast::getLinker()
 void ast::resetModule()
 {
     unique_ptr<Module> module = make_unique<Module>("Pascal Compiler", getContext());
-    getModules().push_back(move(module));
+    getModules().push_back(std::move(module));
     semantic::getSymbolTable().clear();
-    
 }
 
 
@@ -109,7 +108,6 @@ void ast::printIR()
 
 int ast::saveIR(string filename)
 {
-    getModule().setSourceFileName(filename);
     std::error_code EC;
     std::string fullPath = filename;
     size_t dotPos = fullPath.find_last_of('.');
@@ -189,9 +187,9 @@ int ast::saveASM(string filename)
 int ast::link()
 {
     auto it = ++getModules().rbegin();
-    for(; it!=getModules().rend(); ++it)
+    for(; it != getModules().rend(); ++it)
     {
-        if(getLinker().linkInModule(move(*it)))
+        if(getLinker().linkInModule(std::move(*it)))
             return 1;
     }
     return 0;
