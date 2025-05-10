@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # 配置项
-PASCC="./PASCC"           # Pascal转C工具路径
+PASCC="./PASCC.exe"           # Pascal转C工具路径
 TEST_DIR="test_cases"     # 测试用例目录
 OUTPUT_DIR="output"       # 临时输出目录
 LOG_FILE="test_report.log" # 测试日志
