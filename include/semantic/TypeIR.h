@@ -30,4 +30,9 @@ namespace semantic
     llvm::Constant* toChar(const std::string& str);
     llvm::Constant* toBool(const std::string& str);
     llvm::Constant* toReal(const std::string& str);
+
+    bool isInt(const llvm::Type* type);
+    bool isChar(const llvm::Type* type);
+    bool isBool(const llvm::Type* type);
+    bool isReal(const llvm::Type* type);
 }

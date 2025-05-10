@@ -264,12 +264,16 @@ void semantic::callWrite(const vector<token::TokenDesc*>& exps)
     {
         args.push_back(it->entry.val);
         auto* ty = it->entry.type;
-        if (ty->isIntegerTy())
+        if (isInt(ty))
             formatStr.append("%d");
-        else if (ty->isFloatTy())
+        else if(isChar(ty))
+            formatStr.append("%c");
+        else if(isBool(ty))
+            formatStr.append("%d");
+        else if(isReal(ty))
             formatStr.append("%f");
     }
-    formatStr.append("\n");
+    //formatStr.append("\n");
     Constant* format = getBuilder().CreateGlobalString(formatStr);
     args[0] = format;
     Function* func = getModule().getFunction("printf");

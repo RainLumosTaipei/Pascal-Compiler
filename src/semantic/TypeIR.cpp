@@ -57,3 +57,23 @@ llvm::Constant* semantic::toReal(const std::string& str)
 {
     return ConstantFP::get(realTy, stof(str));
 }
+
+bool semantic::isInt(const llvm::Type* type)
+{
+    return type == intTy;
+}
+
+bool semantic::isChar(const llvm::Type* type)
+{
+    return type == charTy;
+}
+
+bool semantic::isBool(const llvm::Type* type)
+{
+    return type == boolTy;
+}
+
+bool semantic::isReal(const llvm::Type* type)
+{
+    return type == realTy;
+}
