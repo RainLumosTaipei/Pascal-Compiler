@@ -36,44 +36,44 @@ void semantic::typeArray(token::TokenDesc* type, int size)
     type->entry.val = newConst;
 }
 
-llvm::Constant* semantic::toInt(const std::string& str)
+Constant* semantic::toInt(const std::string& str)
 {
-    return llvm::ConstantInt::get(intTy, stoi(str), true);
+    return ConstantInt::get(intTy, stoi(str), true);
 }
 
-llvm::Constant* semantic::toChar(const std::string& str)
+Constant* semantic::toChar(const std::string& str)
 {
-    return llvm::ConstantInt::get(charTy, static_cast<int>(str[0]), true);
+    return ConstantInt::get(charTy, str[0], true);
 }
 
-llvm::Constant* semantic::toBool(const std::string& str)
+Constant* semantic::toBool(const std::string& str)
 {
     if (str == "true" || str == "True" || str == "TRUE")
         return trueBool;
     return falseBool;
 }
 
-llvm::Constant* semantic::toReal(const std::string& str)
+Constant* semantic::toReal(const std::string& str)
 {
     return ConstantFP::get(realTy, stof(str));
 }
 
-bool semantic::isInt(const llvm::Type* type)
+bool semantic::isInt(const Type* type)
 {
     return type == intTy;
 }
 
-bool semantic::isChar(const llvm::Type* type)
+bool semantic::isChar(const Type* type)
 {
     return type == charTy;
 }
 
-bool semantic::isBool(const llvm::Type* type)
+bool semantic::isBool(const Type* type)
 {
     return type == boolTy;
 }
 
-bool semantic::isReal(const llvm::Type* type)
+bool semantic::isReal(const Type* type)
 {
     return type == realTy;
 }

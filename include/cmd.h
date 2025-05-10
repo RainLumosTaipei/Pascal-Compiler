@@ -3,13 +3,14 @@
 #include <unordered_map>
 
 // 是否输出详细信息
-inline int debugFlag =  0;
+inline int debugFlag = 0;
 // 优化等级
-inline int optFlag = 0;
+inline int optFlag = 1;
 // 警告等级
 inline int warnFlag = 0;
 // 合并文件名
-inline std::string outFilename = "output/output.exe" ;
+inline std::string outFilename = "output/output.exe";
+
 // 编译格式标记
 enum cmplFlag
 {
@@ -17,7 +18,8 @@ enum cmplFlag
     assembly,
     ll
 };
-typedef std::unordered_map<char*, cmplFlag> OpMap;
+
+using OpMap = std::unordered_map<char*, cmplFlag>;
 
 inline OpMap opMap;
 

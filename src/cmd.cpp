@@ -14,10 +14,10 @@ namespace
 {
     void getFilename(char** filename, char*** argv)
     {
-        if('\0' == (*argv)[0][2])
+        if ('\0' == (*argv)[0][2])
         {
             *filename = (*argv)[1];
-            ++ *argv;
+            ++*argv;
         }
         else
             *filename = &(*argv)[0][2];
@@ -26,23 +26,24 @@ namespace
 
 void cmd(int argc, char** argv)
 {
-    if (argc < 2) {
+    if (argc < 2)
+    {
         usage();
         exit(1);
     }
 
     char* filename;
     ++argv;
-    while(argv[0] != nullptr)
+    while (argv[0] != nullptr)
     {
-        if('-' != argv[0][0])
+        if ('-' != argv[0][0])
         {
             opMap.emplace(argv[0], obj);
             ++argv;
             continue;
         }
-        
-        switch(argv[0][1])
+
+        switch (argv[0][1])
         {
         case 'g':
             ++debugFlag;
@@ -51,19 +52,19 @@ void cmd(int argc, char** argv)
             ++warnFlag;
             break;
         case 'O':
-            if('\0' == argv[0][2])
+            if ('\0' == argv[0][2])
                 optFlag = 1;
             else
                 optFlag = argv[0][2] - '0';
             break;
-            
+
         case 't':
             test::testAll();
             break;
         case 'i':
             init();
             break;
-            
+
         case 'c':
             getFilename(&filename, &argv);
             opMap.emplace(filename, obj);
@@ -76,7 +77,7 @@ void cmd(int argc, char** argv)
             getFilename(&filename, &argv);
             outFilename = filename;
             break;
-        
+
         default:
             break;
         }
@@ -90,18 +91,18 @@ void cmd(int argc, char** argv)
 void usage()
 {
     std::cout << "Usage: " << '\n'
-    << "\t-O0\t" << "no optimize" << '\n'
-    << "\t-O\t" << "use optimize" << '\n'
-    << "\t-g\t" << "generate debug info" << '\n'
-    << "\t-W\t" << "use warning hint" << '\n'
-    
-    << "\t-t\t" << "run unit tests" << '\n'
-    << "\t-i\t" << "init lr syntax table" << '\n'
-    
-    << "\t-c\t" << "<filename> compile to .o file" << '\n'
-    << "\t-S\t" << "<filename> compile to .ll file" << '\n'
-    << "\t-o\t" << "<filename> rename output filename" << '\n'
-    << std::endl;
+        << "\t-O0\t" << "no optimize" << '\n'
+        << "\t-O\t" << "use optimize" << '\n'
+        << "\t-g\t" << "generate debug info" << '\n'
+        << "\t-W\t" << "use warning hint" << '\n'
+
+        << "\t-t\t" << "run unit tests" << '\n'
+        << "\t-i\t" << "init lr syntax table" << '\n'
+
+        << "\t-c\t" << "<filename> compile to .o file" << '\n'
+        << "\t-S\t" << "<filename> compile to .ll file" << '\n'
+        << "\t-o\t" << "<filename> rename output filename" << '\n'
+        << std::endl;
 }
 
 void init()
@@ -118,53 +119,52 @@ void init()
 void cmpl()
 {
     syntax::initSyntaxes();
-    
-    if(syntax::lr::loadTable())
+
+    if (syntax::lr::loadTable())
     {
         return;
     }
     ast::initPass();
-    
-    for(auto& kv : opMap)
+
+    for (auto& kv : opMap)
     {
         ast::resetModule();
-        if(token::lex(kv.first))
+        if (token::lex(kv.first))
         {
             std::cout << "[0/4] lex wrong in " << kv.first << std::endl;
             continue;
         }
 
-        if(syntax::lr::syntaxCheck())
+        if (syntax::lr::syntaxCheck())
         {
             std::cout << "[1/4] syntax check wrong in " << kv.first << std::endl;
             continue;
         }
-        if(ast::saveIR(kv.first))
+        if (ast::saveIR(kv.first))
         {
-            std::cout << "[2/4] " << kv.first <<  " llvm failed" << std::endl;
+            std::cout << "[2/4] " << kv.first << " llvm failed" << std::endl;
             continue;
         }
-        if(kv.second == obj && ast::saveASM(kv.first))
+        if (kv.second == obj && ast::saveASM(kv.first))
         {
-            std::cout << "[3/4] " << kv.first <<  " obj failed" << std::endl;
+            std::cout << "[3/4] " << kv.first << " obj failed" << std::endl;
         }
     }
 
-    if(opMap.size() < 2) return;
+    if (opMap.size() < 2) return;
 
-    if(ast::link())
+    if (ast::link())
     {
         std::cout << "[1/4] linking failed" << std::endl;
         return;
     }
-    if(ast::saveIR(outFilename))
+    if (ast::saveIR(outFilename))
     {
         std::cout << "[2/4] generate IR wrong in " << outFilename << std::endl;
         return;
     }
-    if(ast::saveASM(outFilename))
+    if (ast::saveASM(outFilename))
     {
         std::cout << "[3/4] generate obj wrong in " << outFilename << std::endl;
-        return;
     }
 }

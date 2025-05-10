@@ -14,93 +14,92 @@ namespace
     {
         ast::getModules().clear();
         ast::resetModule();
-        return 
+        return
             !(token::lex(filename) ||
-            syntax::lr::syntaxCheck() ||
-            ast::saveIR(filename) ||
-            ast::saveASM(filename));
+                syntax::lr::syntaxCheck() ||
+                ast::saveIR(filename) ||
+                ast::saveASM(filename));
     }
 
     bool testLinkOne(string& filename)
     {
         ast::resetModule();
-        return 
+        return
             !(token::lex(filename) ||
-            syntax::lr::syntaxCheck() ||
-            ast::saveIR(filename) ||
-            ast::saveASM(filename));
+                syntax::lr::syntaxCheck() ||
+                ast::saveIR(filename) ||
+                ast::saveASM(filename));
     }
 
     bool testLink(string filename)
     {
-        return 
-            !( ast::link() ||
-            ast::saveIR(filename) ||
-            ast::saveASM(filename));
+        return
+            !(ast::link() ||
+                ast::saveIR(filename) ||
+                ast::saveASM(filename));
     }
-    
-    vector<string> simpleVarFile {
+
+    vector<string> simpleVarFile{
         "misc/test_set/var/var_def.pas",
         "misc/test_set/var/var_lval.pas",
         "misc/test_set/var/var_rval.pas",
     };
 
-    vector<string> constVarFile {
+    vector<string> constVarFile{
         "misc/test_set/var/const_rval.pas",
         "misc/test_set/var/const_def.pas",
     };
 
-    vector<string> arrayVarFile {
+    vector<string> arrayVarFile{
         "misc/test_set/var/array_def.pas",
         "misc/test_set/var/array_lval.pas",
         "misc/test_set/var/array_rval.pas",
     };
-    
-    vector<string> funcFile {
+
+    vector<string> funcFile{
         "misc/test_set/func/func_def.pas",
         "misc/test_set/func/func_call.pas",
     };
 
-    vector<string> procFile {
+    vector<string> procFile{
         "misc/test_set/func/proc_call.pas",
         "misc/test_set/func/proc_def.pas",
     };
 
-    vector<string> linkFile {
-        "misc/test_set/link/main.pas", 
-        "misc/test_set/link/add.pas", 
+    vector<string> linkFile{
+        "misc/test_set/link/main.pas",
+        "misc/test_set/link/add.pas",
     };
 
-    vector<string> opStmtFile {
-        "misc/test_set/stmt/unary_op.pas", 
-        "misc/test_set/stmt/binary_op.pas", 
+    vector<string> opStmtFile{
+        "misc/test_set/stmt/unary_op.pas",
+        "misc/test_set/stmt/binary_op.pas",
     };
 
-    vector<string> ioStmtFile {
-        "misc/test_set/stmt/read.pas", 
-        "misc/test_set/stmt/write.pas", 
+    vector<string> ioStmtFile{
+        "misc/test_set/stmt/read.pas",
+        "misc/test_set/stmt/write.pas",
     };
 
-    vector<string> loopStmtFile {
-        "misc/test_set/stmt/if.pas", 
-        "misc/test_set/stmt/for.pas", 
+    vector<string> loopStmtFile{
+        "misc/test_set/stmt/if.pas",
+        "misc/test_set/stmt/for.pas",
     };
 
-    vector<string> errFile {
-        
-        "misc/test_set/err/scope.pas", 
+    vector<string> errFile{
+        "misc/test_set/err/scope.pas",
     };
 
-    vector<string> warnFile {
+    vector<string> warnFile{
         "misc/test_set/warn/type.pas",
-        "misc/test_set/warn/const.pas", 
+        "misc/test_set/warn/const.pas",
     };
 }
 
 void test::testAll()
 {
     syntax::initSyntaxes();
-    if(syntax::lr::loadTable()) return;
+    if (syntax::lr::loadTable()) return;
     ast::initPass();
     testing::InitGoogleTest();
     RUN_ALL_TESTS();
@@ -155,25 +154,22 @@ TEST(block, procedure)
         EXPECT_EQ(true, testOne(file));
 }
 
-TEST(warn, def)
+TEST(warn, level0)
 {
     for (auto& file : warnFile)
         EXPECT_EQ(true, testOne(file));
 }
 
-TEST(err, def)
+TEST(err, level0)
 {
     for (auto& file : errFile)
         EXPECT_EQ(false, testOne(file));
 }
 
-TEST(link, def)
+TEST(link, simpleAdd)
 {
     ast::getModules().clear();
     for (auto& file : linkFile)
         EXPECT_EQ(true, testLinkOne(file));
     EXPECT_EQ(true, testLink("misc/test_set/link/output.pas"));
 }
-
-
-

@@ -18,7 +18,7 @@ namespace semantic
         SemanticErr(std::string msg, const token::TokenDesc* desc);
     };
 
-    inline std::ostream& operator << (std::ostream& os, const SemanticErr& err)
+    inline std::ostream& operator <<(std::ostream& os, const SemanticErr& err)
     {
         std::cout << "Semantic exception at " << ast::getModule().getSourceFileName()
             << ", line " << err.line
@@ -28,4 +28,3 @@ namespace semantic
         return os;
     }
 }
-

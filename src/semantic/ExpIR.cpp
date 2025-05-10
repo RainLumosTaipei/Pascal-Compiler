@@ -22,7 +22,7 @@ namespace
         {
             l.val = getBuilder().CreateSIToFP(l.val, rt, "int_to_float");
             l.type = rt;
-            
+
             return;
         }
         if (rt->isIntegerTy() && lt->isFloatingPointTy())
@@ -164,11 +164,12 @@ void semantic::binaryOp(token::TokenDesc* op, token::TokenDesc* L, token::TokenD
     try
     {
         convertType(L->entry, R->entry);
-    }catch (runtime_error& err)
+    }
+    catch (runtime_error& err)
     {
         throw SemanticErr(err.what(), R);
     }
-    
+
     Type* t = R->entry.type;
     ret->entry.type = R->entry.type;
 

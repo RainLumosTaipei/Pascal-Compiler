@@ -18,7 +18,7 @@ namespace token
         sub_prog, // sub program
         sub_prog_head, // sub program head
         sub_prog_body, // sub program body
-        ext_sub_prog_head,            // external def
+        ext_sub_prog_head, // external def
 
         var_para,
         value_para,
@@ -138,8 +138,8 @@ namespace token
         real_end // $
     };
 
-    constexpr int nonTerminalCount = TokenState::type_int;
-    constexpr int tokenCount = TokenState::real_end + 1;
+    constexpr int nonTerminalCount = type_int;
+    constexpr int tokenCount = real_end + 1;
 
     extern std::string tokenNames[];
 
@@ -183,36 +183,36 @@ namespace token
 
         operator int() const
         {
-            return (int)token;
+            return token;
         }
 
         operator size_t() const
         {
-            return (size_t)token;
+            return static_cast<size_t>(token);
         }
 
-        inline bool operator==(const Token& other) const
+        bool operator==(const Token& other) const
         {
             return token == other.token;
         }
 
-        inline bool operator <(const Token& other) const
+        bool operator <(const Token& other) const
         {
             return token < other.token;
         }
 
-        inline bool isTerminal() const
+        bool isTerminal() const
         {
             return token >= nonTerminalCount;
         }
 
-        inline bool isNull() const
+        bool isNull() const
         {
-            return token == TokenState::null;
+            return token == null;
         }
     };
 
-    struct TermToken : public Token
+    struct TermToken : Token
     {
         TermToken(TokenState t) : Token(t)
         {
@@ -226,7 +226,7 @@ namespace token
         }
     };
 
-    struct NonTermToken : public Token
+    struct NonTermToken : Token
     {
         NonTermToken(TokenState t) : Token(t)
         {

@@ -7,19 +7,19 @@ using namespace token;
 using namespace syntax;
 using namespace syntax::ll;
 
-inline FirstArray& syntax::ll::getFirstArray()
+inline FirstArray& ll::getFirstArray()
 {
     static FirstArray firstArray(tokenCount);
     return firstArray;
 }
 
-inline FirstArray& syntax::ll::getFollowArray()
+inline FirstArray& ll::getFollowArray()
 {
     static FollowArray followArray(tokenCount);
     return followArray;
 }
 
-bool syntax::ll::FirstEntry::find(token::Token t)
+bool FirstEntry::find(Token t)
 {
     for (auto& first : set)
     {
@@ -29,7 +29,7 @@ bool syntax::ll::FirstEntry::find(token::Token t)
     return false;
 }
 
-void syntax::ll::searchNull()
+void ll::searchNull()
 {
     auto& firstArray = getFirstArray();
     // 情况1
@@ -78,14 +78,14 @@ void syntax::ll::searchNull()
     while (count);
 }
 
-void syntax::ll::searchFirst()
+void ll::searchFirst()
 {
     auto& firstArray = getFirstArray();
 
     // 所有终结符的 first 包含自身
     for (int i = nonTerminalCount; i < tokenCount; ++i)
     {
-        if (TokenState::null == i) continue;
+        if (null == i) continue;
         firstArray[i].set.emplace(i);
     }
 
@@ -126,13 +126,13 @@ void syntax::ll::searchFirst()
     while (count);
 }
 
-void syntax::ll::searchFollow()
+void ll::searchFollow()
 {
     auto& firstArray = getFirstArray();
     auto& followArray = getFollowArray();
 
     // 将起始符号的Follow集合设置为 $
-    followArray[0].set.emplace(TokenState::real_end);
+    followArray[0].set.emplace(real_end);
 
     size_t count;
     do
@@ -191,7 +191,7 @@ void syntax::ll::searchFollow()
     while (count);
 }
 
-size_t syntax::ll::mergeFirst(const SyntaxEntry& syntax, size_t loc)
+size_t ll::mergeFirst(const SyntaxEntry& syntax, size_t loc)
 {
     // TODO: add syntax index
     auto& to = getFirstArray()[syntax.l];
@@ -199,7 +199,7 @@ size_t syntax::ll::mergeFirst(const SyntaxEntry& syntax, size_t loc)
     return to.merge(from);
 }
 
-size_t syntax::ll::FirstEntry::merge(const FirstEntry& other)
+size_t FirstEntry::merge(const FirstEntry& other)
 {
     size_t pre = set.size();
     set.insert(other.set.begin(), other.set.end());
@@ -208,7 +208,7 @@ size_t syntax::ll::FirstEntry::merge(const FirstEntry& other)
 }
 
 
-void syntax::ll::initFirst()
+void ll::initFirst()
 {
     searchNull();
     searchFirst();
@@ -221,7 +221,7 @@ static void printLine()
     cout << separator << '\n';
 }
 
-void syntax::ll::printFirst()
+void ll::printFirst()
 {
     cout << "First Table:" << '\n';
     printLine();
@@ -240,7 +240,7 @@ void syntax::ll::printFirst()
     cout << '\n';
 }
 
-void syntax::ll::printFollow()
+void ll::printFollow()
 {
     cout << "Follow Table:" << '\n';
     printLine();

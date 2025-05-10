@@ -17,7 +17,7 @@ namespace syntax
         SyntaxErr(std::string msg, const token::TokenDesc* desc);
     };
 
-    inline std::ostream& operator << (std::ostream& os, const SyntaxErr& err)
+    inline std::ostream& operator <<(std::ostream& os, const SyntaxErr& err)
     {
         std::cout << "Syntax exception at " << token::Lexer::filename
             << ", line " << err.line
@@ -27,4 +27,3 @@ namespace syntax
         return os;
     }
 }
-

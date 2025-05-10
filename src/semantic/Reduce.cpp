@@ -19,7 +19,7 @@ using namespace token;
 
 namespace
 {
-    typedef vector<TokenDesc*> ExpList;
+    using ExpList = vector<TokenDesc*>;
     // func para
     FuncDesc funcDesc;
     // exp/var list
@@ -206,7 +206,7 @@ namespace
     // sub_prog_body -> const_defs var_defs main
     void retFuncBlock(TokenDesc* desc)
     {
-        if(funcDesc.isVoid)
+        if (funcDesc.isVoid)
             retFunc();
         else
             retFuncAtEnd();
@@ -269,13 +269,12 @@ namespace
     void leftArray(TokenDesc* desc)
     {
         auto* id = getBackAt(4);
-        auto expList  = expStack.top();
+        auto expList = expStack.top();
         if (getSymbolTable().findVar(id))
         {
             getArrayElement(id, expList);
             *desc = *id;
             expStack.pop();
-            return;
         }
     }
 
@@ -470,7 +469,7 @@ inline ReduceTable& getReduceTable()
     static ReduceTable reduceTable{
         {2, progDef},
         {4, retMainFunc},
-        
+
         {8, retFuncBlock},
         {9, procDef},
         {10, funcDef},

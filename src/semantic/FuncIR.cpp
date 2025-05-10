@@ -33,20 +33,18 @@ namespace
         FunctionType* writeIntTy = FunctionType::get(voidTy, args, true);
         Function::Create(writeIntTy, Function::ExternalLinkage, "printf", getModule());
     }
-    
+
     stack<Function*>& getFuncScope()
     {
         static stack<Function*> funcScope;
         return funcScope;
     }
-
-    
 }
 
 void semantic::regisProgram(token::TokenDesc* desc)
 {
-    while (!getFuncScope().empty())  getFuncScope().pop();
-    
+    while (!getFuncScope().empty()) getFuncScope().pop();
+
     FunctionType* MainType = FunctionType::get(intTy, false);
     Function* MainFunc = Function::Create(MainType, Function::ExternalLinkage, desc->str, getModule());
     getFuncScope().push(MainFunc);
@@ -120,7 +118,6 @@ void BlockDesc::thenBr()
         getBuilder().SetInsertPoint(els);
         // enter else
         getSymbolTable().enterScope();
-        return;
     }
 }
 
@@ -168,9 +165,9 @@ void semantic::retFuncAtEnd()
 {
     auto* func = getFuncScope().top();
     auto* retType = func->getReturnType();
-    if(retType->isEmptyTy())
+    if (retType->isEmptyTy())
         getBuilder().CreateRetVoid();
-    else if(retType->isIntegerTy())
+    else if (retType->isIntegerTy())
         getBuilder().CreateRet(zeroInt);
     else
         getBuilder().CreateRet(zeroReal);
@@ -199,9 +196,9 @@ void semantic::regisFunc(const FuncDesc& desc)
         funcTy = FunctionType::get(retTy, false);
 
     Function* func = Function::Create(funcTy, Function::ExternalLinkage, desc.name->str, getModule());
-    
-    if(desc.isExtern) return;
-    
+
+    if (desc.isExtern) return;
+
     getFuncScope().push(func);
     startFuncBlock("entry");
 
@@ -266,11 +263,11 @@ void semantic::callWrite(const vector<token::TokenDesc*>& exps)
         auto* ty = it->entry.type;
         if (isInt(ty))
             formatStr.append("%d");
-        else if(isChar(ty))
+        else if (isChar(ty))
             formatStr.append("%c");
-        else if(isBool(ty))
+        else if (isBool(ty))
             formatStr.append("%d");
-        else if(isReal(ty))
+        else if (isReal(ty))
             formatStr.append("%f");
     }
     //formatStr.append("\n");

@@ -26,7 +26,7 @@ namespace syntax::lr
         {
         }
 
-        LrHashEntry(): op(LrOption::shift), id(0)
+        LrHashEntry(): op(shift), id(0)
         {
         };
     };
@@ -53,13 +53,13 @@ namespace syntax::lr
         {
         }
 
-        inline bool operator==(const LrEntry& other) const
+        bool operator==(const LrEntry& other) const
         {
             return syn->id == other.syn->id && dot == other.dot &&
                 look == other.look;
         }
 
-        inline bool operator<(const LrEntry& other) const
+        bool operator<(const LrEntry& other) const
         {
             if (syn->id != other.syn->id)
                 return syn->id < other.syn->id;
@@ -68,7 +68,7 @@ namespace syntax::lr
             return look < other.look;
         }
 
-        inline LrEntry& operator++()
+        LrEntry& operator++()
         {
             ++dot;
             return *this;
@@ -91,12 +91,12 @@ namespace syntax::lr
         {
         }
 
-        inline bool operator==(const LrState& other) const
+        bool operator==(const LrState& other) const
         {
             return entries == other.entries;
         }
 
-        inline bool operator<(const LrState& other) const
+        bool operator<(const LrState& other) const
         {
             return entries < other.entries;
         }

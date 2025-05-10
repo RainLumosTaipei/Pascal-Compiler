@@ -6,7 +6,7 @@ using namespace std;
 using namespace semantic;
 using namespace token;
 
-SemanticErr::SemanticErr(std::string msg, const token::TokenDesc* desc)
+SemanticErr::SemanticErr(std::string msg, const TokenDesc* desc)
     : msg(std::move(msg)), line(desc->line), col(desc->col), name(desc->str)
 {
 }

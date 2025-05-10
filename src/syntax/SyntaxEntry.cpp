@@ -158,21 +158,21 @@ static Token lhs[] = {
     boolean, // 109
     boolean, // 110
 
-    ext_sub_prog_head,    // 111
-    ext_sub_prog_head,  // 112
-    sub_prog,   // 113
-    factor,     // 114
+    ext_sub_prog_head, // 111
+    ext_sub_prog_head, // 112
+    sub_prog, // 113
+    factor, // 114
 
 };
 
 static std::vector<Token> rhs[] = {
 
     // program
-    {prog, real_end},  // 0
-    {prog_head, p_semicolon, prog_body, p_dot},  // 1
-    {key_prog, id},  // 2
-    {key_prog, id, p_l_paren, id, p_r_paren},  // 3
-    {const_defs, var_defs, sub_prog_def, main},   // 4
+    {prog, real_end}, // 0
+    {prog_head, p_semicolon, prog_body, p_dot}, // 1
+    {key_prog, id}, // 2
+    {key_prog, id, p_l_paren, id, p_r_paren}, // 3
+    {const_defs, var_defs, sub_prog_def, main}, // 4
 
     // sub program 5-10
     {},
@@ -180,7 +180,7 @@ static std::vector<Token> rhs[] = {
     {sub_prog_head, p_semicolon, sub_prog_body},
     {const_defs, var_defs, main}, // 8
     {key_proc, idf, formal_para}, // 9
-    { key_func, idf, formal_para, p_colon, type_base},  // 10
+    {key_func, idf, formal_para, p_colon, type_base}, // 10
 
     // parameter
     {},
@@ -319,15 +319,15 @@ static std::vector<Token> rhs[] = {
     {falsely}, // 110
 
     {key_external, key_proc, idf, formal_para}, // 111
-    { key_external, key_func, idf, formal_para, p_colon, type_base},  // 112
+    {key_external, key_func, idf, formal_para, p_colon, type_base}, // 112
     {ext_sub_prog_head}, // 113
-    {letter},          // 114
+    {letter}, // 114
 
 };
 
 static_assert(sizeof(lhs) / sizeof(Token) == sizeof(rhs) / sizeof(std::vector<Token>));
 
-const int entryCount = sizeof(lhs) / sizeof(Token);
+constexpr int entryCount = sizeof(lhs) / sizeof(Token);
 
 inline SyntaxArray& syntax::getSyntaxes()
 {
@@ -335,7 +335,7 @@ inline SyntaxArray& syntax::getSyntaxes()
     return syntaxes;
 }
 
-syntax::SyntaxEntry::SyntaxEntry(size_t id) :
+SyntaxEntry::SyntaxEntry(size_t id) :
     id(id),
     l(lhs[id]),
     r(rhs[id])

@@ -16,12 +16,12 @@ namespace syntax::ll
         {
         }
 
-        inline bool operator==(const FirstToken& other) const
+        bool operator==(const FirstToken& other) const
         {
             return token == other.token;
         }
 
-        inline bool operator<(const FirstToken& other) const
+        bool operator<(const FirstToken& other) const
         {
             return token < other.token;
         }

@@ -17,7 +17,6 @@ inline TokenDeque& token::getTokens()
 
 int token::lex(const string& filename)
 {
-    
     ifstream file(filename);
     if (!file.is_open())
     {
@@ -51,7 +50,7 @@ int token::lex(const string& filename)
         cout << err << endl;
         return 1;
     }
-    
+
     return 0;
 }
 
@@ -63,7 +62,7 @@ void token::printTokens()
     {
         auto& t = tokens.front()->token;
         cout << t << " ";
-        if (TokenState::p_semicolon == t || TokenState::key_begin == t)
+        if (p_semicolon == t || key_begin == t)
             cout << endl;
         tokens.pop_front();
     }

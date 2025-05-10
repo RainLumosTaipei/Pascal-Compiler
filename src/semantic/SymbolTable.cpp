@@ -12,18 +12,18 @@ SymbolTable& semantic::getSymbolTable()
     return symbolTable;
 }
 
-void semantic::SymbolTable::enterScope()
+void SymbolTable::enterScope()
 {
     scopes.emplace_back();
 }
 
-void semantic::SymbolTable::clear()
+void SymbolTable::clear()
 {
     scopes.clear();
     enterScope();
 }
 
-void semantic::SymbolTable::leaveScope()
+void SymbolTable::leaveScope()
 {
     if (!scopes.empty())
     {
@@ -31,13 +31,13 @@ void semantic::SymbolTable::leaveScope()
     }
 }
 
-size_t semantic::SymbolTable::deep()
+size_t SymbolTable::deep()
 {
     return scopes.size();
 }
 
 
-void semantic::SymbolTable::addVar(const std::string& name, llvm::Value* val, llvm::Type* type)
+void SymbolTable::addVar(const std::string& name, llvm::Value* val, llvm::Type* type)
 {
     if (!scopes.empty())
     {
@@ -46,7 +46,7 @@ void semantic::SymbolTable::addVar(const std::string& name, llvm::Value* val, ll
 }
 
 
-bool semantic::SymbolTable::findVar(const std::string& name)
+bool SymbolTable::findVar(const std::string& name)
 {
     for (auto it = scopes.rbegin(); it != scopes.rend(); ++it)
     {
@@ -60,7 +60,7 @@ bool semantic::SymbolTable::findVar(const std::string& name)
 }
 
 
-bool semantic::SymbolTable::findVar(token::TokenDesc* desc)
+bool SymbolTable::findVar(token::TokenDesc* desc)
 {
     for (auto it = scopes.rbegin(); it != scopes.rend(); ++it)
     {
@@ -74,7 +74,7 @@ bool semantic::SymbolTable::findVar(token::TokenDesc* desc)
     throw SemanticErr("variable can't be found", desc);
 }
 
-llvm::Value* semantic::SymbolTable::randomVar()
+llvm::Value* SymbolTable::randomVar()
 {
     if (!scopes.empty())
     {

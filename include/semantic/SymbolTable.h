@@ -14,7 +14,6 @@ namespace semantic
 
     class SymbolTable
     {
-    private:
         std::vector<ScopeTable> scopes;
 
     public:
@@ -26,7 +25,7 @@ namespace semantic
         llvm::Value* randomVar();
         size_t deep();
         void clear();
-        
+
         SymbolTable()
         {
             enterScope();

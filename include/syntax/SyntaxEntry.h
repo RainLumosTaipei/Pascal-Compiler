@@ -13,17 +13,17 @@ namespace syntax
 
         explicit SyntaxEntry(size_t id);
 
-        inline bool operator==(const SyntaxEntry& other) const
+        bool operator==(const SyntaxEntry& other) const
         {
             return id == other.id;
         }
 
-        inline bool operator<(const SyntaxEntry& other) const
+        bool operator<(const SyntaxEntry& other) const
         {
             return id < other.id;
         }
 
-        inline bool isNull() const
+        bool isNull() const
         {
             return r.empty();
         }

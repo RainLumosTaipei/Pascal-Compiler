@@ -6,7 +6,7 @@
 
 namespace semantic
 {
-     typedef struct FuncDesc
+    using FuncDesc = struct FuncDesc
     {
         std::vector<token::TokenDesc*> paraType;
         std::vector<token::TokenDesc*> paraName;
@@ -15,8 +15,10 @@ namespace semantic
         bool isVoid;
         bool isExtern;
 
-        FuncDesc() : rev(nullptr), name(nullptr), isVoid(false), isExtern(false) {}
-    }FuncDesc;
+        FuncDesc() : rev(nullptr), name(nullptr), isVoid(false), isExtern(false)
+        {
+        }
+    };
 
     using BlockType = enum
     {

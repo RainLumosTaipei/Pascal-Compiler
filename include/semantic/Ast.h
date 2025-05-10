@@ -22,5 +22,4 @@ namespace ast
     int saveIR(std::string filename);
     int saveASM(std::string filename);
     int link();
-    int execute();
 }

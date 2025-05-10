@@ -63,7 +63,6 @@ void syntax::lr::serializeLrTable(const LrTable& table)
 // 反序列化 LrTable
 int syntax::lr::deserializeLrTable(LrTable& table)
 {
-
     std::ifstream ifs(binPath, std::ios::binary);
     if (!ifs)
     {

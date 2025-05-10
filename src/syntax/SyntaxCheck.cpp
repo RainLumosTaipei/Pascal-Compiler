@@ -16,7 +16,7 @@ using namespace token;
 
 static stack<LrStateId> stateStack;
 
-inline deque<TokenDesc*>& syntax::lr::getWaitTokens()
+inline deque<TokenDesc*>& lr::getWaitTokens()
 {
     static deque<TokenDesc*> waitTokens;
     return waitTokens;
@@ -57,7 +57,7 @@ namespace
     }
 
 
-    void printError() 
+    void printError()
     {
         auto& tokens = getTokens();
         auto t = tokens.front();
@@ -72,13 +72,13 @@ static int lrCheck()
     auto& tokens = getTokens();
     int isAccept = 1;
     size_t times = 0;
-    
+
     // 初始 lr 状态
     stateStack.push(0);
     // 开始进行分析
     while (!stateStack.empty())
     {
-        if(debugFlag)
+        if (debugFlag)
             check();
 
         int curToken = tokens.front()->token;
@@ -104,20 +104,20 @@ static int lrCheck()
 
         // accept
         case accept:
-            if(debugFlag)
+            if (debugFlag)
                 cout << "No." << left << setw(3) << ++times << " accept (*^__^*) " << '\n';
             isAccept = 0;
             return isAccept;
 
         // shift
         case shift:
-            if(debugFlag)
+            if (debugFlag)
                 cout << "No." << left << setw(3) << ++times << " shift" << '\n';
 
-            // 移进 token
+        // 移进 token
             getWaitTokens().push_back(tokens.front());
             tokens.pop_front();
-            // 压入新的状态
+        // 压入新的状态
             stateStack.push(option.id);
             break;
 
@@ -125,15 +125,15 @@ static int lrCheck()
         case reduce:
             auto& entry = getSyntaxes()[option.id];
 
-            if(debugFlag)
+            if (debugFlag)
                 cout << "No." << left << setw(3) << ++times << " reduce " << option.id << " ["
-                << entry << "]\n";
+                    << entry << "]\n";
 
-            // 规约操作
+        // 规约操作
             TokenDesc* newT = semantic::callReduce(option.id, entry.l);
 
 
-            // 弹出符号和状态
+        // 弹出符号和状态
             for (size_t i = 0; i < entry.r.size(); ++i)
             {
                 getWaitTokens().pop_back();
@@ -142,7 +142,7 @@ static int lrCheck()
 
             getWaitTokens().push_back(newT);
 
-            // goto 跳转状态
+        // goto 跳转状态
             auto s = stateStack.top();
             if (table.find(s) != table.end() &&
                 table[s].find(entry.l) != table[s].end())
@@ -157,7 +157,7 @@ static int lrCheck()
 }
 
 
-int syntax::lr::syntaxCheck()
+int lr::syntaxCheck()
 {
     int res = 1;
     try
@@ -174,7 +174,7 @@ int syntax::lr::syntaxCheck()
         cout << err << endl;
         res = 1;
     }
-    
+
     getTokens().clear();
     while (!getWaitTokens().empty()) getWaitTokens().pop_back();
     while (!stateStack.empty()) stateStack.pop();

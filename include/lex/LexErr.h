@@ -16,7 +16,7 @@ namespace token
         LexErr(std::string msg, const std::string& name);
     };
 
-    inline std::ostream& operator << (std::ostream& os, const LexErr& err)
+    inline std::ostream& operator <<(std::ostream& os, const LexErr& err)
     {
         std::cout << "Lexical exception at " << Lexer::filename
             << ", line " << err.line
@@ -26,4 +26,3 @@ namespace token
         return os;
     }
 }
-

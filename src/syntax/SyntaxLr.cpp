@@ -12,13 +12,13 @@ using namespace syntax::ll;
 using namespace syntax;
 
 
-inline LrArray& syntax::lr::getStates()
+inline LrArray& lr::getStates()
 {
     static LrArray states;
     return states;
 }
 
-inline LrTable& syntax::lr::getLrTable()
+inline LrTable& lr::getLrTable()
 {
     static LrTable lrTable;
     return lrTable;
@@ -62,7 +62,7 @@ static void searchEntry(EntrySet& entries)
                 set<TermToken> looks;
 
                 // 将当前 lookahead 加入到 set 中
-                if (TokenState::null != entry.look)
+                if (null != entry.look)
                     looks.insert(entry.look);
 
                 // 如果当前符号不是最后一个符号，则将当前符号的First集合加入到lookahead中
@@ -137,7 +137,7 @@ static void searchStates()
             // 选定下一个 token
             for (int nextToken = 0; nextToken < tokenCount; ++nextToken)
             {
-                if (nextToken == TokenState::null || nextToken == TokenState::real_end)
+                if (nextToken == null || nextToken == real_end)
                 {
                     continue;
                 }
@@ -149,7 +149,7 @@ static void searchStates()
                     if (entry.dot >= entry.syn->r.size()) continue;
 
                     // 下一个token正确, 拷贝加入新生成式
-                    if (nextToken == (int)entry.syn->r[entry.dot])
+                    if (nextToken == static_cast<int>(entry.syn->r[entry.dot]))
                     {
                         auto e(entry);
                         newEntry.insert(++e);
@@ -213,7 +213,7 @@ static void fillLrTable()
         // 选定下一个 token
         for (int nextToken = 0; nextToken < tokenCount; ++nextToken)
         {
-            if (nextToken == TokenState::null || nextToken == TokenState::real_end)
+            if (nextToken == null || nextToken == real_end)
             {
                 continue;
             }
@@ -239,12 +239,12 @@ static void fillLrTable()
 
                     // TODO: 移进规约冲突可能需要手动解决
                     // 存在 shift 冲突则插入失败
-                    table[state.id].emplace(entry.look, LrHashEntry(LrOption::reduce, pentry->id));
+                    table[state.id].emplace(entry.look, LrHashEntry(reduce, pentry->id));
                     continue;
                 }
 
                 // 下一个token正确, 拷贝加入新生成式
-                if (nextToken == (int)entry.syn->r[entry.dot])
+                if (nextToken == static_cast<int>(entry.syn->r[entry.dot]))
                 {
                     auto e(entry);
                     newEntry.insert(++e);
@@ -256,36 +256,36 @@ static void fillLrTable()
                 size_t id = findState(newEntry);
                 // shift && goto
                 if (Token(nextToken).isTerminal())
-                    table[state.id][nextToken] = LrHashEntry(LrOption::shift, id);
+                    table[state.id][nextToken] = LrHashEntry(shift, id);
                 else
-                    table[state.id][nextToken] = LrHashEntry(LrOption::go, id);
+                    table[state.id][nextToken] = LrHashEntry(go, id);
             }
         }
         // accept
         if (state.id != 0 && state.entries.size() == 1)
         {
             for (auto& entry : state.entries)
-                if (TokenState::null == entry.look)
-                    table[state.id][TokenState::real_end] = LrHashEntry(LrOption::accept, 0);
+                if (null == entry.look)
+                    table[state.id][real_end] = LrHashEntry(accept, 0);
         }
     }
 
     cout << "\nLR table is ready!\n\n";
 }
 
-void syntax::lr::saveTable()
+void lr::saveTable()
 {
     const auto& table = getLrTable();
     serializeLrTable(table);
 }
 
-int syntax::lr::loadTable()
+int lr::loadTable()
 {
     auto& table = getLrTable();
     return deserializeLrTable(table);
 }
 
-void syntax::lr::initLr()
+void lr::initLr()
 {
     searchStates();
     fillLrTable();
