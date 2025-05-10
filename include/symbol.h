@@ -1,6 +1,4 @@
-//
-// Created by jianxff on 2023/3/27.
-//
+
 
 #ifndef PASCC_SYMBOL_H
 #define PASCC_SYMBOL_H

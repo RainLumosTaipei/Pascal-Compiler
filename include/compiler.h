@@ -1,6 +1,4 @@
-//
-// Created by jianxff on 2023/4/19.
-//
+
 
 #ifndef PASCC_COMPILER_H
 #define PASCC_COMPILER_H
