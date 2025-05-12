@@ -1,7 +1,3 @@
-//
-// Created by jianxff on 2023/4/19.
-//
-
 #ifndef PASCC_COMPILER_H
 #define PASCC_COMPILER_H
 
@@ -16,15 +12,11 @@ const std::string stdin_ = "";
 void yyinput(const char* in);
 void yydebug_(int level);
 
-/**
- * @brief Compiler class
-*/
 class Compiler {
  public:
   Compiler() : cur_dir_(".") {}
   Compiler(std::string dir);
-  static std::set<std::string> CODE_STYLES; // styles for clang-format
-
+  static std::set<std::string> CODE_STYLES; 
   int Compile(std::string in, std::string out = stdout_,
               std::string st = "google");
   int Compile(pascals::ast::AST* in, std::string out, std::string st);
@@ -50,4 +42,4 @@ class Compiler {
   void CodeFormat(std::string file_name, std::string st);
 };
 
-#endif  // PASCC_COMPILER_H
+#endif  

@@ -151,14 +151,6 @@ class TableSet {
     return true;
   }
 
-  /**
-   * Unified search entry of Symbol (from symbol-table) or Type (form
-   * type-table)
-   * @tparam T ObjectSymbol || TypeTemplate | ArrayType | RecordType | BasciType
-   * @param name name of identifier
-   * @param local_zone if is searched from current layer
-   * @return T-pointer
-   */
   template <typename T>
   T* SearchEntry(std::string name, bool* local_zone = nullptr) {
     if (local_zone != nullptr) *local_zone = true;

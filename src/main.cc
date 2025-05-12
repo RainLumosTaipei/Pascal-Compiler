@@ -1,6 +1,3 @@
-// Created by jianxff on 2023/4/18.
-//
-
 #include "argparse.hpp"
 #include "compiler.h"
 #include "log.h"
@@ -11,29 +8,6 @@
 
 using std::string;
 namespace fs = std::filesystem; // 使用命名空间
-
-/*  test command examples
- *  - arguments list
- *    usage: ${PASCC} [-i] [-o] [-s] [-d] [-t] [-r]
- *    optional arguments:
- *    tag  name      n-args  note
- *     -h, --help      -     show help message
- *     -i, --input    [?]    input pascal-s file
- *     -o, --output   [?]    output c file
- *     -s, --style    [?]    code style
- *     -d, --debug    [?]    debug mode
- *                           (0: QUIET, 1: ERROR, 2: WARN,
- *                            3: INFO, 4: DEBUG, 5: TRACE)
- *     -t, --test     [?]    test output c file, optional test args
- *     -r, --reserve  [?]    reserve cache files
- *
- *  - set in (out to screen), set code style and reserve cache files
- *      ${PASCC} -i input/input01.txt -s google -r
- *
- *  - set in & out, run c files generated and set running arguments
- *      ${PASCC} -i input/input01.txt -o output/output01.c -t "> test.out"
- *
- */
 
 void dir_make(std::string&);
 void file_make(std::string&);

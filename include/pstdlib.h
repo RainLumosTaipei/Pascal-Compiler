@@ -1,6 +1,3 @@
-//
-// Created by jianxff on 2023/4/24.
-//
 #include <iostream>
 #include <unordered_map>
 #include <vector>
@@ -11,10 +8,6 @@
 #define PASCC_PSTDLIB_H
 
 namespace pascals {
-
-/**
- * @brief standard library for pascal-s
- */
 class PStdLibs {
  public:
   PStdLibs();

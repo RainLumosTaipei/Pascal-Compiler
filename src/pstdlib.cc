@@ -1,6 +1,3 @@
-//
-// Created by jianxff on 2023/4/25.
-//
 #include "pstdlib.h"
 namespace pascals {
 

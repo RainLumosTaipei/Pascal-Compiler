@@ -1,6 +1,3 @@
-//
-// Created by jianxff on 2023/4/29.
-//
 #include "type.h"
 using std::string;
 using std::vector;
