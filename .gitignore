@@ -3,7 +3,7 @@ cmake-build-*
 .vscode
 build
 out
-bin
 test
 [Cc]MakeFile*
 build
+bin
