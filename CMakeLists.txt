@@ -14,4 +14,5 @@ add_executable(PASCC
         src/lex.yy.cc
         src/parser.tab.cc
         src/log.c
+        
 )
